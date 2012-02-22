@@ -5,27 +5,27 @@ package node;
 import analysis.*;
 
 @SuppressWarnings("nls")
-public final class AExternMethPropdef extends PPropdef
+public final class AExternInitPropdef extends PPropdef
 {
     private PDoc _doc_;
     private TKwredef _kwredef_;
     private PVisibility _visibility_;
-    private TKwmeth _kwmeth_;
+    private TKwnew _kwnew_;
     private PMethid _methid_;
     private PSignature _signature_;
     private TString _extern_;
     private PExternCalls _externCalls_;
 
-    public AExternMethPropdef()
+    public AExternInitPropdef()
     {
         // Constructor
     }
 
-    public AExternMethPropdef(
+    public AExternInitPropdef(
         @SuppressWarnings("hiding") PDoc _doc_,
         @SuppressWarnings("hiding") TKwredef _kwredef_,
         @SuppressWarnings("hiding") PVisibility _visibility_,
-        @SuppressWarnings("hiding") TKwmeth _kwmeth_,
+        @SuppressWarnings("hiding") TKwnew _kwnew_,
         @SuppressWarnings("hiding") PMethid _methid_,
         @SuppressWarnings("hiding") PSignature _signature_,
         @SuppressWarnings("hiding") TString _extern_,
@@ -38,7 +38,7 @@ public final class AExternMethPropdef extends PPropdef
 
         setVisibility(_visibility_);
 
-        setKwmeth(_kwmeth_);
+        setKwnew(_kwnew_);
 
         setMethid(_methid_);
 
@@ -53,11 +53,11 @@ public final class AExternMethPropdef extends PPropdef
     @Override
     public Object clone()
     {
-        return new AExternMethPropdef(
+        return new AExternInitPropdef(
             cloneNode(this._doc_),
             cloneNode(this._kwredef_),
             cloneNode(this._visibility_),
-            cloneNode(this._kwmeth_),
+            cloneNode(this._kwnew_),
             cloneNode(this._methid_),
             cloneNode(this._signature_),
             cloneNode(this._extern_),
@@ -66,7 +66,7 @@ public final class AExternMethPropdef extends PPropdef
 
     public void apply(Switch sw)
     {
-        ((Analysis) sw).caseAExternMethPropdef(this);
+        ((Analysis) sw).caseAExternInitPropdef(this);
     }
 
     public PDoc getDoc()
@@ -144,16 +144,16 @@ public final class AExternMethPropdef extends PPropdef
         this._visibility_ = node;
     }
 
-    public TKwmeth getKwmeth()
+    public TKwnew getKwnew()
     {
-        return this._kwmeth_;
+        return this._kwnew_;
     }
 
-    public void setKwmeth(TKwmeth node)
+    public void setKwnew(TKwnew node)
     {
-        if(this._kwmeth_ != null)
+        if(this._kwnew_ != null)
         {
-            this._kwmeth_.parent(null);
+            this._kwnew_.parent(null);
         }
 
         if(node != null)
@@ -166,7 +166,7 @@ public final class AExternMethPropdef extends PPropdef
             node.parent(this);
         }
 
-        this._kwmeth_ = node;
+        this._kwnew_ = node;
     }
 
     public PMethid getMethid()
@@ -276,7 +276,7 @@ public final class AExternMethPropdef extends PPropdef
             + toString(this._doc_)
             + toString(this._kwredef_)
             + toString(this._visibility_)
-            + toString(this._kwmeth_)
+            + toString(this._kwnew_)
             + toString(this._methid_)
             + toString(this._signature_)
             + toString(this._extern_)
@@ -305,9 +305,9 @@ public final class AExternMethPropdef extends PPropdef
             return;
         }
 
-        if(this._kwmeth_ == child)
+        if(this._kwnew_ == child)
         {
-            this._kwmeth_ = null;
+            this._kwnew_ = null;
             return;
         }
 
@@ -360,9 +360,9 @@ public final class AExternMethPropdef extends PPropdef
             return;
         }
 
-        if(this._kwmeth_ == oldChild)
+        if(this._kwnew_ == oldChild)
         {
-            setKwmeth((TKwmeth) newChild);
+            setKwnew((TKwnew) newChild);
             return;
         }
 

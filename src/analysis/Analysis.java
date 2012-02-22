@@ -27,6 +27,7 @@ public interface Analysis extends Switch
     void caseAAbstractClasskind(AAbstractClasskind node);
     void caseAInterfaceClasskind(AInterfaceClasskind node);
     void caseAEnumClasskind(AEnumClasskind node);
+    void caseAExternClasskind(AExternClasskind node);
     void caseAFormaldef(AFormaldef node);
     void caseASuperclass(ASuperclass node);
     void caseAAttrPropdef(AAttrPropdef node);
@@ -36,6 +37,7 @@ public interface Analysis extends Switch
     void caseAExternMethPropdef(AExternMethPropdef node);
     void caseAConcreteMethPropdef(AConcreteMethPropdef node);
     void caseAConcreteInitPropdef(AConcreteInitPropdef node);
+    void caseAExternInitPropdef(AExternInitPropdef node);
     void caseAMainMethPropdef(AMainMethPropdef node);
     void caseATypePropdef(ATypePropdef node);
     void caseAReadAble(AReadAble node);
@@ -143,6 +145,15 @@ public interface Analysis extends Switch
     void caseASimpleClosureId(ASimpleClosureId node);
     void caseABreakClosureId(ABreakClosureId node);
     void caseAModuleName(AModuleName node);
+    void caseAExternCalls(AExternCalls node);
+    void caseAExternCall(AExternCall node);
+    void caseASuperExternCall(ASuperExternCall node);
+    void caseALocalPropExternCall(ALocalPropExternCall node);
+    void caseAFullPropExternCall(AFullPropExternCall node);
+    void caseAInitPropExternCall(AInitPropExternCall node);
+    void caseACastAsExternCall(ACastAsExternCall node);
+    void caseAAsNullableExternCall(AAsNullableExternCall node);
+    void caseAAsNotNullableExternCall(AAsNotNullableExternCall node);
     void caseAQualified(AQualified node);
     void caseADoc(ADoc node);
 
@@ -236,5 +247,7 @@ public interface Analysis extends Switch
     void caseTStartString(TStartString node);
     void caseTMidString(TMidString node);
     void caseTEndString(TEndString node);
+    void caseTBadChar(TBadChar node);
+    void caseTBadString(TBadString node);
     void caseEOF(EOF node);
 }

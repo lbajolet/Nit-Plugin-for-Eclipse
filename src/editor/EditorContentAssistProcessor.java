@@ -1,9 +1,28 @@
 package editor;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.jface.text.BadLocationException;
+import lexer.Lexer;
+import lexer.LexerException;
+import node.AModule;
+import node.AStdClassdef;
+import node.AStdImport;
+import node.ATopClassdef;
+import node.PClassdef;
+import node.PImport;
+import node.Start;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -11,69 +30,114 @@ import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.IFileEditorMapping;
+import org.eclipse.ui.IPersistableElement;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.editors.text.EditorsUI;
+import org.eclipse.ui.internal.Workbench;
+import org.eclipse.ui.internal.editors.text.FileEditorInputAdapterFactory;
+import org.eclipse.ui.part.EditorPart;
+
+import parser.Parser;
+import parser.ParserException;
 
 public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
-	EditorContentAssistProcessor() {
-		this.wordProvider = new WordProvider();
-	}
-
-	private WordProvider wordProvider;
 	private String lastError;
 
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentOffset) {
 		IDocument document = textViewer.getDocument();
-		int currOffset = documentOffset - 1; // position du cusreur dans le texte
-		String currWord = "";
-		char currChar;
 
-		boolean isMethod = false;
+		ArrayList<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		DocumentBufferStream dbs = new DocumentBufferStream();
+
+		dbs.setDoc(document);
 		
-		// tant que l'on ne rencontre pas de séparateur (espace ou point
-		// virgule), on construit le mot et on recule dans le flux
+		Parser pp = new Parser(new Lexer(new PushbackReader(dbs)));
 		try {
-			currChar = document.getChar(currOffset);
-			while (currOffset > 0 && !(Character.isWhitespace(currChar) || currChar == ';')) {
-				System.out.println(currChar);
+			Start st = pp.parse();
+			AModule amod = (AModule) st.getPModule();
+			LinkedList<PClassdef> ll = amod.getClassdefs();
+			LinkedList<PImport> pi = amod.getImports();
+			for (PImport Import : pi) {
 				
-				if(currChar == '.') {
-					isMethod = true;
-					break;
+				AStdImport CttImport = (AStdImport) Import;
+				
+				IEditorInput iEditor = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage()
+						.getActivePart().getSite().getPage()
+						.getActiveEditor().getEditorInput();
+				
+				String editorName = iEditor.getName();
+				
+				String importUri = "";
+				String separator = File.separator;
+				
+				if (iEditor instanceof IFileEditorInput){
+					IFileEditorInput inp = (IFileEditorInput) iEditor;
+					File fichier = inp.getFile().getRawLocation().toFile();
+					String fileAbsoluteUri = fichier.getAbsolutePath();
+					importUri = fileAbsoluteUri.replaceFirst(iEditor.getName(), CttImport.getName().toString().trim()+".nit");
 				}
 				
-				currWord = currChar + currWord;
-				currOffset--;
-				currChar = document.getChar(currOffset);
+				Parser parser = new Parser(new Lexer(new PushbackReader(
+						new BufferedReader(new FileReader(importUri)))));
+				
+				Start tempStr = parser.parse();
+				
+				AModule bmod = (AModule) tempStr.getPModule();
+				
+				LinkedList<PClassdef> classd = bmod.getClassdefs();
+				
+				for (PClassdef pclass : classd) {
+					if(pclass instanceof AStdClassdef){
+						AStdClassdef amc = (AStdClassdef) pclass;
+						proposals.add(new CompletionProposal(amc.getId().getText(),
+								documentOffset, 0, amc.getId().getText().length()));
+					}else if(pclass instanceof ATopClassdef){
+						ATopClassdef amc = (ATopClassdef) pclass;
+						//proposals.add(new CompletionProposal(amc.,
+						//		documentOffset, 0, amc.getId().getText().length()));
+						int toto = 0;
+					}
+				}
 			}
-		} catch (BadLocationException e1) {
+			for (PClassdef pclass : ll) {
+				if(pclass instanceof AStdClassdef){
+					AStdClassdef amc = (AStdClassdef) pclass;
+					proposals.add(new CompletionProposal(amc.getId().getText(),
+							documentOffset, 0, amc.getId().getText().length()));
+				}else if(pclass instanceof ATopClassdef){
+					ATopClassdef amc = (ATopClassdef) pclass;
+					//proposals.add(new CompletionProposal(amc.,
+					//		documentOffset, 0, amc.getId().getText().length()));
+					int toto = 0;
+				}
+				
+				
+				// LinkedList<PPropdef> propd = amc.getPropdefs();
+				// int toto = 0;
+			}
+		} catch (ParserException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
+		} catch (LexerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		// Calcul de la liste de proposition
-		ICompletionProposal[] proposals = null;
-		List<String> suggestions;
+		ICompletionProposal[] suggestions = proposals
+				.toArray(new ICompletionProposal[proposals.size()]);
 
-		System.out.println(isMethod);
-		if (isMethod) {
-			suggestions = wordProvider.suggestMethods(currWord);
-		} else {
-			suggestions = wordProvider.suggestClasses(currWord);
-		}
-
-		if (suggestions.size() > 0) {
-			try {
-				proposals = buildProposals(suggestions, currWord,
-						documentOffset - currWord.length());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return proposals;
+		return suggestions;
 	}
 
 	private ICompletionProposal[] buildProposals(List<String> suggestions,

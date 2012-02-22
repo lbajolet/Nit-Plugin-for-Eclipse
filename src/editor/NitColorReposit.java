@@ -30,6 +30,7 @@ public class NitColorReposit {
 	private static TextAttribute keywordColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(42, 82, 220)), null, SWT.BOLD);
 	private static TextAttribute booleanOperatorColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(150, 0, 24)), null, SWT.BOLD);
 	private static TextAttribute abortColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(178, 34, 34)), new Color(Display.getCurrent(),new RGB(216, 191, 216)), SWT.BOLD);
+	private static TextAttribute errorColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(255,0,0)), null, SWT.UNDERLINE_ERROR);
 	
 	/**	The default attribute of a token */
 	private static TextAttribute defaultAttribute = new TextAttribute(new Color(Display.getCurrent(), new RGB(0,0,0)), null, SWT.NORMAL);
@@ -126,6 +127,8 @@ public class NitColorReposit {
 		keywords.put("TStartString",stringColor);
 		keywords.put("TMidString",stringColor);
 		keywords.put("TEndString",stringColor);
+		keywords.put("TBadChar", errorColor);
+		keywords.put("TBadString", errorColor);
 	}
 	
 	/**

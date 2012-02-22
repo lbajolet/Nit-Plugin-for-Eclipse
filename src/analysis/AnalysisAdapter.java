@@ -144,6 +144,11 @@ public class AnalysisAdapter implements Analysis
         defaultCase(node);
     }
 
+    public void caseAExternClasskind(AExternClasskind node)
+    {
+        defaultCase(node);
+    }
+
     public void caseAFormaldef(AFormaldef node)
     {
         defaultCase(node);
@@ -185,6 +190,11 @@ public class AnalysisAdapter implements Analysis
     }
 
     public void caseAConcreteInitPropdef(AConcreteInitPropdef node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseAExternInitPropdef(AExternInitPropdef node)
     {
         defaultCase(node);
     }
@@ -724,6 +734,51 @@ public class AnalysisAdapter implements Analysis
         defaultCase(node);
     }
 
+    public void caseAExternCalls(AExternCalls node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseAExternCall(AExternCall node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseASuperExternCall(ASuperExternCall node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseALocalPropExternCall(ALocalPropExternCall node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseAFullPropExternCall(AFullPropExternCall node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseAInitPropExternCall(AInitPropExternCall node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseACastAsExternCall(ACastAsExternCall node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseAAsNullableExternCall(AAsNullableExternCall node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseAAsNotNullableExternCall(AAsNotNullableExternCall node)
+    {
+        defaultCase(node);
+    }
+
     public void caseAQualified(AQualified node)
     {
         defaultCase(node);
@@ -1180,6 +1235,16 @@ public class AnalysisAdapter implements Analysis
     }
 
     public void caseTEndString(TEndString node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseTBadChar(TBadChar node)
+    {
+        defaultCase(node);
+    }
+
+    public void caseTBadString(TBadString node)
     {
         defaultCase(node);
     }

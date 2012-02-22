@@ -1,14 +1,11 @@
 package editor;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
  
 public class WordProvider {
 	
-	//public KeyWords nitKeywords = new KeyWords();
- 
     public List< String > suggestClasses(String word) {
         ArrayList< String >wordBuffer = new ArrayList< String >();
         //for(String s:nitKeywords.getKeyWords().keySet())

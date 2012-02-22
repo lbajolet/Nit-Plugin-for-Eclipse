@@ -9,6 +9,7 @@ import analysis.*;
 public final class ABlockExpr extends PExpr
 {
     private final LinkedList<PExpr> _expr_ = new LinkedList<PExpr>();
+    private TKwend _kwend_;
 
     public ABlockExpr()
     {
@@ -16,10 +17,13 @@ public final class ABlockExpr extends PExpr
     }
 
     public ABlockExpr(
-        @SuppressWarnings("hiding") List<PExpr> _expr_)
+        @SuppressWarnings("hiding") List<PExpr> _expr_,
+        @SuppressWarnings("hiding") TKwend _kwend_)
     {
         // Constructor
         setExpr(_expr_);
+
+        setKwend(_kwend_);
 
     }
 
@@ -27,7 +31,8 @@ public final class ABlockExpr extends PExpr
     public Object clone()
     {
         return new ABlockExpr(
-            cloneList(this._expr_));
+            cloneList(this._expr_),
+            cloneNode(this._kwend_));
     }
 
     public void apply(Switch sw)
@@ -55,11 +60,37 @@ public final class ABlockExpr extends PExpr
         }
     }
 
+    public TKwend getKwend()
+    {
+        return this._kwend_;
+    }
+
+    public void setKwend(TKwend node)
+    {
+        if(this._kwend_ != null)
+        {
+            this._kwend_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._kwend_ = node;
+    }
+
     @Override
     public String toString()
     {
         return ""
-            + toString(this._expr_);
+            + toString(this._expr_)
+            + toString(this._kwend_);
     }
 
     @Override
@@ -68,6 +99,12 @@ public final class ABlockExpr extends PExpr
         // Remove child
         if(this._expr_.remove(child))
         {
+            return;
+        }
+
+        if(this._kwend_ == child)
+        {
+            this._kwend_ = null;
             return;
         }
 
@@ -94,6 +131,12 @@ public final class ABlockExpr extends PExpr
                 oldChild.parent(null);
                 return;
             }
+        }
+
+        if(this._kwend_ == oldChild)
+        {
+            setKwend((TKwend) newChild);
+            return;
         }
 
         throw new RuntimeException("Not a child.");

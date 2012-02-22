@@ -293,6 +293,10 @@ public class DepthFirstAdapter extends AnalysisAdapter
                 e.apply(this);
             }
         }
+        if(node.getKwend() != null)
+        {
+            node.getKwend().apply(this);
+        }
         outAStdClassdef(node);
     }
 
@@ -430,6 +434,27 @@ public class DepthFirstAdapter extends AnalysisAdapter
             node.getKwenum().apply(this);
         }
         outAEnumClasskind(node);
+    }
+
+    public void inAExternClasskind(AExternClasskind node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAExternClasskind(AExternClasskind node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAExternClasskind(AExternClasskind node)
+    {
+        inAExternClasskind(node);
+        if(node.getKwextern() != null)
+        {
+            node.getKwextern().apply(this);
+        }
+        outAExternClasskind(node);
     }
 
     public void inAFormaldef(AFormaldef node)
@@ -704,6 +729,10 @@ public class DepthFirstAdapter extends AnalysisAdapter
         {
             node.getExtern().apply(this);
         }
+        if(node.getExternCalls() != null)
+        {
+            node.getExternCalls().apply(this);
+        }
         outAExternMethPropdef(node);
     }
 
@@ -795,6 +824,55 @@ public class DepthFirstAdapter extends AnalysisAdapter
             node.getBlock().apply(this);
         }
         outAConcreteInitPropdef(node);
+    }
+
+    public void inAExternInitPropdef(AExternInitPropdef node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAExternInitPropdef(AExternInitPropdef node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAExternInitPropdef(AExternInitPropdef node)
+    {
+        inAExternInitPropdef(node);
+        if(node.getDoc() != null)
+        {
+            node.getDoc().apply(this);
+        }
+        if(node.getKwredef() != null)
+        {
+            node.getKwredef().apply(this);
+        }
+        if(node.getVisibility() != null)
+        {
+            node.getVisibility().apply(this);
+        }
+        if(node.getKwnew() != null)
+        {
+            node.getKwnew().apply(this);
+        }
+        if(node.getMethid() != null)
+        {
+            node.getMethid().apply(this);
+        }
+        if(node.getSignature() != null)
+        {
+            node.getSignature().apply(this);
+        }
+        if(node.getExtern() != null)
+        {
+            node.getExtern().apply(this);
+        }
+        if(node.getExternCalls() != null)
+        {
+            node.getExternCalls().apply(this);
+        }
+        outAExternInitPropdef(node);
     }
 
     public void inAMainMethPropdef(AMainMethPropdef node)
@@ -1489,6 +1567,10 @@ public class DepthFirstAdapter extends AnalysisAdapter
             {
                 e.apply(this);
             }
+        }
+        if(node.getKwend() != null)
+        {
+            node.getKwend().apply(this);
         }
         outABlockExpr(node);
     }
@@ -3648,6 +3730,234 @@ public class DepthFirstAdapter extends AnalysisAdapter
             node.getId().apply(this);
         }
         outAModuleName(node);
+    }
+
+    public void inAExternCalls(AExternCalls node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAExternCalls(AExternCalls node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAExternCalls(AExternCalls node)
+    {
+        inAExternCalls(node);
+        if(node.getKwimport() != null)
+        {
+            node.getKwimport().apply(this);
+        }
+        {
+            List<PExternCall> copy = new ArrayList<PExternCall>(node.getExternCalls());
+            for(PExternCall e : copy)
+            {
+                e.apply(this);
+            }
+        }
+        outAExternCalls(node);
+    }
+
+    public void inAExternCall(AExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAExternCall(AExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAExternCall(AExternCall node)
+    {
+        inAExternCall(node);
+        outAExternCall(node);
+    }
+
+    public void inASuperExternCall(ASuperExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outASuperExternCall(ASuperExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseASuperExternCall(ASuperExternCall node)
+    {
+        inASuperExternCall(node);
+        if(node.getKwsuper() != null)
+        {
+            node.getKwsuper().apply(this);
+        }
+        outASuperExternCall(node);
+    }
+
+    public void inALocalPropExternCall(ALocalPropExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outALocalPropExternCall(ALocalPropExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseALocalPropExternCall(ALocalPropExternCall node)
+    {
+        inALocalPropExternCall(node);
+        if(node.getMethid() != null)
+        {
+            node.getMethid().apply(this);
+        }
+        outALocalPropExternCall(node);
+    }
+
+    public void inAFullPropExternCall(AFullPropExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAFullPropExternCall(AFullPropExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAFullPropExternCall(AFullPropExternCall node)
+    {
+        inAFullPropExternCall(node);
+        if(node.getClassid() != null)
+        {
+            node.getClassid().apply(this);
+        }
+        if(node.getQuad() != null)
+        {
+            node.getQuad().apply(this);
+        }
+        if(node.getMethid() != null)
+        {
+            node.getMethid().apply(this);
+        }
+        outAFullPropExternCall(node);
+    }
+
+    public void inAInitPropExternCall(AInitPropExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAInitPropExternCall(AInitPropExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAInitPropExternCall(AInitPropExternCall node)
+    {
+        inAInitPropExternCall(node);
+        if(node.getClassid() != null)
+        {
+            node.getClassid().apply(this);
+        }
+        outAInitPropExternCall(node);
+    }
+
+    public void inACastAsExternCall(ACastAsExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outACastAsExternCall(ACastAsExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseACastAsExternCall(ACastAsExternCall node)
+    {
+        inACastAsExternCall(node);
+        if(node.getFromType() != null)
+        {
+            node.getFromType().apply(this);
+        }
+        if(node.getKwas() != null)
+        {
+            node.getKwas().apply(this);
+        }
+        if(node.getToType() != null)
+        {
+            node.getToType().apply(this);
+        }
+        outACastAsExternCall(node);
+    }
+
+    public void inAAsNullableExternCall(AAsNullableExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAAsNullableExternCall(AAsNullableExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAAsNullableExternCall(AAsNullableExternCall node)
+    {
+        inAAsNullableExternCall(node);
+        if(node.getType() != null)
+        {
+            node.getType().apply(this);
+        }
+        if(node.getKwas() != null)
+        {
+            node.getKwas().apply(this);
+        }
+        if(node.getKwnullable() != null)
+        {
+            node.getKwnullable().apply(this);
+        }
+        outAAsNullableExternCall(node);
+    }
+
+    public void inAAsNotNullableExternCall(AAsNotNullableExternCall node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAAsNotNullableExternCall(AAsNotNullableExternCall node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAAsNotNullableExternCall(AAsNotNullableExternCall node)
+    {
+        inAAsNotNullableExternCall(node);
+        if(node.getType() != null)
+        {
+            node.getType().apply(this);
+        }
+        if(node.getKwas() != null)
+        {
+            node.getKwas().apply(this);
+        }
+        if(node.getKwnot() != null)
+        {
+            node.getKwnot().apply(this);
+        }
+        if(node.getKwnullable() != null)
+        {
+            node.getKwnullable().apply(this);
+        }
+        outAAsNotNullableExternCall(node);
     }
 
     public void inAQualified(AQualified node)

@@ -16,6 +16,7 @@ public final class AStdClassdef extends PClassdef
     private final LinkedList<PFormaldef> _formaldefs_ = new LinkedList<PFormaldef>();
     private final LinkedList<PSuperclass> _superclasses_ = new LinkedList<PSuperclass>();
     private final LinkedList<PPropdef> _propdefs_ = new LinkedList<PPropdef>();
+    private TKwend _kwend_;
 
     public AStdClassdef()
     {
@@ -30,7 +31,8 @@ public final class AStdClassdef extends PClassdef
         @SuppressWarnings("hiding") TClassid _id_,
         @SuppressWarnings("hiding") List<PFormaldef> _formaldefs_,
         @SuppressWarnings("hiding") List<PSuperclass> _superclasses_,
-        @SuppressWarnings("hiding") List<PPropdef> _propdefs_)
+        @SuppressWarnings("hiding") List<PPropdef> _propdefs_,
+        @SuppressWarnings("hiding") TKwend _kwend_)
     {
         // Constructor
         setDoc(_doc_);
@@ -49,6 +51,8 @@ public final class AStdClassdef extends PClassdef
 
         setPropdefs(_propdefs_);
 
+        setKwend(_kwend_);
+
     }
 
     @Override
@@ -62,7 +66,8 @@ public final class AStdClassdef extends PClassdef
             cloneNode(this._id_),
             cloneList(this._formaldefs_),
             cloneList(this._superclasses_),
-            cloneList(this._propdefs_));
+            cloneList(this._propdefs_),
+            cloneNode(this._kwend_));
     }
 
     public void apply(Switch sw)
@@ -255,6 +260,31 @@ public final class AStdClassdef extends PClassdef
         }
     }
 
+    public TKwend getKwend()
+    {
+        return this._kwend_;
+    }
+
+    public void setKwend(TKwend node)
+    {
+        if(this._kwend_ != null)
+        {
+            this._kwend_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._kwend_ = node;
+    }
+
     @Override
     public String toString()
     {
@@ -266,7 +296,8 @@ public final class AStdClassdef extends PClassdef
             + toString(this._id_)
             + toString(this._formaldefs_)
             + toString(this._superclasses_)
-            + toString(this._propdefs_);
+            + toString(this._propdefs_)
+            + toString(this._kwend_);
     }
 
     @Override
@@ -315,6 +346,12 @@ public final class AStdClassdef extends PClassdef
 
         if(this._propdefs_.remove(child))
         {
+            return;
+        }
+
+        if(this._kwend_ == child)
+        {
+            this._kwend_ = null;
             return;
         }
 
@@ -407,6 +444,12 @@ public final class AStdClassdef extends PClassdef
                 oldChild.parent(null);
                 return;
             }
+        }
+
+        if(this._kwend_ == oldChild)
+        {
+            setKwend((TKwend) newChild);
+            return;
         }
 
         throw new RuntimeException("Not a child.");

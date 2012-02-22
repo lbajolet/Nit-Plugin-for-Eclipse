@@ -120,25 +120,6 @@ public class NitScanner implements ITokenScanner {
 						- (this.fTokenOffset + this.fTokenLength);
 				this.fTokenOffset = this.docStr.currOffset - this.fTokenLength;
 
-				// This section is only here to send back the appropriate token
-				// if the file ends with a comment
-				// Or to recognize comments properly if added dynamically
-				// The explanation is simple, the lexer returns an error when
-				// arriving on EOF, if the file ends with a comment, an error is
-				// returned by the lexer and the line is coloured in red, except
-				// if the token starts with a #, thereby, it is coloured in
-				// green (To be corrected in the next version of the lexer)
-				try {
-					char sharp = this.doc.getChar(this.fTokenOffset);
-					if (sharp == '#') {
-						return new Token(new TextAttribute(new Color(
-								Display.getCurrent(), new RGB(0, 128, 0)),
-								null, SWT.UNDERLINE_ERROR));
-					}
-				} catch (BadLocationException e1) {
-					// Should not happen, ever.
-				}
-
 				return new Token(new TextAttribute(new Color(
 						Display.getCurrent(), new RGB(255, 0, 0)), null,
 						SWT.UNDERLINE_ERROR));
