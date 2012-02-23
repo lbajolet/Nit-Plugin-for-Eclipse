@@ -1,28 +1,17 @@
 package editor;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PushbackReader;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 
-import lexer.Lexer;
 import lexer.LexerException;
 import node.AModule;
 import node.AStdClassdef;
 import node.AStdImport;
-import node.ATopClassdef;
-import node.PClassdef;
-import node.PImport;
 import node.Start;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
@@ -32,17 +21,11 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
-import org.eclipse.ui.IFileEditorMapping;
-import org.eclipse.ui.IPersistableElement;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.editors.text.EditorsUI;
-import org.eclipse.ui.internal.Workbench;
-import org.eclipse.ui.internal.editors.text.FileEditorInputAdapterFactory;
-import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.ide.FileStoreEditorInput;
 
-import parser.Parser;
 import parser.ParserException;
+import asthelpers.AstParserHelper;
 
 public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
@@ -51,109 +34,99 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentOffset) {
+
+		// Resultsets
+		ArrayList<AStdClassdef> classesToPropose = new ArrayList<AStdClassdef>();
+
 		IDocument document = textViewer.getDocument();
 
-		ArrayList<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
-		DocumentBufferStream dbs = new DocumentBufferStream();
+		AstParserHelper aph = new AstParserHelper();
 
-		dbs.setDoc(document);
-		
-		Parser pp = new Parser(new Lexer(new PushbackReader(dbs)));
+		IEditorInput iEditor = PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow().getActivePage().getActivePart()
+				.getSite().getPage().getActiveEditor().getEditorInput();
+
+		Start st = null;
 		try {
-			Start st = pp.parse();
-			AModule amod = (AModule) st.getPModule();
-			LinkedList<PClassdef> ll = amod.getClassdefs();
-			LinkedList<PImport> pi = amod.getImports();
-			for (PImport Import : pi) {
-				
-				AStdImport CttImport = (AStdImport) Import;
-				
-				IEditorInput iEditor = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage()
-						.getActivePart().getSite().getPage()
-						.getActiveEditor().getEditorInput();
-				
-				String editorName = iEditor.getName();
-				
-				String importUri = "";
-				String separator = File.separator;
-				
-				if (iEditor instanceof IFileEditorInput){
+			st = aph.getAstForDocument(document);
+		} catch (ParserException e) {
+		} catch (LexerException e) {
+		} catch (IOException e) {
+		}
+
+		if (st != null) {
+
+			AModule mod = aph.getModuleOfAST(st);
+
+			if (mod != null) {
+
+				String fileAbsoluteUri = null;
+
+				if (iEditor instanceof IFileEditorInput) {
 					IFileEditorInput inp = (IFileEditorInput) iEditor;
 					File fichier = inp.getFile().getRawLocation().toFile();
-					String fileAbsoluteUri = fichier.getAbsolutePath();
-					importUri = fileAbsoluteUri.replaceFirst(iEditor.getName(), CttImport.getName().toString().trim()+".nit");
+					fileAbsoluteUri = fichier.getAbsolutePath();
+				} else if (iEditor instanceof FileStoreEditorInput) {
+					FileStoreEditorInput fsei = (FileStoreEditorInput) iEditor;
+					File fichier = new File(fsei.getURI());
+					fileAbsoluteUri = fichier.getAbsolutePath();
 				}
-				
-				Parser parser = new Parser(new Lexer(new PushbackReader(
-						new BufferedReader(new FileReader(importUri)))));
-				
-				Start tempStr = parser.parse();
-				
-				AModule bmod = (AModule) tempStr.getPModule();
-				
-				LinkedList<PClassdef> classd = bmod.getClassdefs();
-				
-				for (PClassdef pclass : classd) {
-					if(pclass instanceof AStdClassdef){
-						AStdClassdef amc = (AStdClassdef) pclass;
-						proposals.add(new CompletionProposal(amc.getId().getText(),
-								documentOffset, 0, amc.getId().getText().length()));
-					}else if(pclass instanceof ATopClassdef){
-						ATopClassdef amc = (ATopClassdef) pclass;
-						//proposals.add(new CompletionProposal(amc.,
-						//		documentOffset, 0, amc.getId().getText().length()));
-						int toto = 0;
+
+				ArrayList<AStdImport> imports = aph.getImports(mod);
+
+				for (AStdImport imp : imports) {
+
+					String nameOfCurrentFile = iEditor.getName();
+					String nitName = imp.getName().toString().trim() + ".nit";
+
+					String importUri = fileAbsoluteUri.replaceFirst(
+							nameOfCurrentFile, nitName);
+
+					File importFile = new File(importUri);
+
+					try {
+						Start startNode = aph.getAstForFile(importFile);
+
+						AModule importModule = aph.getModuleOfAST(startNode);
+
+						ArrayList<AStdClassdef> classes = aph
+								.getClassesOfModule(importModule);
+
+						classesToPropose.addAll(classes);
+					} catch (FileNotFoundException e) {
+					} catch (IOException e) {
+					} catch (ParserException e) {
+					} catch (LexerException e) {
 					}
 				}
 			}
-			for (PClassdef pclass : ll) {
-				if(pclass instanceof AStdClassdef){
-					AStdClassdef amc = (AStdClassdef) pclass;
-					proposals.add(new CompletionProposal(amc.getId().getText(),
-							documentOffset, 0, amc.getId().getText().length()));
-				}else if(pclass instanceof ATopClassdef){
-					ATopClassdef amc = (ATopClassdef) pclass;
-					//proposals.add(new CompletionProposal(amc.,
-					//		documentOffset, 0, amc.getId().getText().length()));
-					int toto = 0;
-				}
-				
-				
-				// LinkedList<PPropdef> propd = amc.getPropdefs();
-				// int toto = 0;
+
+			if (mod != null) {
+				ArrayList<AStdClassdef> astdclass = aph.getClassesOfModule(mod);
+				classesToPropose.addAll(astdclass);
+
 			}
-		} catch (ParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (LexerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
-		ICompletionProposal[] suggestions = proposals
-				.toArray(new ICompletionProposal[proposals.size()]);
+		ICompletionProposal[] classesSuggestions = buildClassProposals(
+				classesToPropose, documentOffset);
 
-		return suggestions;
+		return classesSuggestions;
 	}
 
-	private ICompletionProposal[] buildProposals(List<String> suggestions,
-			String replacedWord, int offset) throws Exception {
-		ICompletionProposal[] proposals = new ICompletionProposal[suggestions
-				.size()];
-		int index = 0;
-		for (Iterator<String> i = suggestions.iterator(); i.hasNext();) {
-			String currSuggestion = (String) i.next();
-			CompletionProposal cp = new CompletionProposal(currSuggestion,
-					offset, replacedWord.length(), currSuggestion.length(),
-					null, currSuggestion, null, null);
-			proposals[index] = cp;
-			index++;
+	private ICompletionProposal[] buildClassProposals(
+			ArrayList<AStdClassdef> classes, int fromOffset) {
+
+		HashSet<ICompletionProposal> proposalsArrayList = new HashSet<ICompletionProposal>();
+
+		for (AStdClassdef classDef : classes) {
+			proposalsArrayList.add(new CompletionProposal(classDef.getId()
+					.getText(), fromOffset,
+					classDef.getId().getText().length(), 0));
 		}
-		return proposals;
+
+		return proposalsArrayList
+				.toArray(new ICompletionProposal[proposalsArrayList.size()]);
 	}
 
 	@Override
