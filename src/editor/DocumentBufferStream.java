@@ -146,6 +146,8 @@ public class DocumentBufferStream extends Reader {
 	@Override
 	public void reset(){
 		this.currOffset = 0;
+		this.fStartRange = 0;
+		this.fEndRange = this.doc.getLength()-1;
 	}
 	
 	@Override
