@@ -50,7 +50,7 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 				startBuf.append(tempChar);
 				currOffset--;
 			} while (tempChar != '.' && tempChar != ' ' && tempChar != '\n'
-					&& tempChar != '\t');
+					&& tempChar != '\t' && tempChar !='\r');
 
 			// Bufferize from currOffset to end delimiter
 			currOffset = documentOffset;
@@ -59,7 +59,7 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 				endBuf.append(tempChar);
 				currOffset++;
 			} while (tempChar != '.' && tempChar != ' ' && tempChar != '\n'
-					&& tempChar != '\t');
+					&& tempChar != '\t' && tempChar !='\r');
 
 			startsWith = startBuf.reverse().substring(1, startBuf.length())
 					+ endBuf.substring(0, endBuf.length() - 1);
