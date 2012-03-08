@@ -1,6 +1,5 @@
 package editor;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -143,6 +142,11 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		int totalLength = classesSuggestions.length;
 
+		ICompletionProposal[] keyWordsSuggestions = buildKeywordsProposals(
+				documentOffset, startsWith);
+
+		totalLength += keyWordsSuggestions.length;
+
 		for (ICompletionProposal[] comps : methodsToPropose) {
 			totalLength += comps.length;
 		}
@@ -151,9 +155,16 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		int currLength = 0;
 
-		for (ICompletionProposal comp : classesSuggestions) {
-			finalProposals[currLength] = comp;
-			currLength++;
+		if (classesSuggestions.length > 0) {
+			System.arraycopy(classesSuggestions, 0, finalProposals, currLength,
+					classesSuggestions.length);
+			currLength += classesSuggestions.length;
+		}
+
+		if (keyWordsSuggestions.length > 0) {
+			System.arraycopy(keyWordsSuggestions, 0, finalProposals,
+					currLength, keyWordsSuggestions.length);
+			currLength += keyWordsSuggestions.length;
 		}
 
 		for (ICompletionProposal[] comps : methodsToPropose) {
@@ -209,6 +220,24 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 				proposals.add(new CompletionProposal(toReplace, fromOffset
 						- startsWith.length(), startsWith.length(), toReplace
 						.length()));
+			}
+		}
+
+		return proposals.toArray(new ICompletionProposal[proposals.size()]);
+	}
+
+	private ICompletionProposal[] buildKeywordsProposals(int fromOffset,
+			String startsWith) {
+
+		ArrayList<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
+		String[] kwds = NitColorReposit.getInstance().getKeywords();
+
+		for (String kw : kwds) {
+			if (kw.toLowerCase().startsWith(startsWith.toLowerCase())) {
+				proposals
+						.add(new CompletionProposal(kw, fromOffset
+								- startsWith.length(), startsWith.length(), kw
+								.length()));
 			}
 		}
 

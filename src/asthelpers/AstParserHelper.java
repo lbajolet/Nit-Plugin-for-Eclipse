@@ -42,17 +42,16 @@ public class AstParserHelper {
 
 		dbs.setDoc(document);
 
-		PushbackReader pbr = new PushbackReader(dbs);
+		PushbackReader pbr = new PushbackReader(dbs, 2);
 
 		Parser pp = new Parser(new Lexer(pbr));
 
 		Start st = null;
 		try {
 			st = pp.parse();
-		} catch (ParserException e) {
-		} catch (LexerException e) {
-		} catch (IOException e) {
-		}
+		} catch (ParserException e) {}
+		catch (LexerException e) {} 
+		catch (IOException e) {}
 
 		if (st == null) {
 			String moduleName = getModuleNameInFile(dbs);

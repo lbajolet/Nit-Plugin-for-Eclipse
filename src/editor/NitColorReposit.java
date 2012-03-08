@@ -1,7 +1,9 @@
 package editor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.swt.SWT;
@@ -20,6 +22,9 @@ public class NitColorReposit {
 	
 	/**	The Reposit is a Singleton */
 	private static NitColorReposit instance;
+	
+	//Cached keywords list
+	private String[] keywordsCache = null;
 	
 	/** TextAttribute objects representing all the colors of the different tokens */
 	private static TextAttribute commentColor = new TextAttribute(new Color(Display.getCurrent(),new RGB(0,128,0)),null,SWT.NORMAL);
@@ -129,6 +134,8 @@ public class NitColorReposit {
 		keywords.put("TEndString",stringColor);
 		keywords.put("TBadChar", errorColor);
 		keywords.put("TBadString", errorColor);
+		
+		keywordsCache = this.getKeywords();
 	}
 	
 	/**
@@ -157,5 +164,22 @@ public class NitColorReposit {
 		}else{
 			return defaultAttribute;
 		}
+	}
+	
+	public String[] getKeywords(){
+		if(this.keywordsCache == null){
+			Set<String> keys = this.keywords.keySet();
+			ArrayList<String> results = new ArrayList<String>();
+			
+			for(String key : keys){
+				if(key.substring(0,3).toLowerCase().startsWith("tkw")){
+					results.add(key.substring(3,key.length()));
+				}
+			}
+			
+			this.keywordsCache = results.toArray(new String[results.size()]);
+		}
+		
+		return this.keywordsCache;
 	}
 }
