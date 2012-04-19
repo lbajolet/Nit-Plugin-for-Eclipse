@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
  
+import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
@@ -29,5 +30,10 @@ public class NitEditor extends TextEditor {
 		String id = ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS;
 		action.setActionDefinitionId(id);
 		setAction("ContentAssist", action);
+	}
+	
+	@Override
+	protected void updateMarkerViews(Annotation annotation){
+		super.updateMarkerViews(annotation);
 	}
 }
