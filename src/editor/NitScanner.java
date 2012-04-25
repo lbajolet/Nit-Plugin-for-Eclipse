@@ -17,6 +17,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * @author R4PaSs
+ * Scanner used by the NitEditor to highlight words in the editor
+ */
 public class NitScanner implements ITokenScanner {
 
 	/** The document to scan tokens in */

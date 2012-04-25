@@ -7,9 +7,87 @@
             class="editor.NitEditor"
             default="false"
             extensions="nit"
-            id="eclipse.editor.nit.editor1"
+            id="eclipse.editor.nit.ndt.editor"
             name="Nit Editor">
       </editor>
+   </extension>
+   <extension
+         id="org.uqam.nit.ndt.builder"
+         name="Nit Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="builder.NitBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="org.uqam.nit.ndt.nature"
+         name="Nit Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="builder.NitNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.uqam.nit.ndt.builder">
+      </builder>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+	  <objectContribution
+	  	adaptable = "false"
+		id="org.uqam.nit.ndt.contribution2"
+		nameFilter="*.nit"
+		objectClass="org.eclipse.core.resources.IFile">
+		<action
+              class="builder.SelectAsDefaultFileAction"
+              enablesFor="+"
+              id="org.uqam.nit.ndt.selectAsDefaultFileAction"
+              label="Define as default file for project"
+              menubarPath="additions">
+        </action>
+	  </objectContribution>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="preferences.NitPreferencePage"
+            id="org.uqam.nit.ndt.NitPreferencePage"
+            name="Nit">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="Nit"
+            class="newprojectwizard.NewProjectWizard"
+            id="org.uqam.nit.ndt.newProjectWizard"
+            name="Nit Project"
+            project="true">
+      </wizard>
+   </extension>
+   <extension
+         id="id1"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="builder.NitNature">
+         </run>
+      </runtime>
    </extension>
 
 </plugin>

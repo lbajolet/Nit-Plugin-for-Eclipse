@@ -1,11 +1,8 @@
 package editor;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 
-import node.AConcreteMethPropdef;
-import node.ADeferredMethPropdef;
 import node.AModule;
 import node.AStdClassdef;
 import node.PPropdef;
@@ -13,7 +10,6 @@ import node.Start;
 
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
@@ -21,6 +17,11 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
 import asthelpers.AstParserHelper;
 
+/**
+ * @author R4PaSs
+ *
+ * Class charged to provide auto completion for the NitEditor
+ */
 public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 	private String lastError;
@@ -29,37 +30,44 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 	public ICompletionProposal[] computeCompletionProposals(
 			ITextViewer textViewer, int documentOffset) {
 
-		// Resultsets
+		// Result sets
 		ArrayList<AStdClassdef> classesToPropose = new ArrayList<AStdClassdef>();
 		ArrayList<ICompletionProposal[]> methodsToPropose = new ArrayList<ICompletionProposal[]>();
 
 		String startsWith = "";
+		char lastDelimiter = '\0';
 
 		IDocument document = textViewer.getDocument();
 
 		StringBuffer startBuf = new StringBuffer();
 		StringBuffer endBuf = new StringBuffer();
 
+		WordProvider wp = new WordProvider();
+
 		try {
-			char tempChar;
+			char tempChar = '\0';
 			int currOffset = documentOffset - 1;
 
 			// Bufferize from currOffset to start delimiter
-			do {
+			while (tempChar != '.' && tempChar != ' ' && tempChar != '\n'
+					&& tempChar != '\t' && tempChar != '\r' && currOffset >= 0) {
 				tempChar = document.getChar(currOffset);
 				startBuf.append(tempChar);
 				currOffset--;
-			} while (tempChar != '.' && tempChar != ' ' && tempChar != '\n'
-					&& tempChar != '\t' && tempChar !='\r');
+
+				lastDelimiter = tempChar;
+			}
 
 			// Bufferize from currOffset to end delimiter
 			currOffset = documentOffset;
-			do {
+			tempChar = '\0';
+			while (tempChar != '.' && tempChar != ' ' && tempChar != '\n'
+					&& tempChar != '\t' && tempChar != '\r'
+					&& currOffset < document.getLength()) {
 				tempChar = document.getChar(currOffset);
 				endBuf.append(tempChar);
 				currOffset++;
-			} while (tempChar != '.' && tempChar != ' ' && tempChar != '\n'
-					&& tempChar != '\t' && tempChar !='\r');
+			}
 
 			startsWith = startBuf.reverse().substring(1, startBuf.length())
 					+ endBuf.substring(0, endBuf.length() - 1);
@@ -68,12 +76,6 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		AstParserHelper aph = new AstParserHelper();
 
-		/*
-		 * IEditorInput iEditor = PlatformUI.getWorkbench()
-		 * .getActiveWorkbenchWindow().getActivePage().getActivePart()
-		 * .getSite().getPage().getActiveEditor().getEditorInput();
-		 */
-
 		Start st = null;
 
 		st = aph.getAstForDocument(document);
@@ -81,55 +83,13 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 		if (st != null) {
 
 			AModule mod = aph.getModuleOfAST(st);
-			/*
-			 * if (mod != null) {
-			 * 
-			 * String fileAbsoluteUri = null;
-			 * 
-			 * 
-			 * if (iEditor instanceof IFileEditorInput) { IFileEditorInput inp =
-			 * (IFileEditorInput) iEditor; File fichier =
-			 * inp.getFile().getRawLocation().toFile(); fileAbsoluteUri =
-			 * fichier.getAbsolutePath(); } else if (iEditor instanceof
-			 * FileStoreEditorInput) { FileStoreEditorInput fsei =
-			 * (FileStoreEditorInput) iEditor; File fichier = new
-			 * File(fsei.getURI()); fileAbsoluteUri = fichier.getAbsolutePath();
-			 * }
-			 */
-
-			// ArrayList<AStdImport> imports = aph.getImports(mod);
-
-			/*
-			 * for (AStdImport imp : imports) {
-			 * 
-			 * String nameOfCurrentFile = iEditor.getName(); String nitName =
-			 * imp.getName().toString().trim() + ".nit";
-			 * 
-			 * String importUri = fileAbsoluteUri.replaceFirst(
-			 * nameOfCurrentFile, nitName);
-			 * 
-			 * File importFile = new File(importUri);
-			 * 
-			 * try { Start startNode = aph.getAstForFile(importFile);
-			 * 
-			 * AModule importModule = aph.getModuleOfAST(startNode);
-			 * 
-			 * ArrayList<AStdClassdef> classes = aph
-			 * .getClassesOfModule(importModule);
-			 * 
-			 * classesToPropose.addAll(classes); } catch (FileNotFoundException
-			 * e) { } catch (IOException e) { } catch (ParserException e) { }
-			 * catch (LexerException e) { } }
-			 * 
-			 * }
-			 */
 
 			if (mod != null) {
 				ArrayList<AStdClassdef> astdclass = aph.getClassesOfModule(mod);
 				classesToPropose.addAll(astdclass);
 				for (AStdClassdef claas : astdclass) {
 					LinkedList<PPropdef> props = aph.getPropsOfClass(claas);
-					methodsToPropose.add(this.buildMethProposals(
+					methodsToPropose.add(wp.buildMethProposals(
 							aph.getConcreteMethsInPropList(props),
 							aph.getDeferredMethsInPropList(props),
 							documentOffset, startsWith));
@@ -137,12 +97,12 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 			}
 		}
 
-		ICompletionProposal[] classesSuggestions = buildClassProposals(
+		ICompletionProposal[] classesSuggestions = wp.buildClassProposals(
 				classesToPropose, documentOffset, startsWith);
 
 		int totalLength = classesSuggestions.length;
 
-		ICompletionProposal[] keyWordsSuggestions = buildKeywordsProposals(
+		ICompletionProposal[] keyWordsSuggestions = wp.buildKeywordsProposals(
 				documentOffset, startsWith);
 
 		totalLength += keyWordsSuggestions.length;
@@ -155,16 +115,16 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		int currLength = 0;
 
-		if (classesSuggestions.length > 0) {
-			System.arraycopy(classesSuggestions, 0, finalProposals, currLength,
-					classesSuggestions.length);
-			currLength += classesSuggestions.length;
-		}
-
 		if (keyWordsSuggestions.length > 0) {
 			System.arraycopy(keyWordsSuggestions, 0, finalProposals,
 					currLength, keyWordsSuggestions.length);
 			currLength += keyWordsSuggestions.length;
+		}
+
+		if (classesSuggestions.length > 0) {
+			System.arraycopy(classesSuggestions, 0, finalProposals, currLength,
+					classesSuggestions.length);
+			currLength += classesSuggestions.length;
 		}
 
 		for (ICompletionProposal[] comps : methodsToPropose) {
@@ -176,72 +136,6 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 		}
 
 		return finalProposals;
-	}
-
-	private ICompletionProposal[] buildClassProposals(
-			ArrayList<AStdClassdef> classes, int fromOffset, String startsWith) {
-
-		HashSet<ICompletionProposal> proposalsArrayList = new HashSet<ICompletionProposal>();
-		HashSet<String> completionsHashSet = new HashSet<String>();
-
-		for (AStdClassdef classDef : classes) {
-			String toPropose = classDef.getId().getText().trim();
-			if (toPropose.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				if (completionsHashSet.add(toPropose)) {
-					proposalsArrayList.add(new CompletionProposal(toPropose,
-							fromOffset - startsWith.length(), startsWith
-									.length(), toPropose.length()));
-				}
-			}
-		}
-
-		return proposalsArrayList
-				.toArray(new ICompletionProposal[proposalsArrayList.size()]);
-	}
-
-	private ICompletionProposal[] buildMethProposals(
-			ArrayList<AConcreteMethPropdef> methsProp,
-			ArrayList<ADeferredMethPropdef> defMeths, int fromOffset,
-			String startsWith) {
-		HashSet<ICompletionProposal> proposals = new HashSet<ICompletionProposal>();
-
-		for (AConcreteMethPropdef cctMeth : methsProp) {
-			String toReplace = cctMeth.getMethid().toString().trim();
-			if (toReplace.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				proposals.add(new CompletionProposal(toReplace, fromOffset
-						- startsWith.length(), startsWith.length(), toReplace
-						.length()));
-			}
-		}
-
-		for (ADeferredMethPropdef dfMeth : defMeths) {
-			String toReplace = dfMeth.getMethid().toString().trim();
-			if (toReplace.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				proposals.add(new CompletionProposal(toReplace, fromOffset
-						- startsWith.length(), startsWith.length(), toReplace
-						.length()));
-			}
-		}
-
-		return proposals.toArray(new ICompletionProposal[proposals.size()]);
-	}
-
-	private ICompletionProposal[] buildKeywordsProposals(int fromOffset,
-			String startsWith) {
-
-		ArrayList<ICompletionProposal> proposals = new ArrayList<ICompletionProposal>();
-		String[] kwds = NitColorReposit.getInstance().getKeywords();
-
-		for (String kw : kwds) {
-			if (kw.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				proposals
-						.add(new CompletionProposal(kw, fromOffset
-								- startsWith.length(), startsWith.length(), kw
-								.length()));
-			}
-		}
-
-		return proposals.toArray(new ICompletionProposal[proposals.size()]);
 	}
 
 	@Override

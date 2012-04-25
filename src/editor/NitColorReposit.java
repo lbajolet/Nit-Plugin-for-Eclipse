@@ -32,7 +32,7 @@ public class NitColorReposit {
 	private static TextAttribute numberColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(255, 196, 12)), null, SWT.NORMAL);
 	private static TextAttribute stringColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(163,21,21)), null, SWT.NORMAL);
 	private static TextAttribute operatorColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(0, 66, 37)), null, SWT.BOLD);
-	private static TextAttribute keywordColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(42, 82, 220)), null, SWT.BOLD);
+	private static TextAttribute keywordColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(00, 00, 255)), null, SWT.BOLD);
 	private static TextAttribute booleanOperatorColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(150, 0, 24)), null, SWT.BOLD);
 	private static TextAttribute abortColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(178, 34, 34)), new Color(Display.getCurrent(),new RGB(216, 191, 216)), SWT.BOLD);
 	private static TextAttribute errorColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(255,0,0)), null, SWT.UNDERLINE_ERROR);
@@ -40,6 +40,9 @@ public class NitColorReposit {
 	/**	The default attribute of a token */
 	private static TextAttribute defaultAttribute = new TextAttribute(new Color(Display.getCurrent(), new RGB(0,0,0)), null, SWT.NORMAL);
 	
+	/**
+	 * The Color Reposit, used to set and get the colors of the different tokens identified by the lexer
+	 */
 	private NitColorReposit(){
 		keywords = new HashMap<String, TextAttribute>();
 		
@@ -166,6 +169,9 @@ public class NitColorReposit {
 		}
 	}
 	
+	/**
+	 * @return An array of Nit Keywords
+	 */
 	public String[] getKeywords(){
 		if(this.keywordsCache == null){
 			Set<String> keys = this.keywords.keySet();

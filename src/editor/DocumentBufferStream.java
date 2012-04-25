@@ -63,7 +63,9 @@ public class DocumentBufferStream extends Reader {
 	}
 	
 	/**
-	 * 
+	 * Default constructor for the DocumentBufferStream
+	 * After instantiating, you'll need to set the IDocument to parse from and the fStartRange/fEndRange for the
+	 * Stream to work
 	 */
 	public DocumentBufferStream(){
 		doc = null;
