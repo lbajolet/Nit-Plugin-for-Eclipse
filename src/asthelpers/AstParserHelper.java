@@ -25,6 +25,9 @@ import node.TId;
 import node.TKwmodule;
 import node.Token;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.IDocument;
 
 import parser.Parser;
@@ -36,6 +39,19 @@ import editor.DocumentBufferStream;
  *         the Nit Parser
  */
 public class AstParserHelper {
+
+	private class CompilerCallLightJob extends Job {
+
+		public CompilerCallLightJob(String name) {
+			super(name);
+		}
+
+		@Override
+		protected IStatus run(IProgressMonitor monitor) {
+			
+		}
+
+	}
 
 	/**
 	 * Gets the AST Start node of a Document if the parsing succeeds or if the
@@ -139,7 +155,8 @@ public class AstParserHelper {
 	/**
 	 * Gets the classes of a Module node
 	 * 
-	 * @param Module node
+	 * @param Module
+	 *            node
 	 * @return An ArrayList of class nodes, ready to be used
 	 */
 	public ArrayList<AStdClassdef> getClassesOfModule(AModule module) {
@@ -158,7 +175,8 @@ public class AstParserHelper {
 	/**
 	 * Gets all the import nodes of a Module node
 	 * 
-	 * @param Module node
+	 * @param Module
+	 *            node
 	 * @return List of imports
 	 */
 	public ArrayList<AStdImport> getImports(AModule module) {
@@ -178,7 +196,8 @@ public class AstParserHelper {
 	/**
 	 * Gets the propdefs of a Class node
 	 * 
-	 * @param Class definition node
+	 * @param Class
+	 *            definition node
 	 * @return List of propdefs
 	 */
 	public LinkedList<PPropdef> getPropsOfClass(AStdClassdef className) {
@@ -191,7 +210,8 @@ public class AstParserHelper {
 	/**
 	 * Gets the concrete methods definitions in the props list
 	 * 
-	 * @param Properties got from the getPropsOfClass
+	 * @param Properties
+	 *            got from the getPropsOfClass
 	 * @return List of concrete method definitions
 	 */
 	public ArrayList<AConcreteMethPropdef> getConcreteMethsInPropList(
@@ -208,9 +228,11 @@ public class AstParserHelper {
 	}
 
 	/**
-	 * Gets the deferred methods definitions (external definitions) in the props list
+	 * Gets the deferred methods definitions (external definitions) in the props
+	 * list
 	 * 
-	 * @param  Properties got from the getPropsOfClass
+	 * @param Properties
+	 *            got from the getPropsOfClass
 	 * @return List of deferred method definitions
 	 */
 	public ArrayList<ADeferredMethPropdef> getDeferredMethsInPropList(
@@ -229,7 +251,8 @@ public class AstParserHelper {
 	/**
 	 * Gets the attributes in the props list
 	 * 
-	 * @param Properties got from the getPropsOfClass
+	 * @param Properties
+	 *            got from the getPropsOfClass
 	 * @return List of attributes
 	 */
 	public ArrayList<AAttrPropdef> getNonMethPropsInPropList(
@@ -248,7 +271,8 @@ public class AstParserHelper {
 	/**
 	 * Gets the init_ blocks
 	 * 
-	 * @param Properties got from the getPropsOfClass
+	 * @param Properties
+	 *            got from the getPropsOfClass
 	 * @return List of construct methods found in the props list
 	 */
 	public ArrayList<AConcreteInitPropdef> getConstructMethsInPropList(
