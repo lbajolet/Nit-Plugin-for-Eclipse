@@ -19,8 +19,8 @@ import asthelpers.AstParserHelper;
 
 /**
  * @author R4PaSs
- *
- * Class charged to provide auto completion for the NitEditor
+ * 
+ *         Class charged to provide auto completion for the NitEditor
  */
 public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
@@ -35,8 +35,6 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 		ArrayList<ICompletionProposal[]> methodsToPropose = new ArrayList<ICompletionProposal[]>();
 
 		String startsWith = "";
-		char lastDelimiter = '\0';
-
 		IDocument document = textViewer.getDocument();
 
 		StringBuffer startBuf = new StringBuffer();
@@ -54,8 +52,6 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 				tempChar = document.getChar(currOffset);
 				startBuf.append(tempChar);
 				currOffset--;
-
-				lastDelimiter = tempChar;
 			}
 
 			// Bufferize from currOffset to end delimiter

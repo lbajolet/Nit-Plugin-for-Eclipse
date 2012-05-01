@@ -5,11 +5,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.osgi.service.prefs.Preferences;
 
+import asthelpers.AstReposit;
 import asthelpers.ProjectAutoParser;
 
 public class NitNature implements IProjectNature {
@@ -37,13 +36,20 @@ public class NitNature implements IProjectNature {
 	 */
 	private NitCompilerCallerClass compilerCaller;
 
-	public NitNature(){
+	/**
+	 * Reposit of all the files of the project
+	 */
+	private AstReposit repo;
+
+	public NitNature() {
 		this.compilerCaller = new NitCompilerCallerClass();
-		// Try to auto parse every file of the project
-		ProjectAutoParser pap = new ProjectAutoParser();
-		pap.setProject(this.project);
+		this.repo = new AstReposit();
 	}
 	
+	public AstReposit getAstReposit(){
+		return repo;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -115,6 +121,9 @@ public class NitNature implements IProjectNature {
 	public void setProject(IProject project) {
 		this.project = project;
 		this.defaultFile = null;
+		// Try to auto parse every file of the project
+		ProjectAutoParser pap = new ProjectAutoParser();
+		pap.setProject(this.project);
 	}
 
 	/**

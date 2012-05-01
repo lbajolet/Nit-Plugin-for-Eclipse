@@ -7,7 +7,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
 /**
- * Adapts an IDocument used by Eclipse and the NitLexer, which uses a PushbackReader with a Reader as base to read characters from
+ * Adapts an IDocument used by Eclipse to the NitLexer, which uses a PushbackReader with a Reader as base to read characters from
  * 
  */
 public class DocumentBufferStream extends Reader {

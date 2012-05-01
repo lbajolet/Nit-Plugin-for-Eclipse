@@ -1,5 +1,7 @@
 package asthelpers;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.ArrayList;
@@ -19,19 +21,16 @@ import node.PClassdef;
 import node.PImport;
 import node.PPropdef;
 import node.Start;
-import node.TBlank;
-import node.TEol;
-import node.TId;
-import node.TKwmodule;
-import node.Token;
 
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 
 import parser.Parser;
 import parser.ParserException;
+import builder.NitNature;
 import editor.DocumentBufferStream;
 
 /**
@@ -40,17 +39,7 @@ import editor.DocumentBufferStream;
  */
 public class AstParserHelper {
 
-	private class CompilerCallLightJob extends Job {
-
-		public CompilerCallLightJob(String name) {
-			super(name);
-		}
-
-		@Override
-		protected IStatus run(IProgressMonitor monitor) {
-			
-		}
-
+	public AstParserHelper() {
 	}
 
 	/**
@@ -62,77 +51,100 @@ public class AstParserHelper {
 	 * @return A Start node
 	 */
 	public Start getAstForDocument(IDocument document) {
+
 		DocumentBufferStream dbs = new DocumentBufferStream();
 
 		dbs.setDoc(document);
 
-		PushbackReader pbr = new PushbackReader(dbs, 2);
+		Lexer lex = this.getLexForSource(dbs);
+		if (lex != null) {
+			return getAstForDocumentBody(lex);
+		} else {
+			return null;
+		}
+	}
+	
+	public Start getAstForDocument(IFile file) {
 
-		Parser pp = new Parser(new Lexer(pbr));
+		Lexer lex = getLexForSource(file);
+
+		if (lex != null) {
+			return this.getAstForDocumentBody(lex);
+		} else {
+			return null;
+		}
+	}
+
+	private Start getAstForDocumentBody(Lexer lex) {
+		Parser pp = new Parser(lex);
 
 		Start st = null;
 		try {
 			st = pp.parse();
 		} catch (ParserException e) {
+			e.printStackTrace();
 		} catch (LexerException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		IFile fileBoundToIDocument = null;
+		// First get the active editor, if nit editor, get the file bound to the
+		// IDocument
+		IEditorInput ie = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+				.getActivePage().getActiveEditor().getEditorInput();
+		if (ie instanceof FileEditorInput) {
+			fileBoundToIDocument = ((FileEditorInput) ie).getFile();
+		}
+
+		try {
+			fileBoundToIDocument.getProject().getNature(NitNature.NATURE_ID);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		if (st == null) {
-			String moduleName = getModuleNameInFile(dbs);
-			if (moduleName != "") {
-				return AstReposit.getInstance().getAST(moduleName.trim());
-			} else {
-				return null;
-			}
+			// If st is null, the parsing has failed, for whatever reason
+			// (Parser/Lexer Exception or IO error)
+			// Therefore, call the compiler to find the error spot and have it
+			// pop up in the editor
+			// This is done in the ProjectAutoParser class
+
+			return null;
 		} else {
 			AModuledecl mod = (AModuledecl) ((AModule) st.getPModule())
 					.getModuledecl();
 			String mdName = mod.getName().toString().trim();
-			AstReposit.getInstance().addOrReplaceAST(mdName, st);
+			try {
+				((NitNature) fileBoundToIDocument.getProject().getNature(
+						NitNature.NATURE_ID)).getAstReposit().addOrReplaceAST(
+						mdName, st);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return st;
 		}
-
 	}
 
-	/**
-	 * Used in internal to get the name of the module of a file if exists when
-	 * the parsing has failed because of an error
-	 * 
-	 * @param BufferStream
-	 *            for a Document
-	 * @return The name of the module
-	 */
-	private String getModuleNameInFile(DocumentBufferStream dbs) {
-
+	private Lexer getLexForSource(DocumentBufferStream dbs) {
 		dbs.reset();
 
-		Lexer lx = new Lexer(new PushbackReader(dbs));
+		return new Lexer(new PushbackReader(dbs, 2));
+	}
 
-		Token tk = null;
-		do {
-			try {
-				tk = lx.next();
-			} catch (LexerException e) {
-			} catch (IOException e) {
-			}
-		} while (!(tk instanceof TKwmodule));
+	private Lexer getLexForSource(IFile file) {
+		PushbackReader pbr = null;
+		try {
+			pbr = new PushbackReader(
+					new FileReader(file.getFullPath().toFile()), 2);
+		} catch (FileNotFoundException e1) {
 
-		do {
-			try {
-				tk = lx.next();
-			} catch (LexerException e) {
-				return "";
-			} catch (IOException e) {
-				return "";
-			}
-		} while (tk instanceof TBlank || tk instanceof TEol);
-
-		if (tk instanceof TId) {
-			return tk.toString();
-		} else {
-			return "";
 		}
+		if (pbr != null) {
+			return new Lexer(pbr);
+		}
+		return null;
 	}
 
 	/**

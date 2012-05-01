@@ -9,22 +9,10 @@ import node.Start;
  */
 public class AstReposit {
 
-	private static AstReposit instance;
-
 	private HashMap<String, Start> asts;
 
-	private AstReposit() {
+	public AstReposit() {
 		this.asts = new HashMap<String, Start>();
-	}
-
-	/**
-	 * @return The instance of the Reposit
-	 */
-	public static AstReposit getInstance() {
-		if (instance == null) {
-			AstReposit.instance = new AstReposit();
-		}
-		return AstReposit.instance;
 	}
 
 	/**

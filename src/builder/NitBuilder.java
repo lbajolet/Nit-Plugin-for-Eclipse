@@ -122,7 +122,6 @@ public class NitBuilder extends IncrementalProjectBuilder {
 	protected void fullBuild(final IProgressMonitor monitor)
 			throws CoreException {
 		getProject().accept(new NitResourceVisitor());
-		// int toto = 0;
 	}
 
 	/**
