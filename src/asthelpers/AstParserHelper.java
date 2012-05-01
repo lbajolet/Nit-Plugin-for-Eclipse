@@ -76,8 +76,11 @@ public class AstParserHelper {
 	}
 
 	private Start getAstForDocumentBody(Lexer lex) {
+		
 		Parser pp = new Parser(lex);
 
+		ProjectAutoParser pap = new ProjectAutoParser();
+		
 		Start st = null;
 		try {
 			st = pp.parse();
@@ -103,6 +106,8 @@ public class AstParserHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		pap.addToQueue(fileBoundToIDocument);
 
 		if (st == null) {
 			// If st is null, the parsing has failed, for whatever reason

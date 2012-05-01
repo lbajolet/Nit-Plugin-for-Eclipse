@@ -50,7 +50,7 @@ public class ProjectAutoParser {
 			this.isActive = true;
 			Process compileProcess = null;
 			int totalFiles = nitFilesOfProject.size();
-			
+
 			monitor.beginTask("Parsing full project", totalFiles);
 
 			String pathToCompiler = NitActivator.getDefault()
@@ -62,6 +62,14 @@ public class ProjectAutoParser {
 
 					IFile toParse = workToBeDone.poll();
 					target = toParse;
+
+					// Remove markers of file
+					try {
+						toParse.deleteMarkers(IMarker.PROBLEM, true,
+								IResource.DEPTH_INFINITE);
+					} catch (CoreException e2) {
+						e2.printStackTrace();
+					}
 
 					try {
 						compileProcess = Runtime.getRuntime().exec(
@@ -105,7 +113,7 @@ public class ProjectAutoParser {
 			}
 
 			this.isActive = false;
-			
+
 			monitor.done();
 
 			return Status.OK_STATUS;
@@ -151,8 +159,6 @@ public class ProjectAutoParser {
 				IFile fichier = (IFile) resource;
 				String extension = fichier.getFileExtension();
 				if (extension != null && extension.equals("nit")) {
-					fichier.deleteMarkers(IMarker.PROBLEM, true,
-							IResource.DEPTH_INFINITE);
 					if (aph.getAstForDocument(fichier) == null) {
 						cclj.queueJob(fichier);
 					}
@@ -233,9 +239,15 @@ public class ProjectAutoParser {
 			e.printStackTrace();
 		}
 	}
-	
-	public void addToQueue(IFile fichier){
-		this.cclj.queueJob(fichier);
+
+	public void addToQueue(IFile fichier) {
+		try{
+			this.nitFilesOfProject.clear();
+			fichier.getProject().accept(new NitFilesOfProjectParser());
+			this.cclj.queueJob(fichier);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 }

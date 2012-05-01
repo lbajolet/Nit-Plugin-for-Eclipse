@@ -39,7 +39,7 @@ public class NitEditorConfiguration extends TextSourceViewerConfiguration {
  
 	private ITokenScanner getScanner(){
 		if(scanner == null)
-			scanner=new NitScanner();
+			scanner = new NitScanner();
 		return scanner;
 	}
 }
