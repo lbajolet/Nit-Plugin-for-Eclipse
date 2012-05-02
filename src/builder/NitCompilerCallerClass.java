@@ -4,23 +4,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.editors.text.TextFileDocumentProvider;
-import org.eclipse.ui.texteditor.IDocumentProvider;
 
 import asthelpers.ProjectAutoParser;
 
@@ -89,8 +80,9 @@ public class NitCompilerCallerClass {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			ProjectAutoParser pap = new ProjectAutoParser();
+			pap.setProject(target.getProject());
 			this.setPriority(BUILD);
-			IFile file = target;
 			monitor.beginTask("Compiling Nit", 100);
 			cancelCurrentProcess();
 			if (path == null) {
@@ -131,15 +123,20 @@ public class NitCompilerCallerClass {
 					} while (read >= 0);
 
 					isBeingCalled = false;
-					
-					ProjectAutoParser pap = new ProjectAutoParser();
-					pap.setProject(file.getProject());
+
+					// Add markers to files returned as errors/warnings by
+					// compiler call
+					ProjectAutoParser pap2 = new ProjectAutoParser();
+					NitCompilerMessageInterpreter ncmi = new NitCompilerMessageInterpreter();
+					ncmi.addMessagesToProblems(
+							ncmi.processMessagesOfCompiler(result.toString()),
+							target.getProject(),
+							pap2.buildFilesInProjectRepo(target.getProject()));
+
 					monitor.worked(20);
 
-					Thread.sleep(300);
-
 					monitor.worked(10);
-					
+
 					monitor.done();
 					return Status.OK_STATUS;
 				} catch (IOException e) {

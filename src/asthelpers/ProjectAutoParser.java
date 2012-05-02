@@ -234,20 +234,25 @@ public class ProjectAutoParser {
 			this.nitFilesOfProject.clear();
 			proj.accept(new NitFilesOfProjectParser());
 			pj.schedule();
-
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void addToQueue(IFile fichier) {
-		try{
-			this.nitFilesOfProject.clear();
-			fichier.getProject().accept(new NitFilesOfProjectParser());
-			this.cclj.queueJob(fichier);
-		}catch(Exception e){
+	public HashMap<String, IFile> buildFilesInProjectRepo(IProject proj){
+		this.nitFilesOfProject.clear();
+		try {
+			proj.accept(new NitFilesOfProjectParser());
+		} catch (CoreException e) {
 			e.printStackTrace();
 		}
+		
+		return nitFilesOfProject;
+	}
+	
+	public void addToQueue(IFile fichier) {
+		buildFilesInProjectRepo(fichier.getProject());
+		this.cclj.queueJob(fichier);
 	}
 
 }

@@ -6,8 +6,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 
+import plugin.ProjectPropertiesHelper;
 import asthelpers.AstReposit;
 import asthelpers.ProjectAutoParser;
 
@@ -23,7 +23,7 @@ public class NitNature implements IProjectNature {
 	 */
 	private IProject project;
 
-	private IScopeContext projPref;
+	private ProjectPropertiesHelper pph;
 
 	/**
 	 * File set as target
@@ -45,8 +45,8 @@ public class NitNature implements IProjectNature {
 		this.compilerCaller = new NitCompilerCallerClass();
 		this.repo = new AstReposit();
 	}
-	
-	public AstReposit getAstReposit(){
+
+	public AstReposit getAstReposit() {
 		return repo;
 	}
 
@@ -124,6 +124,11 @@ public class NitNature implements IProjectNature {
 		// Try to auto parse every file of the project
 		ProjectAutoParser pap = new ProjectAutoParser();
 		pap.setProject(this.project);
+		this.pph = new ProjectPropertiesHelper(project.getLocation().toString()+"/project.properties");
+		String defaultFileName = pph.read("defaultFile");
+		if (defaultFileName != null) {
+			this.defaultFile = project.getFile(defaultFileName);
+		}
 	}
 
 	/**
@@ -135,6 +140,10 @@ public class NitNature implements IProjectNature {
 	public void setDefaultFile(IFile file) {
 		this.defaultFile = file;
 		this.compilerCaller.setTarget(file);
+	}
+
+	public ProjectPropertiesHelper getPropertiesHelper() {
+		return this.pph;
 	}
 
 	/**

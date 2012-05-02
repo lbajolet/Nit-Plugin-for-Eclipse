@@ -28,7 +28,7 @@ public class NitCompilerMessageInterpreter {
 		}
 		return compMess.toArray(new NitCompilerMessage[compMess.size()]);
 	}
-
+	
 	/**
 	 * Adds the processed messages to the Problems view of Eclipse and adds
 	 * markers on the problematic files, useful for debugging
