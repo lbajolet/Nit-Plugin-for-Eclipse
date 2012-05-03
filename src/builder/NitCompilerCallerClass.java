@@ -89,7 +89,7 @@ public class NitCompilerCallerClass {
 				this.returnMessage = "Error : No file path specified";
 				isBeingCalled = false;
 				monitor.setCanceled(true);
-				return null;
+				return Status.CANCEL_STATUS;
 			} else {
 				try {
 					compileProcess = Runtime.getRuntime().exec(path);
@@ -102,12 +102,12 @@ public class NitCompilerCallerClass {
 							this.returnMessage = "Error : Compilation aborted";
 							isBeingCalled = false;
 							monitor.setCanceled(true);
-							return null;
+							return Status.CANCEL_STATUS;
 						}
 					} catch (InterruptedException e) {
 						this.returnMessage = "Error : Compilation aborted";
 						isBeingCalled = false;
-						return null;
+						return Status.OK_STATUS;
 					}
 					monitor.worked(50);
 					InputStream inpt = compileProcess.getErrorStream();
@@ -143,11 +143,13 @@ public class NitCompilerCallerClass {
 					this.returnMessage = "Error : Binary cannot be found at specified path";
 					isBeingCalled = false;
 					monitor.setCanceled(true);
-					return null;
+					monitor.done();
+					return Status.OK_STATUS;
 				} catch (Exception e) {
 					e.printStackTrace();
 					monitor.setCanceled(true);
-					return null;
+					monitor.done();
+					return Status.OK_STATUS;
 				}
 			}
 		}
