@@ -39,7 +39,9 @@ public class ProjectAutoParser {
 		}
 
 		public void queueJob(IFile fileToAdd) {
-			workToBeDone.add(fileToAdd);
+			if(!workToBeDone.contains(fileToAdd)){
+				workToBeDone.add(fileToAdd);
+			}
 			if (this.isActive == false) {
 				this.schedule();
 			}
@@ -51,7 +53,7 @@ public class ProjectAutoParser {
 			Process compileProcess = null;
 			int totalFiles = nitFilesOfProject.size();
 
-			monitor.beginTask("Parsing full project", totalFiles);
+			monitor.beginTask("Parsing nit files", totalFiles);
 
 			String pathToCompiler = NitActivator.getDefault()
 					.getPreferenceStore().getString("compilerLocation");
@@ -80,10 +82,8 @@ public class ProjectAutoParser {
 						e1.printStackTrace();
 					}
 
-					int endCode = 0;
-
 					try {
-						endCode = compileProcess.waitFor();
+						compileProcess.waitFor();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

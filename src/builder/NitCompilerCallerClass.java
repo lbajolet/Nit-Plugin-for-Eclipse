@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -80,8 +81,11 @@ public class NitCompilerCallerClass {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			ProjectAutoParser pap = new ProjectAutoParser();
-			pap.setProject(target.getProject());
+			try {
+				((NitNature)(target.getProject().getNature(NitNature.NATURE_ID))).getProjectAutoParser().setProject(target.getProject());
+			} catch (CoreException e1) {
+				e1.printStackTrace();
+			}
 			this.setPriority(BUILD);
 			monitor.beginTask("Compiling Nit", 100);
 			cancelCurrentProcess();

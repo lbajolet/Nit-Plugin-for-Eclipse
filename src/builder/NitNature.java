@@ -40,6 +40,8 @@ public class NitNature implements IProjectNature {
 	 * Reposit of all the files of the project
 	 */
 	private AstReposit repo;
+	
+	private ProjectAutoParser pap;
 
 	public NitNature() {
 		this.compilerCaller = new NitCompilerCallerClass();
@@ -122,7 +124,7 @@ public class NitNature implements IProjectNature {
 		this.project = project;
 		this.defaultFile = null;
 		// Try to auto parse every file of the project
-		ProjectAutoParser pap = new ProjectAutoParser();
+		this.pap = new ProjectAutoParser();
 		pap.setProject(this.project);
 		this.pph = new ProjectPropertiesHelper(project.getLocation().toString()+"/project.properties");
 		String defaultFileName = pph.read("defaultFile");
@@ -144,6 +146,10 @@ public class NitNature implements IProjectNature {
 
 	public ProjectPropertiesHelper getPropertiesHelper() {
 		return this.pph;
+	}
+	
+	public ProjectAutoParser getProjectAutoParser(){
+		return this.pap;
 	}
 
 	/**

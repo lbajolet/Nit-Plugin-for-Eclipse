@@ -101,7 +101,22 @@
       </perspective>
    </extension>
    <extension
-         point="org.eclipse.ui.actionSets">
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="launcher.NitLauncher"
+            id="org.uqam.nit.ndt.nitLauncher"
+            modes="run"
+            name="Nit Program"
+            public="true">
+      </launchConfigurationType>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="org.uqam.nit.ndt.AbstractLaunchConfigurationTabGroup1"
+            id="org.uqam.nit.ndt.nitLaunchGroup"
+            type="org.uqam.nit.ndt.launchConfigurationTabGroup1">
+      </launchConfigurationTabGroup>
    </extension>
 
 </plugin>

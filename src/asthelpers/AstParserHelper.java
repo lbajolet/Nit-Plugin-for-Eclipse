@@ -85,29 +85,33 @@ public class AstParserHelper {
 		try {
 			st = pp.parse();
 		} catch (ParserException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (LexerException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 
 		IFile fileBoundToIDocument = null;
 		// First get the active editor, if nit editor, get the file bound to the
 		// IDocument
-		IEditorInput ie = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-				.getActivePage().getActiveEditor().getEditorInput();
-		if (ie instanceof FileEditorInput) {
-			fileBoundToIDocument = ((FileEditorInput) ie).getFile();
-		}
-
-		try {
-			fileBoundToIDocument.getProject().getNature(NitNature.NATURE_ID);
-		} catch (Exception e) {
+		try{
+			IEditorInput ie = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+					.getActivePage().getActiveEditor().getEditorInput();
+			if (ie instanceof FileEditorInput) {
+				fileBoundToIDocument = ((FileEditorInput) ie).getFile();
+			}
+	
+			try {
+				fileBoundToIDocument.getProject().getNature(NitNature.NATURE_ID);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			pap.addToQueue(fileBoundToIDocument);
+		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		pap.addToQueue(fileBoundToIDocument);
 
 		if (st == null) {
 			// If st is null, the parsing has failed, for whatever reason

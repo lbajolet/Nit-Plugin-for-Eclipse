@@ -23,8 +23,6 @@ public class NitBuilder extends IncrementalProjectBuilder {
 
 	public static final String BUILDER_ID = "org.uqam.nit.ndt.builder";
 
-	private static final String MARKER_TYPE = "org.uqam.nit.ndt.nitProblem";
-
 	/**
 	 * Visitor for the files of the project
 	 * 
@@ -52,8 +50,14 @@ public class NitBuilder extends IncrementalProjectBuilder {
 									.getCompilerCaller();
 							ncc.setPath(path
 									+ " --no-color -o "
-									+ defaultFile.getLocation().toString().substring(0,
-											defaultFile.getLocation().toString().length() - 4));
+									+ defaultFile
+											.getLocation()
+											.toString()
+											.substring(
+													0,
+													defaultFile.getLocation()
+															.toString()
+															.length() - 4));
 							ncc.call();
 						} else {
 							// TODO : Probably means the compiler was not set in
@@ -136,6 +140,8 @@ public class NitBuilder extends IncrementalProjectBuilder {
 	 */
 	protected void incrementalBuild(IResourceDelta delta,
 			IProgressMonitor monitor) throws CoreException {
+		
 		fullBuild(monitor);
+		
 	}
 }
