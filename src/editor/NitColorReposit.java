@@ -57,7 +57,7 @@ public class NitColorReposit {
 		keywords.put("TKwspecial", keywordColor);
 		keywords.put("TKwend", keywordColor);
 		keywords.put("TKwmeth", keywordColor);
-		keywords.put("TKwtype", classColor);
+		keywords.put("TKwtype", keywordColor);
 		keywords.put("TKwinit", keywordColor);
 		keywords.put("TKwredef", keywordColor);
 		keywords.put("TKwis", keywordColor);

@@ -39,7 +39,7 @@ public class ProjectAutoParser {
 		}
 
 		public void queueJob(IFile fileToAdd) {
-			if(!workToBeDone.contains(fileToAdd)){
+			if (!workToBeDone.contains(fileToAdd)) {
 				workToBeDone.add(fileToAdd);
 			}
 			if (this.isActive == false) {
@@ -60,7 +60,7 @@ public class ProjectAutoParser {
 
 			if (pathToCompiler != null) {
 
-				while (!this.workToBeDone.isEmpty()) {
+				while (!this.workToBeDone.isEmpty() && !monitor.isCanceled()) {
 
 					IFile toParse = workToBeDone.poll();
 					target = toParse;
@@ -74,10 +74,10 @@ public class ProjectAutoParser {
 					}
 
 					try {
-						compileProcess = Runtime.getRuntime().exec(
-								pathToCompiler
-										+ " --only-metamodel --no-color "
-										+ toParse.getLocation().toString());
+						String peon = pathToCompiler + " --only-metamodel --no-color "
+								+ toParse.getLocation().toString();
+
+						compileProcess = Runtime.getRuntime().exec(peon);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -104,7 +104,7 @@ public class ProjectAutoParser {
 
 						ncmi.addMessagesToProblems(ncmi
 								.processMessagesOfCompiler(result.toString()),
-								target.getProject(), nitFilesOfProject);
+								target, nitFilesOfProject);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -113,6 +113,10 @@ public class ProjectAutoParser {
 			}
 
 			this.isActive = false;
+
+			if (monitor.isCanceled()) {
+				this.workToBeDone.clear();
+			}
 
 			monitor.done();
 
@@ -228,6 +232,12 @@ public class ProjectAutoParser {
 	 */
 	public void setProject(IProject proj) {
 		this.projectToParse = proj;
+		try {
+			proj.deleteMarkers(IMarker.PROBLEM, true,
+					IResource.DEPTH_INFINITE);
+		} catch (CoreException e1) {
+			e1.printStackTrace();
+		}
 		ParsingJob pj = new ParsingJob("Parsing project "
 				+ this.projectToParse.getName());
 		try {
@@ -239,17 +249,17 @@ public class ProjectAutoParser {
 		}
 	}
 
-	public HashMap<String, IFile> buildFilesInProjectRepo(IProject proj){
+	public HashMap<String, IFile> buildFilesInProjectRepo(IProject proj) {
 		this.nitFilesOfProject.clear();
 		try {
 			proj.accept(new NitFilesOfProjectParser());
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-		
+
 		return nitFilesOfProject;
 	}
-	
+
 	public void addToQueue(IFile fichier) {
 		buildFilesInProjectRepo(fichier.getProject());
 		this.cclj.queueJob(fichier);

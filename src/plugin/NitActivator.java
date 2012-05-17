@@ -7,6 +7,12 @@ public class NitActivator extends AbstractUIPlugin {
 	
 	// The plug-in ID
 	public static final String PLUGIN_ID = "ActivatorExample"; //$NON-NLS-1$
+	
+	// Compiler path string
+	public static final String COMPILER_PATH_PREFERENCES_ID = "compilerLocation";
+	
+	// Compiler path string
+	public static final String STDLIB_FOLDER_PREFERENCES_ID = "NitLibEditor";
 
 	// The shared instance
 	private static NitActivator plugin;

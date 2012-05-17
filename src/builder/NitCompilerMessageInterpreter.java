@@ -37,7 +37,7 @@ public class NitCompilerMessageInterpreter {
 	 *            Messages to add as markers to the problems view and files
 	 */
 	public void addMessagesToProblems(NitCompilerMessage[] mess,
-			IProject target, HashMap<String, IFile> nitFilesOfProject) {
+			IFile target, HashMap<String, IFile> nitFilesOfProject) {
 
 		for (NitCompilerMessage currentMessage : mess) {
 			if (nitFilesOfProject.containsKey(currentMessage.getFileName())) {

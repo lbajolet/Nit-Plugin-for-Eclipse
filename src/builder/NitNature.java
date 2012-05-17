@@ -126,11 +126,6 @@ public class NitNature implements IProjectNature {
 		// Try to auto parse every file of the project
 		this.pap = new ProjectAutoParser();
 		pap.setProject(this.project);
-		this.pph = new ProjectPropertiesHelper(project.getLocation().toString()+"/project.properties");
-		String defaultFileName = pph.read("defaultFile");
-		if (defaultFileName != null) {
-			this.defaultFile = project.getFile(defaultFileName);
-		}
 	}
 
 	/**

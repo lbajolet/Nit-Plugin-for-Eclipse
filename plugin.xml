@@ -95,7 +95,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="perspective.NitPerspective"
-            icon="Resources/NitLogo.png"
+            icon="Resources/nitperspective.png"
             id="perspective.NitPerspective"
             name="Nit Development">
       </perspective>
@@ -111,12 +111,32 @@
       </launchConfigurationType>
    </extension>
    <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="org.uqam.nit.ndt.nitLauncher"
+            icon="Resources/NitLogo.png"
+            id="org.uqam.nit.ndt.nitLauncherImage">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            class="org.uqam.nit.ndt.AbstractLaunchConfigurationTabGroup1"
-            id="org.uqam.nit.ndt.nitLaunchGroup"
-            type="org.uqam.nit.ndt.launchConfigurationTabGroup1">
+            class="launcher.NitLauncherTabGroup"
+            id="org.uqam.nit.ndt.nitLaunchProgram"
+            type="org.uqam.nit.ndt.nitLauncher">
       </launchConfigurationTabGroup>
    </extension>
-
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            class="org.uqam.nit.ndt.nitLaunchShortcut"
+            icon="Resources/NitLogo.png"
+            id="org.uqam.nit.ndt.nitLaunchShortcut"
+            label="Nit Program"
+            modes="org.uqam.nit.ndt.shortcut1">
+            	<perspective
+                   id="org.uqam.nit.ndt.perspective.NitPerspective">
+            	</perspective>
+      </shortcut>
+   </extension>
 </plugin>

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.HashSet;
-import java.util.Iterator;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -14,6 +12,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+import plugin.NitActivator;
 import asthelpers.ProjectAutoParser;
 
 /**
@@ -25,11 +24,6 @@ public class NitCompilerCallerClass {
 	 * Path in the FileSystem to the compiler
 	 */
 	private String path;
-
-	/**
-	 * Options to be added when compiling
-	 */
-	private HashSet<String> options;
 
 	/**
 	 * The Eclipse Job, automatically uses the Eclipse API to compile in
@@ -44,11 +38,15 @@ public class NitCompilerCallerClass {
 	 */
 	private IFile target;
 
+	private String outputFolder;
+
+	private String options;
+
 	/**
 	 * @author r4pass The Job used to compile a Nit Project using the default
 	 *         file set by the user
 	 */
-	private class NitCompileJob extends Job {
+	public class NitCompileJob extends Job {
 
 		private String path;
 		private Process compileProcess;
@@ -66,6 +64,10 @@ public class NitCompilerCallerClass {
 			}
 		}
 
+		public Process getCurrentCompileProcess(){
+			return this.compileProcess;
+		}
+		
 		public void setPath(String path) {
 			this.path = path;
 		}
@@ -82,7 +84,9 @@ public class NitCompilerCallerClass {
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
-				((NitNature)(target.getProject().getNature(NitNature.NATURE_ID))).getProjectAutoParser().setProject(target.getProject());
+				((NitNature) (target.getProject()
+						.getNature(NitNature.NATURE_ID)))
+						.getProjectAutoParser().setProject(target.getProject());
 			} catch (CoreException e1) {
 				e1.printStackTrace();
 			}
@@ -134,12 +138,14 @@ public class NitCompilerCallerClass {
 					NitCompilerMessageInterpreter ncmi = new NitCompilerMessageInterpreter();
 					ncmi.addMessagesToProblems(
 							ncmi.processMessagesOfCompiler(result.toString()),
-							target.getProject(),
+							target,
 							pap2.buildFilesInProjectRepo(target.getProject()));
 
 					monitor.worked(20);
 
 					monitor.worked(10);
+					
+					this.returnMessage = "All OK";
 
 					monitor.done();
 					return Status.OK_STATUS;
@@ -163,7 +169,11 @@ public class NitCompilerCallerClass {
 	 * 
 	 */
 	public NitCompilerCallerClass() {
-		this.options = new HashSet<String>();
+		this.options = "";
+	}
+	
+	public NitCompileJob getCompileJob(){
+		return this.eclipseJob;
 	}
 
 	/**
@@ -176,10 +186,8 @@ public class NitCompilerCallerClass {
 	/**
 	 * @param newOpt
 	 */
-	public void addOption(String newOpt) {
-		if (!options.contains(newOpt)) {
-			options.add(newOpt);
-		}
+	public void setOptions(String newOpt) {
+		this.options = newOpt;
 	}
 
 	/**
@@ -189,22 +197,34 @@ public class NitCompilerCallerClass {
 		this.path = newPath;
 	}
 
+	public void setOutFolder(String folder) {
+		this.outputFolder = folder;
+	}
+
 	/**
 	 * 
 	 */
 	public void call() {
+		if (!NitActivator.getDefault().getPreferenceStore()
+				.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID)
+				.equals("")) {
+			setPath(NitActivator.getDefault().getPreferenceStore()
+					.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID));
+		}
 		if (this.path != null && this.target != null) {
 			// String completeCommand = "cd " +
 			// this.target.getLocation().toString().substring(0,
 			// this.target.getLocation().toString().lastIndexOf("/")) + "; ";
 			String completeCommand = path;
-			Iterator<String> iter = options.iterator();
-			String currOpt = "";
-			while (iter.hasNext()) {
-				currOpt = iter.next();
-				completeCommand += " " + currOpt;
-			}
-			completeCommand += " " + this.target.getLocation().toString();
+			completeCommand += " "
+					+ this.target.getLocation().toString()
+					+ " "
+					+ this.options.trim()
+					+ " -o "
+					+ this.outputFolder
+					+ "/"
+					+ this.target.getName().substring(0,
+							this.target.getName().length() - 4);
 			if (eclipseJob == null) {
 				this.eclipseJob = new NitCompileJob("Nit Compiler");
 			}
