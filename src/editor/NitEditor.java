@@ -8,14 +8,14 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
 import asthelpers.ProjectAutoParser;
-import builder.NitNature;
 
 public class NitEditor extends TextEditor {
 
@@ -54,21 +54,23 @@ public class NitEditor extends TextEditor {
 
 			IFile fileBoundToIDocument = null;
 
-			IEditorInput ie = this.getEditorInput();
-			if (ie instanceof FileEditorInput) {
-				fileBoundToIDocument = ((FileEditorInput) ie).getFile();
+			// Get all files open
+			IEditorReference[] editors = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
+					.getEditorReferences();
+
+			for (IEditorReference ed : editors) {
+				if (ed.getEditorInput() instanceof FileEditorInput) {
+					fileBoundToIDocument = ((FileEditorInput) ed
+							.getEditorInput()).getFile();
+					if (fileBoundToIDocument.getFileExtension().contains("nit")) {
+						pap.addToQueue(fileBoundToIDocument);
+					}
+				}
 			}
 
-			try {
-				fileBoundToIDocument.getProject()
-						.getNature(NitNature.NATURE_ID);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			pap.addToQueue(fileBoundToIDocument);
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		}
 	}
 }
