@@ -65,19 +65,11 @@ public class NitBuilder extends IncrementalProjectBuilder {
 							NitActivator
 									.getDefault()
 									.getLog()
-									.log(new Status(Status.WARNING,
+									.log(new Status(Status.ERROR,
 											"Nit Compiling Process",
 											"You need to set the Nit compiler location in Window/Properties/Nit"));
 						}
-					} else {
-						NitActivator
-								.getDefault()
-								.getLog()
-								.log(new Status(
-										Status.WARNING,
-										"Nit Compiling Process",
-										"You need to set a target for compilation (Right click on a nit file > Define as default for project)"));
-					}
+					} else {}
 				}
 			}
 			return true;

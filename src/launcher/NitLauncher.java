@@ -15,9 +15,8 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 
-import console.NitConsole;
-
 import builder.NitNature;
+import console.NitConsole;
 
 public class NitLauncher implements ILaunchConfigurationDelegate {
 
@@ -49,42 +48,64 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 				nnat.getCompilerCaller().setOutFolder(
 						configuration.getAttribute(NitMainTab.OUTPUT_PATH, ""));
 				monitor.worked(10);
-				
-				String[] file = configuration.getAttribute(NitMainTab.TARGET_FILE_PATH, "").split("/");
-				String pathToFile = configuration.getAttribute(NitMainTab.OUTPUT_PATH, "")
-						+ "/" + file[file.length-1].substring(0,
-								file[file.length-1].length() - 4);
-				
-				//add arguments for compiling
-				String attributesComp = configuration.getAttribute(NitMainTab.COMPILATION_ARGUMENTS, "");
-				
+
+				String[] file = configuration.getAttribute(
+						NitMainTab.TARGET_FILE_PATH, "").split("/");
+				String pathToFile = configuration.getAttribute(
+						NitMainTab.OUTPUT_PATH, "")
+						+ "/"
+						+ file[file.length - 1].substring(0,
+								file[file.length - 1].length() - 4);
+
+				// add arguments for compiling
+				String attributesComp = configuration.getAttribute(
+						NitMainTab.COMPILATION_ARGUMENTS, "");
+
 				nnat.getCompilerCaller().setOptions(attributesComp);
-				
+
 				nnat.getCompilerCaller().call();
 				monitor.worked(40);
-				
-				//Get arguments for execution
-				String argsForExec = " " + configuration.getAttribute(NitMainTab.EXECUTION_ARGUMENTS, "").trim();
-				try {
-					Process compProc = nnat.getCompilerCaller().getCompileJob().getCurrentCompileProcess();
 
-					try {
-						compProc.waitFor();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					
-					File toExec = new File(pathToFile);
-					if(toExec.exists() && toExec.canExecute() && toExec.isFile()){
-						Process execute = Runtime.getRuntime().exec(pathToFile + argsForExec);
-						BufferedReader buf = new BufferedReader(new InputStreamReader(
-								execute.getInputStream()));
-						String readLine = null;
-						while((readLine = buf.readLine()) != null){
-							NitConsole.getInstance().write(readLine);
+				// Get arguments for execution
+				String argsForExec = " "
+						+ configuration.getAttribute(
+								NitMainTab.EXECUTION_ARGUMENTS, "").trim();
+				try {
+					if (nnat.getCompilerCaller().getCompileJob() != null) {
+						Process compProc = nnat.getCompilerCaller()
+								.getCompileJob().getCurrentCompileProcess();
+
+						try {
+							compProc.waitFor();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+						File toExec = new File(pathToFile);
+						if (toExec.exists() && toExec.canExecute()
+								&& toExec.isFile()) {
+							Process execute = Runtime.getRuntime().exec(
+									pathToFile + argsForExec);
+							BufferedReader buf = new BufferedReader(
+									new InputStreamReader(
+											execute.getInputStream()));
+							BufferedReader errBuf = new BufferedReader(
+									new InputStreamReader(
+											execute.getErrorStream()));
+							String readLine = null;
+							String readError = null;
+							while ((readLine = buf.readLine()) != null
+									&& (readError = errBuf.readLine()) != null) {
+								if (readLine != null)
+									NitConsole.getInstance().write(readLine);
+								if (readError != null)
+									NitConsole.getInstance().write(readError);
+							}
 						}
 					}
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				monitor.worked(50);

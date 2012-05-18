@@ -1,5 +1,6 @@
 package builder;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -64,10 +65,10 @@ public class NitCompilerCallerClass {
 			}
 		}
 
-		public Process getCurrentCompileProcess(){
+		public Process getCurrentCompileProcess() {
 			return this.compileProcess;
 		}
-		
+
 		public void setPath(String path) {
 			this.path = path;
 		}
@@ -144,7 +145,7 @@ public class NitCompilerCallerClass {
 					monitor.worked(20);
 
 					monitor.worked(10);
-					
+
 					this.returnMessage = "All OK";
 
 					monitor.done();
@@ -171,8 +172,8 @@ public class NitCompilerCallerClass {
 	public NitCompilerCallerClass() {
 		this.options = "";
 	}
-	
-	public NitCompileJob getCompileJob(){
+
+	public NitCompileJob getCompileJob() {
 		return this.eclipseJob;
 	}
 
@@ -201,6 +202,22 @@ public class NitCompilerCallerClass {
 		this.outputFolder = folder;
 	}
 
+	public boolean checkIfPathToCompilerIsValid() {
+		if (this.path != null) {
+			File compiler = new File(this.path);
+			if (compiler.exists() && compiler.canExecute() && compiler.isFile())
+				return true;
+		}
+		NitActivator
+				.getDefault()
+				.getLog()
+				.log(new Status(
+						Status.ERROR,
+						"Error with nit compiler",
+						"Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?"));
+		return false;
+	}
+
 	/**
 	 * 
 	 */
@@ -211,7 +228,8 @@ public class NitCompilerCallerClass {
 			setPath(NitActivator.getDefault().getPreferenceStore()
 					.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID));
 		}
-		if (this.path != null && this.target != null) {
+		if (this.path != null && checkIfPathToCompilerIsValid()
+				&& this.target != null) {
 			// String completeCommand = "cd " +
 			// this.target.getLocation().toString().substring(0,
 			// this.target.getLocation().toString().lastIndexOf("/")) + "; ";
