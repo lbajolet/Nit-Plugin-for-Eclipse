@@ -109,11 +109,6 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		int totalLength = classesSuggestions.length;
 
-		ICompletionProposal[] keyWordsSuggestions = wp.buildKeywordsProposals(
-				documentOffset, startsWith);
-
-		totalLength += keyWordsSuggestions.length;
-
 		for (ICompletionProposal[] comps : methodsToPropose) {
 			totalLength += comps.length;
 		}
@@ -121,12 +116,6 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 		ICompletionProposal[] finalProposals = new ICompletionProposal[totalLength];
 
 		int currLength = 0;
-
-		if (keyWordsSuggestions.length > 0) {
-			System.arraycopy(keyWordsSuggestions, 0, finalProposals,
-					currLength, keyWordsSuggestions.length);
-			currLength += keyWordsSuggestions.length;
-		}
 
 		if (classesSuggestions.length > 0) {
 			System.arraycopy(classesSuggestions, 0, finalProposals, currLength,
