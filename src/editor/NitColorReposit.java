@@ -29,7 +29,7 @@ public class NitColorReposit {
 	/** TextAttribute objects representing all the colors of the different tokens */
 	private static TextAttribute commentColor = new TextAttribute(new Color(Display.getCurrent(),new RGB(0,128,0)),null,SWT.NORMAL);
 	private static TextAttribute classColor = new TextAttribute(new Color(Display.getCurrent(),new RGB(44,145,175)),null,SWT.NORMAL);
-	private static TextAttribute numberColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(255, 196, 12)), null, SWT.NORMAL);
+	private static TextAttribute numberColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(217, 92, 0)), null, SWT.NORMAL);
 	private static TextAttribute stringColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(163,21,21)), null, SWT.NORMAL);
 	private static TextAttribute operatorColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(0, 66, 37)), null, SWT.BOLD);
 	private static TextAttribute keywordColor = new TextAttribute(new Color(Display.getCurrent(), new RGB(00, 00, 255)), null, SWT.BOLD);
