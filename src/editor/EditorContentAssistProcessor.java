@@ -44,7 +44,11 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		try {
 			char tempChar = '\0';
-			int currOffset = documentOffset - 1;
+			int currOffset = 0;
+			if (documentOffset > 0)
+				currOffset = documentOffset - 1;
+			else
+				currOffset = 0;
 
 			// Bufferize from currOffset to start delimiter
 			while (tempChar != '.' && tempChar != ' ' && tempChar != '\n'
@@ -65,8 +69,15 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 				currOffset++;
 			}
 
-			startsWith = startBuf.reverse().substring(1, startBuf.length())
-					+ endBuf.substring(0, endBuf.length() - 1);
+			String startStr = "";
+			if (startBuf.length() > 0)
+				startStr = startBuf.reverse().toString().trim();
+
+			String endStr = "";
+			if (endBuf.length() > 0)
+				endStr = endBuf.toString().trim();
+
+			startsWith = startStr + endStr;
 		} catch (Exception e) {
 		}
 
