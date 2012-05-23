@@ -13,6 +13,9 @@ public class NitActivator extends AbstractUIPlugin {
 	
 	// Compiler path string
 	public static final String STDLIB_FOLDER_PREFERENCES_ID = "NitLibEditor";
+	
+	// Debug trigger
+	public static final boolean DEBUG_MODE = false;
 
 	// The shared instance
 	private static NitActivator plugin;

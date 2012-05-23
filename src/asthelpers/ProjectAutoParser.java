@@ -1,5 +1,6 @@
 package asthelpers;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -70,22 +71,42 @@ public class ProjectAutoParser {
 						toParse.deleteMarkers(IMarker.PROBLEM, true,
 								IResource.DEPTH_INFINITE);
 					} catch (CoreException e2) {
-						e2.printStackTrace();
+						if (NitActivator.DEBUG_MODE)
+							e2.printStackTrace();
 					}
 
 					try {
-						String peon = pathToCompiler + " --only-metamodel --no-color "
+						String peon = pathToCompiler
+								+ " --only-metamodel --no-color "
 								+ toParse.getLocation().toString();
+
+						// Check if compiler is accessible
+						File comp = new File(pathToCompiler);
+						if (!comp.exists() || !comp.isFile()
+								|| !comp.canExecute()) {
+							NitActivator
+									.getDefault()
+									.getLog()
+									.log(new Status(
+											Status.ERROR,
+											"Error with nit compiler",
+											"Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?"));
+						}
 
 						compileProcess = Runtime.getRuntime().exec(peon);
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						if (NitActivator.DEBUG_MODE)
+							e1.printStackTrace();
 					}
 
 					try {
 						compileProcess.waitFor();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						if (NitActivator.DEBUG_MODE)
+							e.printStackTrace();
+					} catch (NullPointerException e) {
+						if (NitActivator.DEBUG_MODE)
+							e.printStackTrace();
 					}
 
 					try {
@@ -106,7 +127,8 @@ public class ProjectAutoParser {
 								.processMessagesOfCompiler(result.toString()),
 								target, nitFilesOfProject);
 					} catch (Exception e) {
-						e.printStackTrace();
+						if (NitActivator.DEBUG_MODE)
+							e.printStackTrace();
 					}
 					monitor.worked(1);
 				}
@@ -207,7 +229,8 @@ public class ProjectAutoParser {
 			try {
 				projectToParse.accept(new NitProjectVisitor());
 			} catch (CoreException e) {
-				e.printStackTrace();
+				if (NitActivator.DEBUG_MODE)
+					e.printStackTrace();
 			}
 			monitor.done();
 			return Status.OK_STATUS;
@@ -233,10 +256,10 @@ public class ProjectAutoParser {
 	public void setProject(IProject proj) {
 		this.projectToParse = proj;
 		try {
-			proj.deleteMarkers(IMarker.PROBLEM, true,
-					IResource.DEPTH_INFINITE);
+			proj.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 		} catch (CoreException e1) {
-			e1.printStackTrace();
+			if (NitActivator.DEBUG_MODE)
+				e1.printStackTrace();
 		}
 		ParsingJob pj = new ParsingJob("Parsing project "
 				+ this.projectToParse.getName());
@@ -245,7 +268,8 @@ public class ProjectAutoParser {
 			proj.accept(new NitFilesOfProjectParser());
 			pj.schedule();
 		} catch (CoreException e) {
-			e.printStackTrace();
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
 		}
 	}
 
@@ -254,7 +278,8 @@ public class ProjectAutoParser {
 		try {
 			proj.accept(new NitFilesOfProjectParser());
 		} catch (CoreException e) {
-			e.printStackTrace();
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
 		}
 
 		return nitFilesOfProject;

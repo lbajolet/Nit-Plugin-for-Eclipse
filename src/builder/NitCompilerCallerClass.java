@@ -89,7 +89,8 @@ public class NitCompilerCallerClass {
 						.getNature(NitNature.NATURE_ID)))
 						.getProjectAutoParser().setProject(target.getProject());
 			} catch (CoreException e1) {
-				e1.printStackTrace();
+				if (NitActivator.DEBUG_MODE)
+					e1.printStackTrace();
 			}
 			this.setPriority(BUILD);
 			monitor.beginTask("Compiling Nit", 100);

@@ -5,15 +5,19 @@ import java.util.LinkedList;
 
 import node.AModule;
 import node.AStdClassdef;
+import node.AStdImport;
 import node.PPropdef;
 import node.Start;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 
 import asthelpers.AstParserHelper;
 
@@ -41,6 +45,8 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 		StringBuffer endBuf = new StringBuffer();
 
 		WordProvider wp = new WordProvider();
+
+		ArrayList<Start> startNodes = new ArrayList<Start>();
 
 		try {
 			char tempChar = '\0';
@@ -101,6 +107,39 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 							aph.getDeferredMethsInPropList(props),
 							documentOffset, startsWith));
 				}
+				// Resolve imports and add their info to the candidates for
+				// autocompletion
+				ArrayList<AStdImport> imps = aph.getImports(mod);
+				// Get IFile of current document
+				IFile from = null;
+				if (PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+						.getActivePage().getActiveEditor().getEditorInput() instanceof FileEditorInput)
+					from = ((FileEditorInput) PlatformUI.getWorkbench()
+							.getActiveWorkbenchWindow().getActivePage()
+							.getActiveEditor().getEditorInput()).getFile();
+				if (from != null)
+					for (AStdImport imp : imps) {
+						Start importStartNode = aph
+								.getAstForDocument(imp, from);
+						if (importStartNode != null) {
+							AModule modImp = aph
+									.getModuleOfAST(importStartNode);
+							if (modImp != null) {
+								ArrayList<AStdClassdef> astimpclass = aph
+										.getClassesOfModule(modImp);
+								classesToPropose.addAll(astimpclass);
+								for (AStdClassdef claas : astimpclass) {
+									LinkedList<PPropdef> props = aph
+											.getPropsOfClass(claas);
+									methodsToPropose
+											.add(wp.buildMethProposals(
+													aph.getConcreteMethsInPropList(props),
+													aph.getDeferredMethsInPropList(props),
+													documentOffset, startsWith));
+								}
+							}
+						}
+					}
 			}
 		}
 
