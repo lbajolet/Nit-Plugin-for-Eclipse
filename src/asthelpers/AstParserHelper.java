@@ -25,8 +25,10 @@ import node.PPropdef;
 import node.Start;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
@@ -62,10 +64,13 @@ public class AstParserHelper {
 
 		Lexer lex = this.getLexForSource(dbs);
 		if (lex != null) {
-			return getAstForDocumentBody(lex);
-		} else {
-			return null;
+			Start node = getAstForDocumentBody(lex);
+			if (node != null) {
+				this.saveStartNodeInAST(node, document);
+				return node;
+			}
 		}
+		return null;
 	}
 
 	public Start getAstForDocument(IFile file) {
@@ -73,10 +78,13 @@ public class AstParserHelper {
 		Lexer lex = getLexForSource(file);
 
 		if (lex != null) {
-			return this.getAstForDocumentBody(lex);
-		} else {
-			return null;
+			Start node = this.getAstForDocumentBody(lex);
+			if (node != null) {
+				this.saveStartNodeInAST(node, file);
+				return node;
+			}
 		}
+		return null;
 	}
 
 	public Start getAstForDocument(AStdImport imp, IFile fileToSeekFrom) {
@@ -101,29 +109,90 @@ public class AstParserHelper {
 			if (toCheck.exists() && toCheck.isFile()) {
 				return this
 						.getAstForDocumentBody(this.getLexForSource(toCheck));
-			}else{
+			} else {
 				File dir = new File(sah.join(separatedPath, "/"));
-				if(dir.exists() && dir.isDirectory()){
-					File finalFile = new File(sah.join(separatedPath, "/") + "/" + separatedPath[separatedPath.length-1] + ".nit");
-					
-					if(finalFile.exists() && finalFile.isFile()){
-						return this.getAstForDocumentBody(this.getLexForSource(finalFile));
+				if (dir.exists() && dir.isDirectory()) {
+					File finalFile = new File(sah.join(separatedPath, "/")
+							+ "/" + separatedPath[separatedPath.length - 1]
+							+ ".nit");
+
+					if (finalFile.exists() && finalFile.isFile()) {
+						Start node = this.getAstForDocumentBody(this
+								.getLexForSource(finalFile));
+						if (node != null)
+							try {
+								saveStartNodeInAST(node, finalFile,
+										(NitNature) fileToSeekFrom.getProject()
+												.getNature(NitNature.NATURE_ID));
+							} catch (CoreException e) {
+								if (NitActivator.DEBUG_MODE)
+									e.printStackTrace();
+							}
+						break;
 					}
 				}
 			}
-			
-			//Remove the last
+
+			// Remove the last
 			separatedPath = sah.removeLast(separatedPath);
 		}
 
 		return null;
 	}
 
+	private void saveStartNodeInAST(Start node, IFile fileBound) {
+		try {
+			((NitNature) fileBound.getProject().getNature(NitNature.NATURE_ID))
+					.getAstReposit().addOrReplaceAST(fileBound.getName(), node);
+		} catch (Exception e) {
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
+		}
+	}
+
+	private void saveStartNodeInAST(Start node, IDocument fileBound) {
+		AModuledecl docName = (AModuledecl) this.getModuleOfAST(node)
+				.getModuledecl();
+		String modName = docName.getName().toString();
+		try {
+			// Get open editors
+			for (IEditorReference editor : PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
+					.getEditorReferences()) {
+				if (editor.getEditorInput() instanceof FileEditorInput) {
+					FileEditorInput fed = (FileEditorInput) editor
+							.getEditorInput();
+					String fileName = fed.getFile().getName();
+					if (fileName.equals(modName.trim() + ".nit")) {
+						NitNature nnat = (NitNature) fed.getFile().getProject()
+								.getNature(NitNature.NATURE_ID);
+						nnat.getAstReposit().addOrReplaceAST(fileName, node);
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
+		}
+	}
+
+	private void saveStartNodeInAST(Start node, File fileBound,
+			NitNature natureConcerned) {
+		String fileName = fileBound.getName();
+		try {
+			natureConcerned.getAstReposit().addOrReplaceAST(fileName, node);
+		} catch (Exception e) {
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
+		}
+	}
+
 	private Start getAstForDocumentBody(Lexer lex) {
 
 		Parser pp = new Parser(lex);
 
-		ProjectAutoParser pap = new ProjectAutoParser();
+		NitNature nnat = null;
 
 		Start st = null;
 		try {
@@ -151,14 +220,13 @@ public class AstParserHelper {
 			}
 
 			try {
-				fileBoundToIDocument.getProject()
-						.getNature(NitNature.NATURE_ID);
+				nnat = (NitNature) fileBoundToIDocument.getProject().getNature(
+						NitNature.NATURE_ID);
+				nnat.getProjectAutoParser().addToQueue(fileBoundToIDocument);
 			} catch (Exception e) {
 				if (NitActivator.DEBUG_MODE)
 					e.printStackTrace();
 			}
-
-			pap.addToQueue(fileBoundToIDocument);
 		} catch (Exception e) {
 			if (NitActivator.DEBUG_MODE)
 				e.printStackTrace();
@@ -171,19 +239,15 @@ public class AstParserHelper {
 			// pop up in the editor
 			// This is done in the ProjectAutoParser class
 
+			// Try to get and old version of the Start node anyway in the node
+			// reposit of the project
+			if (nnat != null) {
+				return nnat.getAstReposit().getAST(
+						fileBoundToIDocument.getName());
+			}
+
 			return null;
 		} else {
-			AModuledecl mod = (AModuledecl) ((AModule) st.getPModule())
-					.getModuledecl();
-			String mdName = mod.getName().toString().trim();
-			try {
-				((NitNature) fileBoundToIDocument.getProject().getNature(
-						NitNature.NATURE_ID)).getAstReposit().addOrReplaceAST(
-						mdName, st);
-			} catch (Exception e) {
-				if (NitActivator.DEBUG_MODE)
-					e.printStackTrace();
-			}
 			return st;
 		}
 	}

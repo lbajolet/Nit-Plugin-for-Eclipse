@@ -1,5 +1,7 @@
 package builder;
 
+import plugin.NitActivator;
+
 public class NitCompilerMessage {
 
 	public static final int NIT_ERROR_TYPE = 1;
@@ -23,7 +25,8 @@ public class NitCompilerMessage {
 		try {
 			parseMessage();
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
 		}
 	}
 
@@ -109,12 +112,12 @@ public class NitCompilerMessage {
 			}
 			currIndexInString++;
 		}
-		
+
 		String end = endIndex.toString();
-		
+
 		if (end.compareTo("") != 0) {
 			infos[2] = Integer.parseInt(endIndex.toString());
-		}else{
+		} else {
 			infos[2] = infos[1] + 1;
 		}
 

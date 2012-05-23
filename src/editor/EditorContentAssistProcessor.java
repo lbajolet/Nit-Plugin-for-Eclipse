@@ -46,8 +46,6 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		WordProvider wp = new WordProvider();
 
-		ArrayList<Start> startNodes = new ArrayList<Start>();
-
 		try {
 			char tempChar = '\0';
 			int currOffset = 0;

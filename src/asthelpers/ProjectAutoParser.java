@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.jobs.Job;
 
 import plugin.NitActivator;
 import builder.NitCompilerMessageInterpreter;
+import builder.NitNature;
 
 public class ProjectAutoParser {
 
@@ -53,6 +54,7 @@ public class ProjectAutoParser {
 			this.isActive = true;
 			Process compileProcess = null;
 			int totalFiles = nitFilesOfProject.size();
+			AstParserHelper aph = new AstParserHelper();
 
 			monitor.beginTask("Parsing nit files", totalFiles);
 
@@ -65,6 +67,9 @@ public class ProjectAutoParser {
 
 					IFile toParse = workToBeDone.poll();
 					target = toParse;
+
+					// Parse and add to main AST
+					aph.getAstForDocument(toParse);
 
 					// Remove markers of file
 					try {
