@@ -48,14 +48,21 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			monitor.beginTask("Executing program", 100);
 			// Get arguments for execution
 			try {
 				if (nnat.getCompilerCaller().getCompileJob() != null) {
 
-					while(!nnat.getCompilerCaller().getCompileJob().isOver()){
+					while (!nnat.getCompilerCaller().getCompileJob().isOver()) {
+						if (monitor.isCanceled()) {
+							monitor.done();
+							break;
+						}
 						Thread.sleep(100);
 					}
-					
+
+					monitor.worked(50);
+
 					File toExec = new File(pathToFile);
 					if (toExec.exists() && toExec.canExecute()
 							&& toExec.isFile()) {
@@ -67,6 +74,12 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 						BufferedReader errBuf = new BufferedReader(
 								new InputStreamReader(execute.getErrorStream()));
 						while (!leaveOnNextIter) {
+							Thread.sleep(200);
+							if (monitor.isCanceled()) {
+								execute.destroy();
+								monitor.done();
+								break;
+							}
 							try {
 								execute.exitValue();
 								leaveOnNextIter = true;
@@ -74,14 +87,11 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 								if (NitActivator.DEBUG_MODE)
 									e.printStackTrace();
 							}
-							String readLine = null;
-							String readError = null;
-							while ((readLine = buf.readLine()) != null
-									|| (readError = errBuf.readLine()) != null) {
-								if (readLine != null)
-									NitConsole.getInstance().write(readLine);
-								if (readError != null)
-									NitConsole.getInstance().write(readError);
+							while (buf.ready() || errBuf.ready()) {
+								if (buf.ready())
+									NitConsole.getInstance().write(buf.readLine());
+								if (errBuf.ready())
+									NitConsole.getInstance().write(errBuf.readLine());
 							}
 						}
 					}
@@ -93,6 +103,8 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 				if (NitActivator.DEBUG_MODE)
 					e.printStackTrace();
 			}
+			monitor.worked(50);
+			monitor.done();
 
 			return Status.OK_STATUS;
 		}
