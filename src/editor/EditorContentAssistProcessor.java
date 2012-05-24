@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import node.AModule;
 import node.AStdClassdef;
 import node.AStdImport;
+import node.ATopClassdef;
 import node.PPropdef;
 import node.Start;
 
@@ -35,7 +36,8 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 			ITextViewer textViewer, int documentOffset) {
 
 		// Result sets
-		ArrayList<AStdClassdef> classesToPropose = new ArrayList<AStdClassdef>();
+		ArrayList<AStdClassdef> stdClassesToPropose = new ArrayList<AStdClassdef>();
+		ArrayList<ATopClassdef> topClassesToPropose = new ArrayList<ATopClassdef>();
 		ArrayList<ICompletionProposal[]> methodsToPropose = new ArrayList<ICompletionProposal[]>();
 
 		String startsWith = "";
@@ -96,8 +98,10 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 			AModule mod = aph.getModuleOfAST(st);
 
 			if (mod != null) {
-				ArrayList<AStdClassdef> astdclass = aph.getClassesOfModule(mod);
-				classesToPropose.addAll(astdclass);
+				ArrayList<AStdClassdef> astdclass = aph
+						.getAStdClassesOfModule(mod);
+				stdClassesToPropose.addAll(astdclass);
+				topClassesToPropose.addAll(aph.getATopClassesOfModule(mod));
 				for (AStdClassdef claas : astdclass) {
 					LinkedList<PPropdef> props = aph.getPropsOfClass(claas);
 					methodsToPropose.add(wp.buildMethProposals(
@@ -124,8 +128,9 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 									.getModuleOfAST(importStartNode);
 							if (modImp != null) {
 								ArrayList<AStdClassdef> astimpclass = aph
-										.getClassesOfModule(modImp);
-								classesToPropose.addAll(astimpclass);
+										.getAStdClassesOfModule(modImp);
+								stdClassesToPropose.addAll(astimpclass);
+								topClassesToPropose.addAll(aph.getATopClassesOfModule(modImp));
 								for (AStdClassdef claas : astimpclass) {
 									LinkedList<PPropdef> props = aph
 											.getPropsOfClass(claas);
@@ -142,7 +147,7 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 		}
 
 		ICompletionProposal[] classesSuggestions = wp.buildClassProposals(
-				classesToPropose, documentOffset, startsWith);
+				stdClassesToPropose, topClassesToPropose, documentOffset, startsWith);
 
 		int totalLength = classesSuggestions.length;
 

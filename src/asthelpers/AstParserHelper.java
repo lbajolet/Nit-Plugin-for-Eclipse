@@ -19,6 +19,7 @@ import node.AModuleName;
 import node.AModuledecl;
 import node.AStdClassdef;
 import node.AStdImport;
+import node.ATopClassdef;
 import node.PClassdef;
 import node.PImport;
 import node.PPropdef;
@@ -107,8 +108,19 @@ public class AstParserHelper {
 			File toCheck = new File(sah.join(separatedPath, "/") + ".nit");
 
 			if (toCheck.exists() && toCheck.isFile()) {
-				return this
-						.getAstForDocumentBody(this.getLexForSource(toCheck));
+				Start node = this.getAstForDocumentBody(this
+						.getLexForSource(toCheck));
+				try {
+					saveStartNodeInAST(
+							node,
+							toCheck,
+							(NitNature) fileToSeekFrom.getProject().getNature(
+									NitNature.NATURE_ID));
+				} catch (CoreException e) {
+					if (NitActivator.DEBUG_MODE)
+						e.printStackTrace();
+				}
+				return node;
 			} else {
 				File dir = new File(sah.join(separatedPath, "/"));
 				if (dir.exists() && dir.isDirectory()) {
@@ -128,7 +140,7 @@ public class AstParserHelper {
 								if (NitActivator.DEBUG_MODE)
 									e.printStackTrace();
 							}
-						break;
+						return node;
 					}
 				}
 			}
@@ -310,7 +322,7 @@ public class AstParserHelper {
 	 *            node
 	 * @return An ArrayList of class nodes, ready to be used
 	 */
-	public ArrayList<AStdClassdef> getClassesOfModule(AModule module) {
+	public ArrayList<AStdClassdef> getAStdClassesOfModule(AModule module) {
 
 		ArrayList<AStdClassdef> defs = new ArrayList<AStdClassdef>();
 
@@ -320,6 +332,21 @@ public class AstParserHelper {
 				defs.add(amc);
 			}
 		}
+		return defs;
+	}
+
+	public ArrayList<ATopClassdef> getATopClassesOfModule(AModule module) {
+
+		ArrayList<ATopClassdef> defs = new ArrayList<ATopClassdef>();
+
+		for (PClassdef pclass : module.getClassdefs()) {
+
+			if (pclass instanceof ATopClassdef) {
+				ATopClassdef amc = (ATopClassdef) pclass;
+				defs.add(amc);
+			}
+		}
+
 		return defs;
 	}
 

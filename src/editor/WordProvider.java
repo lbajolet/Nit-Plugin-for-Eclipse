@@ -6,25 +6,33 @@ import java.util.HashSet;
 import node.AConcreteMethPropdef;
 import node.ADeferredMethPropdef;
 import node.AStdClassdef;
+import node.ATopClassdef;
 
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
 /**
  * @author R4PaSs
- *
- * Provides the methods needed to compute the words to propose via AutoComplete for the NitEditor
+ * 
+ *         Provides the methods needed to compute the words to propose via
+ *         AutoComplete for the NitEditor
  */
 public class WordProvider {
 
 	/**
-	 * @param classes The definition of Classes as returned by the actual parser
-	 * @param fromOffset Current Offset in the IDocument
-	 * @param startsWith String being typed by the user, used to compute intelligent proposals
+	 * @param classes
+	 *            The definition of Classes as returned by the actual parser
+	 * @param fromOffset
+	 *            Current Offset in the IDocument
+	 * @param startsWith
+	 *            String being typed by the user, used to compute intelligent
+	 *            proposals
 	 * @return An array of classes proposals
 	 */
 	public ICompletionProposal[] buildClassProposals(
-			ArrayList<AStdClassdef> classes, int fromOffset, String startsWith) {
+			ArrayList<AStdClassdef> classes,
+			ArrayList<ATopClassdef> topClasses, int fromOffset,
+			String startsWith) {
 
 		HashSet<ICompletionProposal> proposalsArrayList = new HashSet<ICompletionProposal>();
 		HashSet<String> completionsHashSet = new HashSet<String>();
@@ -40,15 +48,42 @@ public class WordProvider {
 			}
 		}
 
+		for (ATopClassdef classDef : topClasses) {
+			String[] toProposeExploded = classDef.toString().split(" ");
+			boolean takeNext = false;
+			String toPropose = null;
+			for(int i = 0; i < toProposeExploded.length; i++){
+				if(takeNext){
+					toPropose = toProposeExploded[i].trim();
+					break;
+				}
+				if(toProposeExploded[i].equals("fun")){
+					takeNext = true;
+				}
+			}
+			if (toPropose != null && toPropose.toLowerCase().startsWith(startsWith.toLowerCase())) {
+				if (completionsHashSet.add(toPropose)) {
+					proposalsArrayList.add(new CompletionProposal(toPropose,
+							fromOffset - startsWith.length(), startsWith
+									.length(), toPropose.length()));
+				}
+			}
+		}
+
 		return proposalsArrayList
 				.toArray(new ICompletionProposal[proposalsArrayList.size()]);
 	}
 
 	/**
-	 * @param methsProp Definition of methods proposals (In classes)
-	 * @param defMeths Definition of methods proposals (Top Level)
-	 * @param fromOffset Current offset in IDocument
-	 * @param startsWith String being typed by the user, used to compute intelligent proposals
+	 * @param methsProp
+	 *            Definition of methods proposals (In classes)
+	 * @param defMeths
+	 *            Definition of methods proposals (Top Level)
+	 * @param fromOffset
+	 *            Current offset in IDocument
+	 * @param startsWith
+	 *            String being typed by the user, used to compute intelligent
+	 *            proposals
 	 * @return An array of methods proposals
 	 */
 	public ICompletionProposal[] buildMethProposals(
@@ -79,8 +114,11 @@ public class WordProvider {
 	}
 
 	/**
-	 * @param fromOffset String being typed by the user, used to compute intelligent proposals
-	 * @param startsWith Current offset in IDocument
+	 * @param fromOffset
+	 *            String being typed by the user, used to compute intelligent
+	 *            proposals
+	 * @param startsWith
+	 *            Current offset in IDocument
 	 * @return An array of Keywords
 	 */
 	public ICompletionProposal[] buildKeywordsProposals(int fromOffset,
