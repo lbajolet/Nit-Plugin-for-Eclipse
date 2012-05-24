@@ -53,6 +53,7 @@ public class NitCompilerCallerClass {
 		private Process compileProcess;
 		private Boolean isBeingCalled;
 		private String returnMessage;
+		private boolean isOver;
 
 		public void cancelCurrentProcess() {
 			if (isBeingCalled == true) {
@@ -63,6 +64,10 @@ public class NitCompilerCallerClass {
 				}
 				isBeingCalled = false;
 			}
+		}
+		
+		public boolean isOver(){
+			return this.isOver;
 		}
 
 		public Process getCurrentCompileProcess() {
@@ -84,6 +89,7 @@ public class NitCompilerCallerClass {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
+			isOver = false;
 			try {
 				((NitNature) (target.getProject()
 						.getNature(NitNature.NATURE_ID)))
@@ -99,6 +105,7 @@ public class NitCompilerCallerClass {
 				this.returnMessage = "Error : No file path specified";
 				isBeingCalled = false;
 				monitor.setCanceled(true);
+				isOver = true;
 				return Status.CANCEL_STATUS;
 			} else {
 				try {
@@ -112,11 +119,13 @@ public class NitCompilerCallerClass {
 							this.returnMessage = "Error : Compilation aborted";
 							isBeingCalled = false;
 							monitor.setCanceled(true);
+							isOver = true;
 							return Status.CANCEL_STATUS;
 						}
 					} catch (InterruptedException e) {
 						this.returnMessage = "Error : Compilation aborted";
 						isBeingCalled = false;
+						isOver = true;
 						return Status.OK_STATUS;
 					}
 					monitor.worked(50);
@@ -150,17 +159,20 @@ public class NitCompilerCallerClass {
 					this.returnMessage = "All OK";
 
 					monitor.done();
+					isOver = true;
 					return Status.OK_STATUS;
 				} catch (IOException e) {
 					this.returnMessage = "Error : Binary cannot be found at specified path";
 					isBeingCalled = false;
 					monitor.setCanceled(true);
 					monitor.done();
+					isOver = true;
 					return Status.OK_STATUS;
 				} catch (Exception e) {
 					e.printStackTrace();
 					monitor.setCanceled(true);
 					monitor.done();
+					isOver = true;
 					return Status.OK_STATUS;
 				}
 			}
