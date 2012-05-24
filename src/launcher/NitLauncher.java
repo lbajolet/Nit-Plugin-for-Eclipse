@@ -51,7 +51,8 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 			monitor.beginTask("Executing program", 100);
 			// Get arguments for execution
 			try {
-				if (nnat.getCompilerCaller().getCompileJob() != null) {
+				if (nnat != null && nnat.getCompilerCaller() != null
+						&& nnat.getCompilerCaller().getCompileJob() != null) {
 
 					while (!nnat.getCompilerCaller().getCompileJob().isOver()) {
 						if (monitor.isCanceled()) {
@@ -87,11 +88,16 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 								if (NitActivator.DEBUG_MODE)
 									e.printStackTrace();
 							}
-							while (buf.ready() || errBuf.ready()) {
-								if (buf.ready())
-									NitConsole.getInstance().write(buf.readLine());
-								if (errBuf.ready())
-									NitConsole.getInstance().write(errBuf.readLine());
+							char[] buffer = new char[2048];
+							while (buf.ready()) {
+								buf.read(buffer);
+								NitConsole.getInstance().write(
+										String.copyValueOf(buffer));
+							}
+							while (errBuf.ready()) {
+								errBuf.read(buffer);
+								NitConsole.getInstance().write(
+										String.copyValueOf(buffer));
 							}
 						}
 					}
