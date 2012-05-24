@@ -59,13 +59,11 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 					File toExec = new File(pathToFile);
 					if (toExec.exists() && toExec.canExecute()
 							&& toExec.isFile()) {
-//						Thread.currentThread().wait(100);
 						Process execute = Runtime.getRuntime().exec(
 								pathToFile + argsForExec);
 						boolean leaveOnNextIter = false;
 						BufferedReader buf = new BufferedReader(
 								new InputStreamReader(execute.getInputStream()));
-//						execute.get
 						BufferedReader errBuf = new BufferedReader(
 								new InputStreamReader(execute.getErrorStream()));
 						while (!leaveOnNextIter) {

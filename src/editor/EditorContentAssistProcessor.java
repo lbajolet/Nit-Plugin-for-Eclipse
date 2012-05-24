@@ -3,6 +3,8 @@ package editor;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import node.AConcreteMethPropdef;
+import node.ADeferredMethPropdef;
 import node.AModule;
 import node.AStdClassdef;
 import node.AStdImport;
@@ -38,7 +40,8 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 		// Result sets
 		ArrayList<AStdClassdef> stdClassesToPropose = new ArrayList<AStdClassdef>();
 		ArrayList<ATopClassdef> topClassesToPropose = new ArrayList<ATopClassdef>();
-		ArrayList<ICompletionProposal[]> methodsToPropose = new ArrayList<ICompletionProposal[]>();
+		ArrayList<AConcreteMethPropdef> concMethsToPropose = new ArrayList<AConcreteMethPropdef>();
+		ArrayList<ADeferredMethPropdef> defMethsToPropose = new ArrayList<ADeferredMethPropdef>();
 
 		String startsWith = "";
 		IDocument document = textViewer.getDocument();
@@ -104,10 +107,10 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 				topClassesToPropose.addAll(aph.getATopClassesOfModule(mod));
 				for (AStdClassdef claas : astdclass) {
 					LinkedList<PPropdef> props = aph.getPropsOfClass(claas);
-					methodsToPropose.add(wp.buildMethProposals(
-							aph.getConcreteMethsInPropList(props),
-							aph.getDeferredMethsInPropList(props),
-							documentOffset, startsWith));
+					concMethsToPropose.addAll(aph
+							.getConcreteMethsInPropList(props));
+					defMethsToPropose.addAll(aph
+							.getDeferredMethsInPropList(props));
 				}
 				// Resolve imports and add their info to the candidates for
 				// autocompletion
@@ -130,15 +133,15 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 								ArrayList<AStdClassdef> astimpclass = aph
 										.getAStdClassesOfModule(modImp);
 								stdClassesToPropose.addAll(astimpclass);
-								topClassesToPropose.addAll(aph.getATopClassesOfModule(modImp));
+								topClassesToPropose.addAll(aph
+										.getATopClassesOfModule(modImp));
 								for (AStdClassdef claas : astimpclass) {
 									LinkedList<PPropdef> props = aph
 											.getPropsOfClass(claas);
-									methodsToPropose
-											.add(wp.buildMethProposals(
-													aph.getConcreteMethsInPropList(props),
-													aph.getDeferredMethsInPropList(props),
-													documentOffset, startsWith));
+									concMethsToPropose.addAll(aph
+											.getConcreteMethsInPropList(props));
+									defMethsToPropose.addAll(aph
+											.getDeferredMethsInPropList(props));
 								}
 							}
 						}
@@ -146,14 +149,14 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 			}
 		}
 
+		ICompletionProposal[] methodsToPropose = wp.buildMethProposals(concMethsToPropose,
+				defMethsToPropose, documentOffset, startsWith);
+
 		ICompletionProposal[] classesSuggestions = wp.buildClassProposals(
-				stdClassesToPropose, topClassesToPropose, documentOffset, startsWith);
+				stdClassesToPropose, topClassesToPropose, documentOffset,
+				startsWith);
 
-		int totalLength = classesSuggestions.length;
-
-		for (ICompletionProposal[] comps : methodsToPropose) {
-			totalLength += comps.length;
-		}
+		int totalLength = classesSuggestions.length + methodsToPropose.length;
 
 		ICompletionProposal[] finalProposals = new ICompletionProposal[totalLength];
 
@@ -164,13 +167,9 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 					classesSuggestions.length);
 			currLength += classesSuggestions.length;
 		}
-
-		for (ICompletionProposal[] comps : methodsToPropose) {
-			if (comps.length > 0) {
-				System.arraycopy(comps, 0, finalProposals, currLength,
-						comps.length);
-				currLength += comps.length;
-			}
+		
+		if(methodsToPropose.length > 0){
+			System.arraycopy(methodsToPropose, 0, finalProposals, currLength, methodsToPropose.length);
 		}
 
 		return finalProposals;

@@ -1,6 +1,7 @@
 package editor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 import node.AConcreteMethPropdef;
@@ -34,44 +35,55 @@ public class WordProvider {
 			ArrayList<ATopClassdef> topClasses, int fromOffset,
 			String startsWith) {
 
-		HashSet<ICompletionProposal> proposalsArrayList = new HashSet<ICompletionProposal>();
+		ICompletionProposal[] proposalsArrayList;
 		HashSet<String> completionsHashSet = new HashSet<String>();
 
 		for (AStdClassdef classDef : classes) {
 			String toPropose = classDef.getId().getText().trim();
-			if (toPropose.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				if (completionsHashSet.add(toPropose)) {
-					proposalsArrayList.add(new CompletionProposal(toPropose,
-							fromOffset - startsWith.length(), startsWith
-									.length(), toPropose.length()));
-				}
-			}
+			if (toPropose.toLowerCase().startsWith(startsWith.toLowerCase()))
+				completionsHashSet.add(toPropose);
 		}
 
 		for (ATopClassdef classDef : topClasses) {
 			String[] toProposeExploded = classDef.toString().split(" ");
 			boolean takeNext = false;
 			String toPropose = null;
-			for(int i = 0; i < toProposeExploded.length; i++){
-				if(takeNext){
+			for (int i = 0; i < toProposeExploded.length; i++) {
+				if (takeNext) {
 					toPropose = toProposeExploded[i].trim();
 					break;
 				}
-				if(toProposeExploded[i].equals("fun")){
+				if (toProposeExploded[i].equals("fun")) {
 					takeNext = true;
 				}
 			}
-			if (toPropose != null && toPropose.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				if (completionsHashSet.add(toPropose)) {
-					proposalsArrayList.add(new CompletionProposal(toPropose,
-							fromOffset - startsWith.length(), startsWith
-									.length(), toPropose.length()));
-				}
+			if (toPropose != null
+					&& toPropose.toLowerCase().startsWith(
+							startsWith.toLowerCase())) {
+				completionsHashSet.add(toPropose);
 			}
 		}
 
-		return proposalsArrayList
-				.toArray(new ICompletionProposal[proposalsArrayList.size()]);
+		String[] arrayOfClassesStr = new String[completionsHashSet.size()];
+
+		completionsHashSet.toArray(arrayOfClassesStr);
+
+		Arrays.sort(arrayOfClassesStr, String.CASE_INSENSITIVE_ORDER);
+
+		proposalsArrayList = new ICompletionProposal[arrayOfClassesStr.length];
+
+		int count = 0;
+
+		for (String prop : arrayOfClassesStr) {
+			if (prop != null) {
+				proposalsArrayList[count] = new CompletionProposal(prop,
+						fromOffset - startsWith.length(), startsWith.length(),
+						prop.length());
+				count++;
+			}
+		}
+
+		return proposalsArrayList;
 	}
 
 	/**
@@ -90,27 +102,41 @@ public class WordProvider {
 			ArrayList<AConcreteMethPropdef> methsProp,
 			ArrayList<ADeferredMethPropdef> defMeths, int fromOffset,
 			String startsWith) {
-		HashSet<ICompletionProposal> proposals = new HashSet<ICompletionProposal>();
+		ICompletionProposal proposals[];
+		HashSet<String> stringProposals = new HashSet<String>();
 
 		for (AConcreteMethPropdef cctMeth : methsProp) {
 			String toReplace = cctMeth.getMethid().toString().trim();
-			if (toReplace.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				proposals.add(new CompletionProposal(toReplace, fromOffset
-						- startsWith.length(), startsWith.length(), toReplace
-						.length()));
-			}
+			if (toReplace.toLowerCase().startsWith(startsWith.toLowerCase()))
+				stringProposals.add(toReplace);
 		}
 
 		for (ADeferredMethPropdef dfMeth : defMeths) {
 			String toReplace = dfMeth.getMethid().toString().trim();
-			if (toReplace.toLowerCase().startsWith(startsWith.toLowerCase())) {
-				proposals.add(new CompletionProposal(toReplace, fromOffset
-						- startsWith.length(), startsWith.length(), toReplace
-						.length()));
+			if (toReplace.toLowerCase().startsWith(startsWith.toLowerCase()))
+				stringProposals.add(toReplace);
+		}
+
+		String[] arrayOfStrProps = new String[stringProposals.size()];
+
+		stringProposals.toArray(arrayOfStrProps);
+
+		Arrays.sort(arrayOfStrProps, String.CASE_INSENSITIVE_ORDER);
+
+		proposals = new ICompletionProposal[arrayOfStrProps.length];
+
+		int count = 0;
+
+		for (String prop : arrayOfStrProps) {
+			if (prop != null) {
+				proposals[count] = new CompletionProposal(prop, fromOffset
+						- startsWith.length(), startsWith.length(),
+						prop.length());
+				count++;
 			}
 		}
 
-		return proposals.toArray(new ICompletionProposal[proposals.size()]);
+		return proposals;
 	}
 
 	/**
