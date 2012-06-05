@@ -39,8 +39,14 @@ public class NitCompilerCallerClass {
 	 */
 	private IFile target;
 
+	/**
+	 * The folder to save the compiled binaries into
+	 */
 	private String outputFolder;
 
+	/**
+	 * The options for compilation
+	 */
 	private String options;
 
 	/**
@@ -49,12 +55,30 @@ public class NitCompilerCallerClass {
 	 */
 	public class NitCompileJob extends Job {
 
+		/**
+		 * Path to the compiler + target and options
+		 */
 		private String path;
+		/**
+		 * The process called to compile some nit sources
+		 */
 		private Process compileProcess;
+		/**
+		 * If the process is being called, true
+		 */
 		private Boolean isBeingCalled;
+		/**
+		 * The return message of the process
+		 */
 		private String returnMessage;
+		/**
+		 * Boolean to set if the compiler finished its work or not
+		 */
 		private boolean isOver;
 
+		/**
+		 * Cancels the process running
+		 */
 		public void cancelCurrentProcess() {
 			if (isBeingCalled == true) {
 				try {
@@ -65,23 +89,50 @@ public class NitCompilerCallerClass {
 				isBeingCalled = false;
 			}
 		}
-		
-		public boolean isOver(){
+
+		/**
+		 * Returns boolean saying of the process finished its work or not
+		 * 
+		 * @return true if over, false if not
+		 */
+		public boolean isOver() {
 			return this.isOver;
 		}
 
+		/**
+		 * Returns the compilation process
+		 * 
+		 * @return Process representing an instance of nitc
+		 */
 		public Process getCurrentCompileProcess() {
 			return this.compileProcess;
 		}
 
+		/**
+		 * Sets the path of the compiler / target file and options
+		 * 
+		 * @param path
+		 *            Path + arguments for compilation
+		 */
 		public void setPath(String path) {
 			this.path = path;
 		}
 
+		/**
+		 * Returns the message from the compiler process
+		 * 
+		 * @return Message from the compiler
+		 */
 		public String getReturnMessage() {
 			return this.returnMessage;
 		}
 
+		/**
+		 * Default constructor
+		 * 
+		 * @param name
+		 *            Required by super constructor
+		 */
 		public NitCompileJob(String name) {
 			super(name);
 			isBeingCalled = false;
@@ -180,17 +231,24 @@ public class NitCompilerCallerClass {
 	}
 
 	/**
-	 * 
+	 * The default constructor
 	 */
 	public NitCompilerCallerClass() {
 		this.options = "";
 	}
 
+	/**
+	 * Gets the compilation eclipse job
+	 * 
+	 * @return The Nit compile job containing the process
+	 */
 	public NitCompileJob getCompileJob() {
 		return this.eclipseJob;
 	}
 
 	/**
+	 * Sets the target for compilation
+	 * 
 	 * @param file
 	 */
 	public void setTarget(IFile file) {
@@ -198,23 +256,40 @@ public class NitCompilerCallerClass {
 	}
 
 	/**
+	 * Set the options for the compilation
+	 * 
 	 * @param newOpt
+	 *            Series of options in one string
 	 */
 	public void setOptions(String newOpt) {
 		this.options = newOpt;
 	}
 
 	/**
+	 * The path for the compiler
+	 * 
 	 * @param newPath
+	 *            Path
 	 */
 	public void setPath(String newPath) {
 		this.path = newPath;
 	}
 
+	/**
+	 * The output folder for the binaries
+	 * 
+	 * @param folder
+	 */
 	public void setOutFolder(String folder) {
 		this.outputFolder = folder;
 	}
 
+	/**
+	 * Checks if the compiler binary exists where specified, adds an error log
+	 * entry otherwise
+	 * 
+	 * @return true if exists, false otherwise
+	 */
 	public boolean checkIfPathToCompilerIsValid() {
 		if (this.path != null) {
 			File compiler = new File(this.path);
@@ -232,7 +307,7 @@ public class NitCompilerCallerClass {
 	}
 
 	/**
-	 * 
+	 * Calls the compiler on the set target with the set options
 	 */
 	public void call() {
 		if (!NitActivator.getDefault().getPreferenceStore()

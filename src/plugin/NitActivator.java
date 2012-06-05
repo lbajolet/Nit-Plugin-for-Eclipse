@@ -3,6 +3,10 @@ package plugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+/**
+ * @author lucas
+ * The plugin activator, singleton
+ */
 public class NitActivator extends AbstractUIPlugin {
 	
 	// The plug-in ID

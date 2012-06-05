@@ -33,6 +33,10 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 
+/**
+ * @author lucas The main tab, contains all the arguments and targets for
+ *         compilation
+ */
 public class NitMainTab extends AbstractLaunchConfigurationTab {
 
 	private final String SHARED_LAUNCH_CONFIGURATON_DIALOG = IDebugUIConstants.PLUGIN_ID
@@ -41,9 +45,9 @@ public class NitMainTab extends AbstractLaunchConfigurationTab {
 	public static final String OUTPUT_PATH = "outputPath";
 
 	public static final String TARGET_FILE_PATH = "targetPath";
-	
+
 	public static final String EXECUTION_ARGUMENTS = "executionArgs";
-	
+
 	public static final String COMPILATION_ARGUMENTS = "compilationArguments";
 
 	private Button registerOutPath;
@@ -51,9 +55,9 @@ public class NitMainTab extends AbstractLaunchConfigurationTab {
 
 	private Text registerTargetPathVisualization;
 	private Button registerTargetPath;
-	
+
 	private Text registerArgumentsForCompiling;
-	
+
 	private Text registerArgumentsForExecution;
 
 	/**
@@ -192,28 +196,32 @@ public class NitMainTab extends AbstractLaunchConfigurationTab {
 
 		// END CHOOSE FILE TO TARGET //
 	}
-	
-	private void createArgumentsFolder(Composite parent){
-		Group group = SWTFactory.createGroup(parent, "Arguments", 3,
-				2, GridData.FILL_HORIZONTAL);
+
+	private void createArgumentsFolder(Composite parent) {
+		Group group = SWTFactory.createGroup(parent, "Arguments", 3, 2,
+				GridData.FILL_HORIZONTAL);
 		Composite comp = SWTFactory.createComposite(group, parent.getFont(), 2,
 				3, GridData.FILL_HORIZONTAL, 0, 0);
 		Composite comp2 = SWTFactory.createComposite(group, parent.getFont(),
 				2, 3, GridData.FILL_HORIZONTAL, 0, 0);
 		GridData gd = new GridData();
 		gd.horizontalSpan = 2;
-		
+
 		Label registerArgsCompiling = new Label(comp, 0);
 		registerArgsCompiling.setText("Arguments For Compiling");
-		
-		this.registerArgumentsForCompiling = SWTFactory.createSingleText(comp, 0);
-		this.registerArgumentsForCompiling.addModifyListener(fBasicModifyListener);
-		
+
+		this.registerArgumentsForCompiling = SWTFactory.createSingleText(comp,
+				0);
+		this.registerArgumentsForCompiling
+				.addModifyListener(fBasicModifyListener);
+
 		Label registerArgsExec = new Label(comp2, 0);
 		registerArgsExec.setText("Arguments For Execution");
-		
-		this.registerArgumentsForExecution = SWTFactory.createSingleText(comp2, 0);
-		this.registerArgumentsForExecution.addModifyListener(fBasicModifyListener);
+
+		this.registerArgumentsForExecution = SWTFactory.createSingleText(comp2,
+				0);
+		this.registerArgumentsForExecution
+				.addModifyListener(fBasicModifyListener);
 	}
 
 	@Override
@@ -232,7 +240,8 @@ public class NitMainTab extends AbstractLaunchConfigurationTab {
 				this.registerTargetPathVisualization.setText(configuration
 						.getAttribute(TARGET_FILE_PATH, ""));
 			}
-			if (!configuration.getAttribute(COMPILATION_ARGUMENTS, "").equals("")) {
+			if (!configuration.getAttribute(COMPILATION_ARGUMENTS, "").equals(
+					"")) {
 				this.registerArgumentsForCompiling.setText(configuration
 						.getAttribute(COMPILATION_ARGUMENTS, ""));
 			}
@@ -259,11 +268,13 @@ public class NitMainTab extends AbstractLaunchConfigurationTab {
 			configuration.setAttribute(TARGET_FILE_PATH,
 					this.registerTargetPathVisualization.getText());
 		}
-		if(!this.registerArgumentsForCompiling.getText().equals("")){
-			configuration.setAttribute(COMPILATION_ARGUMENTS, this.registerArgumentsForCompiling.getText());
+		if (!this.registerArgumentsForCompiling.getText().equals("")) {
+			configuration.setAttribute(COMPILATION_ARGUMENTS,
+					this.registerArgumentsForCompiling.getText());
 		}
-		if(!this.registerArgumentsForExecution.getText().equals("")){
-			configuration.setAttribute(EXECUTION_ARGUMENTS, registerArgumentsForExecution.getText());
+		if (!this.registerArgumentsForExecution.getText().equals("")) {
+			configuration.setAttribute(EXECUTION_ARGUMENTS,
+					registerArgumentsForExecution.getText());
 		}
 	}
 

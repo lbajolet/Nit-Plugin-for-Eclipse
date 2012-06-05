@@ -6,18 +6,21 @@ import org.eclipse.debug.ui.ILaunchShortcut2;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 
+/**
+ * @author lucas Shortcut for a nit configuration TODO : Implement me.
+ */
 public class nitLaunchShortcut implements ILaunchShortcut2 {
 
 	@Override
 	public void launch(ISelection selection, String mode) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void launch(IEditorPart editor, String mode) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

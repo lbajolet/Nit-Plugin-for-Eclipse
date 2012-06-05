@@ -23,6 +23,9 @@ public class NitNature implements IProjectNature {
 	 */
 	private IProject project;
 
+	/**
+	 * Custom class to help reading and writing in properties for this project
+	 */
 	private ProjectPropertiesHelper pph;
 
 	/**
@@ -40,14 +43,26 @@ public class NitNature implements IProjectNature {
 	 * Reposit of all the files of the project
 	 */
 	private AstReposit repo;
-	
+
+	/**
+	 * Project Auto Parser, used to parse the files of a project and keep the
+	 * AST Reposit up to date
+	 */
 	private ProjectAutoParser pap;
 
+	/**
+	 * Default constructor
+	 */
 	public NitNature() {
 		this.compilerCaller = new NitCompilerCallerClass();
 		this.repo = new AstReposit();
 	}
 
+	/**
+	 * Gets the ASTReposit for this project nature
+	 * 
+	 * @return ASTReposit
+	 */
 	public AstReposit getAstReposit() {
 		return repo;
 	}
@@ -139,11 +154,21 @@ public class NitNature implements IProjectNature {
 		this.compilerCaller.setTarget(file);
 	}
 
+	/**
+	 * Gets the properties helper object for this nature
+	 * 
+	 * @return ProjectPropertiesHelper
+	 */
 	public ProjectPropertiesHelper getPropertiesHelper() {
 		return this.pph;
 	}
-	
-	public ProjectAutoParser getProjectAutoParser(){
+
+	/**
+	 * Gets the project auto parser helper for this nature
+	 * 
+	 * @return ProjectAutoParser
+	 */
+	public ProjectAutoParser getProjectAutoParser() {
 		return this.pap;
 	}
 

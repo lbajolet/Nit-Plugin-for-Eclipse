@@ -6,16 +6,27 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
+/**
+ * @author lucas Console wrapper for the Nit plugin (Singleton)
+ */
 public class NitConsole {
 
+	/**
+	 * Instance of the console
+	 */
 	private static NitConsole instance;
-	
+
+	/**
+	 * Id of the console
+	 */
 	public static String CONSOLE_NAME = "org.uqam.nit.ndt.console";
-	
-	private NitConsole(){
-		
+
+	private NitConsole() {
 	}
 
+	/**
+	 * @return The singleton instance
+	 */
 	public static NitConsole getInstance() {
 		if (instance == null) {
 			instance = new NitConsole();
@@ -23,6 +34,12 @@ public class NitConsole {
 		return instance;
 	}
 
+	/**
+	 * Gets the console in Eclipse UI corresponding to Nit
+	 * 
+	 * @param name The name of the console
+	 * @return The MessageConsole for nit
+	 */
 	private MessageConsole findConsole(String name) {
 		ConsolePlugin plugin = ConsolePlugin.getDefault();
 		IConsoleManager conMan = plugin.getConsoleManager();
@@ -36,6 +53,12 @@ public class NitConsole {
 		return myConsole;
 	}
 
+	/**
+	 * Writes a message in the Nit console
+	 * 
+	 * @param message
+	 *            The message to write
+	 */
 	public void write(String message) {
 		MessageConsole myConsole = findConsole(CONSOLE_NAME);
 		MessageConsoleStream out = myConsole.newMessageStream();

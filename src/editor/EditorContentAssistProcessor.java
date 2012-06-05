@@ -149,8 +149,9 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 			}
 		}
 
-		ICompletionProposal[] methodsToPropose = wp.buildMethProposals(concMethsToPropose,
-				defMethsToPropose, documentOffset, startsWith);
+		ICompletionProposal[] methodsToPropose = wp.buildMethProposals(
+				concMethsToPropose, defMethsToPropose, documentOffset,
+				startsWith);
 
 		ICompletionProposal[] classesSuggestions = wp.buildClassProposals(
 				stdClassesToPropose, topClassesToPropose, documentOffset,
@@ -167,9 +168,10 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 					classesSuggestions.length);
 			currLength += classesSuggestions.length;
 		}
-		
-		if(methodsToPropose.length > 0){
-			System.arraycopy(methodsToPropose, 0, finalProposals, currLength, methodsToPropose.length);
+
+		if (methodsToPropose.length > 0) {
+			System.arraycopy(methodsToPropose, 0, finalProposals, currLength,
+					methodsToPropose.length);
 		}
 
 		return finalProposals;

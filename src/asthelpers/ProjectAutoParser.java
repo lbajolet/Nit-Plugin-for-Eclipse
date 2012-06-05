@@ -21,18 +21,34 @@ import org.eclipse.core.runtime.jobs.Job;
 
 import plugin.NitActivator;
 import builder.NitCompilerMessageInterpreter;
-import builder.NitNature;
 
 public class ProjectAutoParser {
 
+	/**
+	 * @author lucas Job to call compiler on nit files Adds markers on errors
+	 */
 	private class CompilerCallLightJob extends Job {
 
+		/**
+		 * Boolean set to true if a job is active at the moment
+		 */
 		private boolean isActive;
 
+		/**
+		 * Queue for the jobs to be done
+		 */
 		ConcurrentLinkedQueue<IFile> workToBeDone;
 
+		/**
+		 * Helper to parse the messages returned by the nit compiler
+		 */
 		NitCompilerMessageInterpreter ncmi;
 
+		/**
+		 * Default constructor for the job
+		 * 
+		 * @param name
+		 */
 		public CompilerCallLightJob(String name) {
 			super(name);
 			workToBeDone = new ConcurrentLinkedQueue<IFile>();
@@ -40,6 +56,12 @@ public class ProjectAutoParser {
 			this.ncmi = new NitCompilerMessageInterpreter();
 		}
 
+		/**
+		 * Add new job to the queue of jobs
+		 * 
+		 * @param fileToAdd
+		 *            The IFile to parse
+		 */
 		public void queueJob(IFile fileToAdd) {
 			if (!workToBeDone.contains(fileToAdd)) {
 				workToBeDone.add(fileToAdd);
@@ -173,11 +195,14 @@ public class ProjectAutoParser {
 	 */
 	private HashMap<String, IFile> nitFilesOfProject;
 
+	/**
+	 * Job instance, used to keep track of what is executing and to add new
+	 * elements to parse
+	 */
 	CompilerCallLightJob cclj;
 
 	/**
-	 * @author r4pass A visitor being needed to get the files of a project, here
-	 *         it is.
+	 * @author lucas A visitor needed to get the files of a project.
 	 */
 	private class NitProjectVisitor implements IResourceVisitor {
 
@@ -199,6 +224,10 @@ public class ProjectAutoParser {
 		}
 	}
 
+	/**
+	 * @author lucas Visitor to get all the files of a project and add them to
+	 *         the Hashmap of files
+	 */
 	private class NitFilesOfProjectParser implements IResourceVisitor {
 
 		@Override
@@ -214,14 +243,17 @@ public class ProjectAutoParser {
 		}
 	}
 
+	/**
+	 * @author lucas The Eclipse job used to parse all the files in the project
+	 *         (With compiler)
+	 */
 	private class ParsingJob extends Job {
 
 		/**
 		 * Default constructor for the Job
 		 * 
 		 * @param name
-		 *            Name to give for I don't know what, required by the super
-		 *            constructor
+		 *            Name required by the super constructor
 		 */
 		public ParsingJob(String name) {
 			super(name);
@@ -278,6 +310,12 @@ public class ProjectAutoParser {
 		}
 	}
 
+	/**
+	 * Launches the job to build the reposit of files in the project
+	 * 
+	 * @param proj The project to parse
+	 * @return Reposit of IFiles for the filenames
+	 */
 	public HashMap<String, IFile> buildFilesInProjectRepo(IProject proj) {
 		this.nitFilesOfProject.clear();
 		try {
@@ -290,6 +328,11 @@ public class ProjectAutoParser {
 		return nitFilesOfProject;
 	}
 
+	/**
+	 * Adds a job to the queue of files to be parsed
+	 * 
+	 * @param fichier The file to add to the parsing queue
+	 */
 	public void addToQueue(IFile fichier) {
 		buildFilesInProjectRepo(fichier.getProject());
 		this.cclj.queueJob(fichier);

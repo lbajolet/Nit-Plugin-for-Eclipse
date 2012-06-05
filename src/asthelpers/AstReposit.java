@@ -9,8 +9,15 @@ import node.Start;
  */
 public class AstReposit {
 
+	/**
+	 * Collection of all the ASTs of a Project
+	 * To get an AST, the key is : "filename.nit"
+	 */
 	private HashMap<String, Start> asts;
 
+	/**
+	 * Default constructor, creates a new HashMap
+	 */
 	public AstReposit() {
 		this.asts = new HashMap<String, Start>();
 	}

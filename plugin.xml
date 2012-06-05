@@ -37,22 +37,6 @@
       </builder>
    </extension>
    <extension
-         point="org.eclipse.ui.popupMenus">
-	  <objectContribution
-	  	adaptable = "false"
-		id="org.uqam.nit.ndt.contribution2"
-		nameFilter="*.nit"
-		objectClass="org.eclipse.core.resources.IFile">
-		<action
-              class="builder.SelectAsDefaultFileAction"
-              enablesFor="+"
-              id="org.uqam.nit.ndt.selectAsDefaultFileAction"
-              label="Define as default file for project"
-              menubarPath="additions">
-        </action>
-	  </objectContribution>
-   </extension>
-   <extension
          id="xmlProblem"
          name="XML Problem"
          point="org.eclipse.core.resources.markers">

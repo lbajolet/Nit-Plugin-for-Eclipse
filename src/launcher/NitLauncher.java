@@ -22,16 +22,37 @@ import plugin.NitActivator;
 import builder.NitNature;
 import console.NitConsole;
 
+/**
+ * @author lucas The launcher class, auto-compiles and executes a nit program
+ *         with the selected configuration
+ */
 public class NitLauncher implements ILaunchConfigurationDelegate {
 
+	/**
+	 * @author lucas The background job doing the compiling + Executing
+	 *         processes
+	 */
 	private class ExecJob extends Job {
 
+		/**
+		 * @param name
+		 *            Default constructor for a Job, only does the Super part
+		 */
 		public ExecJob(String name) {
 			super(name);
 		}
 
+		/**
+		 * Arguments for executing the compiled binaries
+		 */
 		private String argsForExec;
+		/**
+		 * Path to the file to compile
+		 */
 		private String pathToFile;
+		/**
+		 * NitNature, contains the compilerCallerClass
+		 */
 		private NitNature nnat;
 
 		public void setArgsForExec(String args) {
@@ -65,6 +86,9 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 					monitor.worked(50);
 
 					File toExec = new File(pathToFile);
+
+					int countBeforeLeaving = 0;
+
 					if (toExec.exists() && toExec.canExecute()
 							&& toExec.isFile()) {
 						Process execute = Runtime.getRuntime().exec(
@@ -74,27 +98,33 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 								new InputStreamReader(execute.getInputStream()));
 						BufferedReader errBuf = new BufferedReader(
 								new InputStreamReader(execute.getErrorStream()));
+						// BufferedWriter inputBuf = new BufferedWriter(
+						// new OutputStreamWriter(
+						// execute.getOutputStream()));
 						while (!leaveOnNextIter) {
 							Thread.sleep(200);
 							if (monitor.isCanceled()) {
 								execute.destroy();
 								monitor.done();
-								break;
 							}
 							try {
 								execute.exitValue();
-								leaveOnNextIter = true;
+								if (countBeforeLeaving >= 4)
+									leaveOnNextIter = true;
+								countBeforeLeaving++;
 							} catch (Exception e) {
 								if (NitActivator.DEBUG_MODE)
 									e.printStackTrace();
 							}
 							char[] buffer = new char[2048];
 							while (buf.ready()) {
+								countBeforeLeaving = 0;
 								buf.read(buffer);
 								NitConsole.getInstance().write(
 										String.copyValueOf(buffer));
 							}
 							while (errBuf.ready()) {
+								countBeforeLeaving = 0;
 								errBuf.read(buffer);
 								NitConsole.getInstance().write(
 										String.copyValueOf(buffer));
@@ -122,7 +152,7 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 		monitor.beginTask("Compile and Run Nit", 100);
 
 		if (mode.equals("run")) {
-			// Get file for this twat
+			// Get the file to compile
 			String fileName = configuration.getAttribute(
 					NitMainTab.TARGET_FILE_PATH, "");
 			IFile fichier = null;

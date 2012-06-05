@@ -4,6 +4,10 @@ import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IFolderLayout;
 
+/**
+ * @author lucas
+ * The nit Perspective
+ */
 public class NitPerspective implements IPerspectiveFactory {
 
 	/**

@@ -15,8 +15,13 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 
+import plugin.NitActivator;
 import asthelpers.ProjectAutoParser;
 
+/**
+ * @author lucas The editor for nit, bound to the completion methods and the
+ *         highlighting functionalities
+ */
 public class NitEditor extends TextEditor {
 
 	public NitEditor() {
@@ -70,7 +75,8 @@ public class NitEditor extends TextEditor {
 			}
 
 		} catch (Exception e) {
-			// e.printStackTrace();
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
 		}
 	}
 }

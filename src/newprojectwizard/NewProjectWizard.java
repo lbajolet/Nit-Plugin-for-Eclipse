@@ -29,12 +29,24 @@ import org.eclipse.ui.statushandlers.StatusManager;
 
 import builder.NitNature;
 
+/**
+ * @author lucas The wizard for new Nit Projects
+ */
 public class NewProjectWizard extends Wizard implements IWorkbenchWizard {
 
+	/**
+	 * The new project to create and attach NitNature to
+	 */
 	IProject project;
 
+	/**
+	 * The page for the Project
+	 */
 	protected NewProjectPageOne pageOne;
 
+	/**
+	 * The default constructor
+	 */
 	public NewProjectWizard() {
 		super();
 		setNeedsProgressMonitor(true);

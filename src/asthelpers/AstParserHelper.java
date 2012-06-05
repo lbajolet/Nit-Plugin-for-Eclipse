@@ -58,22 +58,33 @@ public class AstParserHelper {
 	 * @return A Start node
 	 */
 	public Start getAstForDocument(IDocument document) {
+		if (document != null) {
+			DocumentBufferStream dbs = new DocumentBufferStream();
 
-		DocumentBufferStream dbs = new DocumentBufferStream();
+			dbs.setDoc(document);
 
-		dbs.setDoc(document);
-
-		Lexer lex = this.getLexForSource(dbs);
-		if (lex != null) {
-			Start node = getAstForDocumentBody(lex);
-			if (node != null) {
-				this.saveStartNodeInAST(node, document);
-				return node;
+			Lexer lex = this.getLexForSource(dbs);
+			if (lex != null) {
+				Start node = getAstForDocumentBody(lex);
+				if (node != null) {
+					this.saveStartNodeInAST(node, document);
+					return node;
+				}
 			}
+			return null;
+		} else {
+			return null;
 		}
-		return null;
 	}
 
+	/**
+	 * Gets the AST Start node of a Document if the parsing succeeds or if the
+	 * document had been parsed before.
+	 * 
+	 * @param file
+	 *            The IFile to parse
+	 * @return A Start node if found or null otherwise
+	 */
 	public Start getAstForDocument(IFile file) {
 
 		Lexer lex = getLexForSource(file);
@@ -88,6 +99,16 @@ public class AstParserHelper {
 		return null;
 	}
 
+	/**
+	 * Gets the AST Start node of an import node if the parsing succeeds or if
+	 * the document had been parsed before. Returns null otherwise
+	 * 
+	 * @param imp
+	 *            The import node
+	 * @param fileToSeekFrom
+	 *            The file needed to simulate the import mechanism
+	 * @return A Start node if found or null otherwise
+	 */
 	public Start getAstForDocument(AStdImport imp, IFile fileToSeekFrom) {
 		// Get IFile for this import
 		AModuleName moduleName = (AModuleName) imp.getName();
@@ -152,6 +173,14 @@ public class AstParserHelper {
 		return null;
 	}
 
+	/**
+	 * Saves a Start node in the AST for the IFile given
+	 * 
+	 * @param node
+	 *            The node to save into the ASTReposit for the actual project
+	 * @param fileBound
+	 *            The file bound to the node, used to get the name
+	 */
 	private void saveStartNodeInAST(Start node, IFile fileBound) {
 		try {
 			((NitNature) fileBound.getProject().getNature(NitNature.NATURE_ID))
@@ -162,6 +191,15 @@ public class AstParserHelper {
 		}
 	}
 
+	/**
+	 * Saves a Start node in the AST for the IDocument given
+	 * 
+	 * @param node
+	 *            The node to save into the ASTReposit for the actual project
+	 * @param fileBound
+	 *            The document bound to the node, used to get the name, project
+	 *            and save into the reposit
+	 */
 	private void saveStartNodeInAST(Start node, IDocument fileBound) {
 		AModuledecl docName = (AModuledecl) this.getModuleOfAST(node)
 				.getModuledecl();
@@ -189,6 +227,17 @@ public class AstParserHelper {
 		}
 	}
 
+	/**
+	 * Saves a Start node in the AST for the File given
+	 * 
+	 * @param node
+	 *            The node to save into the ASTReposit for the actual project
+	 * @param fileBound
+	 *            The File bound to the Start node
+	 * @param natureConcerned
+	 *            Nature concerned by the node, to save in the AST Reposit of
+	 *            the good project
+	 */
 	private void saveStartNodeInAST(Start node, File fileBound,
 			NitNature natureConcerned) {
 		String fileName = fileBound.getName();
@@ -200,6 +249,13 @@ public class AstParserHelper {
 		}
 	}
 
+	/**
+	 * Gets the AST for specified Lexer
+	 * 
+	 * @param lex
+	 *            Lexer for a file
+	 * @return Start node if parsed or null otherwise
+	 */
 	private Start getAstForDocumentBody(Lexer lex) {
 
 		Parser pp = new Parser(lex);
@@ -264,12 +320,26 @@ public class AstParserHelper {
 		}
 	}
 
+	/**
+	 * Gets a Lexer instance for a DocumentBufferStream instance
+	 * 
+	 * @param dbs
+	 *            DocumentBufferStream used to parse a file
+	 * @return The Lexer instance corresponding to the DocumentBufferStream
+	 */
 	private Lexer getLexForSource(DocumentBufferStream dbs) {
 		dbs.reset();
 
 		return new Lexer(new PushbackReader(dbs, 2));
 	}
 
+	/**
+	 * Gets a lexer instance for a source IFile
+	 * 
+	 * @param file
+	 *            The IFile used to get the Lexer instance
+	 * @return The Lexer instance
+	 */
 	private Lexer getLexForSource(IFile file) {
 		PushbackReader pbr = null;
 		try {
@@ -285,6 +355,13 @@ public class AstParserHelper {
 		return null;
 	}
 
+	/**
+	 * Get a lexer instance for a Source File
+	 * 
+	 * @param file
+	 *            The File used to get a Lexer Instance
+	 * @return The Lexer instance
+	 */
 	private Lexer getLexForSource(File file) {
 		Lexer lex = null;
 		if (file.exists()) {
@@ -335,6 +412,12 @@ public class AstParserHelper {
 		return defs;
 	}
 
+	/**
+	 * Gets the Top Classes Definitions of a Module
+	 * 
+	 * @param module The module to get top level classes into
+	 * @return An ArrayList of Top classes definitions
+	 */
 	public ArrayList<ATopClassdef> getATopClassesOfModule(AModule module) {
 
 		ArrayList<ATopClassdef> defs = new ArrayList<ATopClassdef>();

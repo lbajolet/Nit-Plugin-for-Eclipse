@@ -2,24 +2,55 @@ package builder;
 
 import plugin.NitActivator;
 
+/**
+ * @author lucas Class representing a message sent by the nit compiler (better
+ *         presentation)
+ */
 public class NitCompilerMessage {
 
 	public static final int NIT_ERROR_TYPE = 1;
 	public static final int NIT_WARNING_TYPE = 2;
 	public static final int NIT_OTHER_TYPE = 3;
 
+	/**
+	 * The raw message sent by the compiler
+	 */
 	private String rawMessage;
+	/**
+	 * The type of message (ERROR/WARNING/OTHER)
+	 */
 	private int type;
+	/**
+	 * The name of the file concerned by this message
+	 */
 	private String fileName;
+	/**
+	 * The line concerned by the message
+	 */
 	private int line;
+	/**
+	 * Where the error/warning starts in the line
+	 */
 	private int startIndex;
+	/**
+	 * Where the error/warning ends in the line
+	 */
 	private int endIndex;
+	/**
+	 * The message cleaned by the functions
+	 */
 	private String realMessage;
 
+	/**
+	 * @param rawMessage
+	 */
 	public NitCompilerMessage(String rawMessage) {
 		setRawMessage(rawMessage);
 	}
 
+	/**
+	 * @param rawMessage
+	 */
 	public void setRawMessage(String rawMessage) {
 		this.rawMessage = rawMessage;
 		try {
@@ -30,10 +61,16 @@ public class NitCompilerMessage {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public String getRawMessage() {
 		return this.rawMessage;
 	}
 
+	/**
+	 * Tries to parse the raw message sent back by the compiler
+	 */
 	private void parseMessage() {
 		// Gets the type of message
 		if (this.rawMessage.toLowerCase().contains("error")) {
@@ -72,6 +109,12 @@ public class NitCompilerMessage {
 		}
 	}
 
+	/**
+	 * Get the infos form the message (line number, start index and end index)
+	 * 
+	 * @param midStringInCompilerMessage
+	 * @return And int array such as [line,start index,end index]
+	 */
 	private int[] getInfos(String midStringInCompilerMessage) {
 		// This is what the line looks like : 410,25--15
 
