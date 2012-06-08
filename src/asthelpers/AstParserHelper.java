@@ -203,7 +203,19 @@ public class AstParserHelper {
 	private void saveStartNodeInAST(Start node, IDocument fileBound) {
 		AModuledecl docName = (AModuledecl) this.getModuleOfAST(node)
 				.getModuledecl();
-		String modName = docName.getName().toString();
+		String modName = null;
+		if (docName != null) {
+			modName = docName.getName().toString().trim() + ".nit";
+		} else {
+			// Si l'on ne peut pas récupérer de nom pour le module, on devra
+			// chercher le nom du fichier directement
+			IEditorInput input = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage()
+					.getActiveEditor().getEditorInput();
+			if(input instanceof FileEditorInput){
+				modName = ((FileEditorInput) input).getFile().getName();
+			}
+		}
 		try {
 			// Get open editors
 			for (IEditorReference editor : PlatformUI.getWorkbench()
@@ -213,7 +225,7 @@ public class AstParserHelper {
 					FileEditorInput fed = (FileEditorInput) editor
 							.getEditorInput();
 					String fileName = fed.getFile().getName();
-					if (fileName.equals(modName.trim() + ".nit")) {
+					if (fileName.equals(modName)) {
 						NitNature nnat = (NitNature) fed.getFile().getProject()
 								.getNature(NitNature.NATURE_ID);
 						nnat.getAstReposit().addOrReplaceAST(fileName, node);
@@ -415,7 +427,8 @@ public class AstParserHelper {
 	/**
 	 * Gets the Top Classes Definitions of a Module
 	 * 
-	 * @param module The module to get top level classes into
+	 * @param module
+	 *            The module to get top level classes into
 	 * @return An ArrayList of Top classes definitions
 	 */
 	public ArrayList<ATopClassdef> getATopClassesOfModule(AModule module) {
@@ -547,5 +560,23 @@ public class AstParserHelper {
 		}
 
 		return constructs;
+	}
+
+	/**
+	 * Checks if a nit file can be used as an executable (has top level code)
+	 * 
+	 * @param node
+	 *            The Start node to parse and check if top-level source code can
+	 *            be found
+	 * @return True if executable, False otherwise
+	 */
+	public boolean checkIfExecutable(Start node) {
+		AModule mod = this.getModuleOfAST(node);
+		LinkedList<PClassdef> classes = mod.getClassdefs();
+		for (PClassdef nitClass : classes) {
+			int tooo = 0;
+			tooo++;
+		}
+		return false;
 	}
 }

@@ -13,6 +13,15 @@
       </editor>
    </extension>
    <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="perspective.NitPerspective">
+         <actionSet
+               id="org.eclipse.debug.ui.launchActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+   <extension
          id="org.uqam.nit.ndt.builder"
          name="Nit Builder"
          point="org.eclipse.core.resources.builders">
@@ -113,14 +122,26 @@
    <extension
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
-            class="org.uqam.nit.ndt.nitLaunchShortcut"
+            class="launcher.nitLaunchShortcut"
+            description="Compiles a nit program and execute it in the standard console."
             icon="Resources/NitLogo.png"
             id="org.uqam.nit.ndt.nitLaunchShortcut"
             label="Nit Program"
-            modes="org.uqam.nit.ndt.shortcut1">
-            	<perspective
-                   id="org.uqam.nit.ndt.perspective.NitPerspective">
-            	</perspective>
+            modes="run">
+         <contextualLaunch>
+            <contextLabel
+                  label="Run nit program"
+                  mode="run">
+            </contextLabel>
+            <enablement>
+               <with
+                     variable="selection">
+               </with>
+            </enablement>
+         </contextualLaunch>
       </shortcut>
+   </extension>
+   <extension
+         point="org.eclipse.pde.ui.launchShortcuts">
    </extension>
 </plugin>
