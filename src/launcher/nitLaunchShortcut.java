@@ -1,5 +1,11 @@
 package launcher;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+
+import node.Start;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.ISelection;
@@ -36,10 +42,23 @@ public class nitLaunchShortcut extends EclipseLaunchShortcut {
 			try {
 				NitNature nnat = (NitNature) nitProj
 						.getNature(NitNature.NATURE_ID);
-//				si c'est le cas, on va chercher des candidats potentiels pour la compilation/exécution
-//				IFile[] targets = nnat.getPotentialTargets();
-				
-				nnat.getAstReposit().getAST(nameOfAST);
+				// si c'est le cas, on va chercher des candidats potentiels pour
+				// la compilation/exécution
+				// IFile[] targets = nnat.getPotentialTargets();
+
+				Set<String> projectKeys = nnat.getAstReposit().getKeys();
+				Iterator<String> iter = projectKeys.iterator();
+				String nextKey;
+				AstParserHelper aph = new AstParserHelper();
+				LinkedList<Start> executableFiles = new LinkedList<Start>();
+				while (iter.hasNext()) {
+					nextKey = iter.next();
+					if (aph.checkIfExecutable(nnat.getAstReposit().getAST(
+							nextKey))) {
+						executableFiles.add(nnat.getAstReposit()
+								.getAST(nextKey));
+					}
+				}
 			} catch (Exception e) {
 				if (NitActivator.DEBUG_MODE)
 					e.printStackTrace();

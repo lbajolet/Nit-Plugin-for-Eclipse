@@ -5,11 +5,12 @@ import java.util.HashMap;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProvider;
+
+import plugin.NitActivator;
 
 public class NitCompilerMessageInterpreter {
 
@@ -28,7 +29,7 @@ public class NitCompilerMessageInterpreter {
 		}
 		return compMess.toArray(new NitCompilerMessage[compMess.size()]);
 	}
-	
+
 	/**
 	 * Adds the processed messages to the Problems view of Eclipse and adds
 	 * markers on the problematic files, useful for debugging
@@ -36,8 +37,8 @@ public class NitCompilerMessageInterpreter {
 	 * @param mess
 	 *            Messages to add as markers to the problems view and files
 	 */
-	public void addMessagesToProblems(NitCompilerMessage[] mess,
-			IFile target, HashMap<String, IFile> nitFilesOfProject) {
+	public void addMessagesToProblems(NitCompilerMessage[] mess, IFile target,
+			HashMap<String, IFile> nitFilesOfProject) {
 
 		for (NitCompilerMessage currentMessage : mess) {
 			if (nitFilesOfProject.containsKey(currentMessage.getFileName())) {
@@ -56,7 +57,8 @@ public class NitCompilerMessageInterpreter {
 					startOffset = doc.getLineInformation(
 							currentMessage.getLine() - 1).getOffset();
 				} catch (Exception e) {
-					e.printStackTrace();
+					if (NitActivator.DEBUG_MODE)
+						e.printStackTrace();
 				}
 				try {
 					switch (currentMessage.getType()) {
@@ -120,7 +122,8 @@ public class NitCompilerMessageInterpreter {
 						break;
 					}
 				} catch (CoreException e) {
-					e.printStackTrace();
+					if (NitActivator.DEBUG_MODE)
+						e.printStackTrace();
 				}
 			} else {
 				IMarker m;
@@ -134,7 +137,8 @@ public class NitCompilerMessageInterpreter {
 						m.setAttribute(IMarker.LINE_NUMBER, 1);
 					}
 				} catch (CoreException e) {
-					e.printStackTrace();
+					if (NitActivator.DEBUG_MODE)
+						e.printStackTrace();
 				}
 			}
 		}

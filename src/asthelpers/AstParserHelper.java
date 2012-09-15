@@ -27,6 +27,7 @@ import node.Start;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -212,7 +213,7 @@ public class AstParserHelper {
 			IEditorInput input = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage()
 					.getActiveEditor().getEditorInput();
-			if(input instanceof FileEditorInput){
+			if (input instanceof FileEditorInput) {
 				modName = ((FileEditorInput) input).getFile().getName();
 			}
 		}
@@ -354,9 +355,11 @@ public class AstParserHelper {
 	 */
 	private Lexer getLexForSource(IFile file) {
 		PushbackReader pbr = null;
+		IPath fullPath = file.getLocation();
+		File finalFile = fullPath.toFile();
+		boolean exx = finalFile.exists();
 		try {
-			pbr = new PushbackReader(
-					new FileReader(file.getFullPath().toFile()), 2);
+			pbr = new PushbackReader(new FileReader(finalFile), 2);
 		} catch (FileNotFoundException e1) {
 			if (NitActivator.DEBUG_MODE)
 				e1.printStackTrace();

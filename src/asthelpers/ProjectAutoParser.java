@@ -118,6 +118,7 @@ public class ProjectAutoParser {
 											Status.ERROR,
 											"Error with nit compiler",
 											"Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?"));
+							this.cancel();
 						}
 
 						compileProcess = Runtime.getRuntime().exec(peon);

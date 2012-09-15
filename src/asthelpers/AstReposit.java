@@ -1,6 +1,7 @@
 package asthelpers;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import node.Start;
 
@@ -10,8 +11,8 @@ import node.Start;
 public class AstReposit {
 
 	/**
-	 * Collection of all the ASTs of a Project
-	 * To get an AST, the key is : "filename.nit"
+	 * Collection of all the ASTs of a Project To get an AST, the key is :
+	 * "filename.nit"
 	 */
 	private HashMap<String, Start> asts;
 
@@ -34,6 +35,10 @@ public class AstReposit {
 			asts.remove(nameOfAST);
 		}
 		asts.put(nameOfAST, startNodeOfAST);
+	}
+
+	public Set<String> getKeys() {
+		return this.asts.keySet();
 	}
 
 	/**
