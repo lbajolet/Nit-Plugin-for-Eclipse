@@ -7,7 +7,7 @@
             class="editor.NitEditor"
             default="false"
             extensions="nit"
-            icon="Resources/NitLogo.png"
+            icon="Resources/nit_logo.png"
             id="eclipse.editor.nit.ndt.editor"
             name="Nit Editor">
       </editor>
@@ -60,7 +60,7 @@
       <wizard
             category="Nit"
             class="newprojectwizard.NewProjectWizard"
-            icon="Resources/NitLogo.png"
+            icon="Resources/nit_project.png"
             id="org.uqam.nit.ndt.newProjectWizard"
             name="Nit Project"
             project="true">
@@ -79,7 +79,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="perspective.NitPerspective"
-            icon="Resources/nitperspective.png"
+            icon="Resources/nit_perspective.png"
             id="perspective.NitPerspective"
             name="Nit Development">
       </perspective>
@@ -98,7 +98,7 @@
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             configTypeID="org.uqam.nit.ndt.nitLauncher"
-            icon="Resources/NitLogo.png"
+            icon="Resources/nit_logo.png"
             id="org.uqam.nit.ndt.nitLauncherImage">
       </launchConfigurationTypeImage>
    </extension>
@@ -114,7 +114,7 @@
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
             class="org.uqam.nit.ndt.nitLaunchShortcut"
-            icon="Resources/NitLogo.png"
+            icon="Resources/nit_logo.png"
             id="org.uqam.nit.ndt.nitLaunchShortcut"
             label="Nit Program"
             modes="org.uqam.nit.ndt.shortcut1">
