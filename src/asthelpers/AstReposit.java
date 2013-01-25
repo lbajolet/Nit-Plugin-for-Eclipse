@@ -2,7 +2,7 @@ package asthelpers;
 
 import java.util.HashMap;
 
-import node.Start;
+import org.nitlanguage.gen.node.Start;
 
 /**
  * Singleton reposit for Abstract Syntax Trees of modules
