@@ -3,8 +3,8 @@ package editor;
 import java.io.IOException;
 import java.io.PushbackReader;
 
-import lexer.Lexer;
-import lexer.LexerException;
+import org.nitlanguage.gen.lexer.Lexer;
+import org.nitlanguage.gen.lexer.LexerException;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -82,7 +82,7 @@ public class NitScanner implements ITokenScanner {
 	 *            : The token to get the origin position from
 	 * @return the position computed from the document
 	 */
-	private int computePositionFromOfToken(node.Token tok) {
+	private int computePositionFromOfToken(org.nitlanguage.gen.node.Token tok) {
 		try {
 			int linesToAdd = this.doc.getLineOfOffset(this.docStr.fStartRange);
 			int test = this.doc.getLineOffset(linesToAdd + tok.getLine() - 1);
@@ -98,10 +98,10 @@ public class NitScanner implements ITokenScanner {
 		if (this.doc != null) {
 			try {
 
-				node.Token tok = lex.next();
+				org.nitlanguage.gen.node.Token tok = lex.next();
 				this.fTokenLength = tok.getText().length();
 				this.fTokenOffset = this.computePositionFromOfToken(tok);
-				if (tok instanceof node.EOF) {
+				if (tok instanceof org.nitlanguage.gen.node.EOF) {
 					return Token.EOF;
 				}
 

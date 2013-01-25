@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import node.AConcreteMethPropdef;
-import node.ADeferredMethPropdef;
-import node.AStdClassdef;
-import node.ATopClassdef;
+import org.nitlanguage.gen.node.AConcreteMethPropdef;
+import org.nitlanguage.gen.node.ADeferredMethPropdef;
+import org.nitlanguage.gen.node.AStdClassdef;
+import org.nitlanguage.gen.node.ATopClassdef;
 
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;

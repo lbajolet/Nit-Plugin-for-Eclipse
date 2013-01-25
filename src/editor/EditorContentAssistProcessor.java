@@ -3,15 +3,6 @@ package editor;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import node.AConcreteMethPropdef;
-import node.ADeferredMethPropdef;
-import node.AModule;
-import node.AStdClassdef;
-import node.AStdImport;
-import node.ATopClassdef;
-import node.PPropdef;
-import node.Start;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -21,9 +12,16 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.nitlanguage.gen.node.AConcreteMethPropdef;
+import org.nitlanguage.gen.node.ADeferredMethPropdef;
+import org.nitlanguage.gen.node.AModule;
+import org.nitlanguage.gen.node.AStdClassdef;
+import org.nitlanguage.gen.node.AStdImport;
+import org.nitlanguage.gen.node.ATopClassdef;
+import org.nitlanguage.gen.node.PPropdef;
+import org.nitlanguage.gen.node.Start;
 
 import asthelpers.AstParserHelper;
-
 /**
  * @author R4PaSs
  * 
