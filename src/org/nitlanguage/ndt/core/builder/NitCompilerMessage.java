@@ -1,6 +1,6 @@
-package builder;
+package org.nitlanguage.ndt.core.builder;
 
-import plugin.NitActivator;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
  * @author lucas Class representing a message sent by the nit compiler (better

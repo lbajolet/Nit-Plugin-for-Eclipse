@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
-import plugin.NitActivator;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
  * @author lucas The nit preferences page (Window > Preferences > Nit)

@@ -2,7 +2,6 @@ package org.nitlanguage.ndt.ui.newprojectwizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -26,8 +25,7 @@ import org.eclipse.ui.internal.ide.StatusUtil;
 import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
-
-import builder.NitNature;
+import org.nitlanguage.ndt.core.builder.NitNature;
 
 /**
  * @author lucas The wizard for new Nit Projects

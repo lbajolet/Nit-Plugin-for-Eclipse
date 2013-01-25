@@ -1,4 +1,4 @@
-package asthelpers;
+package org.nitlanguage.ndt.core.asthelpers;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +19,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-import plugin.NitActivator;
-import builder.NitCompilerMessageInterpreter;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.core.builder.NitCompilerMessageInterpreter;
 
 public class ProjectAutoParser {
 

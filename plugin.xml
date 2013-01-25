@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         point="org.eclipse.ui.editors">
+   <extension point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.nitlanguage.ndt.ui.perspective.NitPerspective"
+            icon="icons/nit_perspective.png"
+            id="org.nitlanguage.ndt.ui.perspective.NitPerspective"
+            name="Nit">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.editors">
       <editor
             class="org.nitlanguage.ndt.ui.editor.NitEditor"
             default="false"
             extensions="nit"
             icon="icons/nit_logo.png"
-            id="eclipse.editor.nit.ndt.editor"
+            id="org.nitlanguage.ndt.ui.editor.NitEditor"
             name="Nit Editor">
       </editor>
    </extension>
@@ -19,7 +26,7 @@
       <builder
             hasNature="true">
          <run
-               class="builder.NitBuilder">
+               class="org.nitlanguage.ndt.core.builder.NitBuilder">
          </run>
       </builder>
    </extension>
@@ -29,7 +36,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="builder.NitNature">
+               class="org.nitlanguage.ndt.core.builder.NitNature">
          </run>
       </runtime>
       <builder
@@ -43,12 +50,9 @@
       <super
             type="org.eclipse.core.resources.problemmarker">
       </super>
-      <persistent
-            value="true">
-      </persistent>
+      <persistent value="true"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
+   <extension point="org.eclipse.ui.preferencePages">
       <page
             class="org.nitlanguage.ndt.ui.preferences.NitPreferencePage"
             id="org.uqam.nit.ndt.NitPreferencePage"
@@ -57,8 +61,12 @@
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
+      <category
+            id="org.uqam.nit.ndt.wizard.category"
+            name="Nit">
+      </category>
       <wizard
-            category="Nit"
+            category="org.uqam.nit.ndt.wizard.category"
             class="org.nitlanguage.ndt.ui.newprojectwizard.NewProjectWizard"
             icon="icons/nit_project.png"
             id="org.uqam.nit.ndt.newProjectWizard"
@@ -67,60 +75,54 @@
       </wizard>
    </extension>
    <extension
-         id="id1"
+         id="org.nitlanguage.ndt.nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="builder.NitNature">
+               class="org.nitlanguage.ndt.core.builder.NitNature">
          </run>
       </runtime>
    </extension>
-   <extension
-         point="org.eclipse.ui.perspectives">
-      <perspective
-            class="org.nitlanguage.ndt.ui.perspective.NitPerspective"
-            icon="icons/nit_perspective.png"
-            id="perspective.NitPerspective"
-            name="Nit Development">
-      </perspective>
-   </extension>
-   <extension
-         point="org.eclipse.debug.core.launchConfigurationTypes">
+   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
-            delegate="launcher.NitLauncher"
+            delegate="org.nitlanguage.ndt.core.launcher.NitLauncher"
+	    delegateName="Nit Launcher"            
+	    delegateDescription="The Nit Application Launcher supports running Nit on UNIX based operating systems."
             id="org.uqam.nit.ndt.nitLauncher"
-            modes="run"
-            name="Nit Program"
-            public="true">
+            modes="run, debug"
+            name="Nit Application">
       </launchConfigurationType>
    </extension>
-   <extension
-         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             configTypeID="org.uqam.nit.ndt.nitLauncher"
             icon="icons/nit_logo.png"
             id="org.uqam.nit.ndt.nitLauncherImage">
       </launchConfigurationTypeImage>
    </extension>
-   <extension
-         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+   <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            class="launcher.NitLauncherTabGroup"
+            class="org.nitlanguage.ndt.core.launcher.NitLauncherTabGroup"
             id="org.uqam.nit.ndt.nitLaunchProgram"
             type="org.uqam.nit.ndt.nitLauncher">
+            <launchMode
+                  mode="run"
+                  description="run description">
+            </launchMode>
       </launchConfigurationTabGroup>
    </extension>
-   <extension
-         point="org.eclipse.debug.ui.launchShortcuts">
-      <shortcut
-            class="org.uqam.nit.ndt.nitLaunchShortcut"
-            icon="icons/nit_logo.png"
-            id="org.uqam.nit.ndt.nitLaunchShortcut"
-            label="Nit Program"
-            modes="org.uqam.nit.ndt.shortcut1">
-            	<perspective
-                   id="org.uqam.nit.ndt.perspective.NitPerspective">
-            	</perspective>
-      </shortcut>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.nitlanguage.ndt.ui.perspective.NitPerspective">
+         <actionSet
+               id="org.eclipse.debug.ui.launchActionSet">
+         </actionSet>
+      </perspectiveExtension>
    </extension>
+    <extension point="org.eclipse.ui.ide.projectNatureImages">
+       <image
+             icon="icons/nit_project.png"
+             id="org.uqam.nit.ndt.nature.project_img"
+             natureId="org.uqam.nit.ndt.nature">
+       </image>
+    </extension>
 </plugin>

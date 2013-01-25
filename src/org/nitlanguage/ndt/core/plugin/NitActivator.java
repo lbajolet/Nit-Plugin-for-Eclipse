@@ -1,4 +1,4 @@
-package plugin;
+package org.nitlanguage.ndt.core.plugin;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -10,7 +10,7 @@ import org.osgi.framework.BundleContext;
 public class NitActivator extends AbstractUIPlugin {
 	
 	// The plug-in ID
-	public static final String PLUGIN_ID = "ActivatorExample"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "org.nitlanguage.ndt.plugin"; //$NON-NLS-1$
 	
 	// Compiler path string
 	public static final String COMPILER_PATH_PREFERENCES_ID = "compilerLocation";

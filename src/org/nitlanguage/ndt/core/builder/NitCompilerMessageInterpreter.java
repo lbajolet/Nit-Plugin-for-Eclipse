@@ -1,4 +1,4 @@
-package builder;
+package org.nitlanguage.ndt.core.builder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

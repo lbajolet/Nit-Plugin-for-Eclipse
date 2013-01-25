@@ -1,4 +1,4 @@
-package general_helpers;
+package org.nitlanguage.ndt.core;
 
 /**
  * @author lucas Helper for String Array operations such as Join or remove the

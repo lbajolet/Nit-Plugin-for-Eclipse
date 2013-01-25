@@ -1,4 +1,4 @@
-package launcher;
+package org.nitlanguage.ndt.core.launcher;
 
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
 import org.eclipse.debug.ui.ILaunchConfigurationDialog;

@@ -1,4 +1,4 @@
-package builder;
+package org.nitlanguage.ndt.core.builder;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
-import plugin.NitActivator;
-import asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 
 /**
  * @author r4pass Helper to call the Nit Compiler

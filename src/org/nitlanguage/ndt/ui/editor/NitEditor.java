@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.source.Annotation;
@@ -14,9 +13,8 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-
-import plugin.NitActivator;
-import asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 
 /**
  * @author lucas The editor for nit, bound to the completion methods and the
