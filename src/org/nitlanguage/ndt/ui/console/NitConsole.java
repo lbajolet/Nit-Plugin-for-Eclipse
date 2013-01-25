@@ -1,4 +1,4 @@
-package console;
+package org.nitlanguage.ndt.ui.console;
 
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;

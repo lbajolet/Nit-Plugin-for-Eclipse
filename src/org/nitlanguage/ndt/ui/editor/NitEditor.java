@@ -1,4 +1,4 @@
-package editor;
+package org.nitlanguage.ndt.ui.editor;
 
 import java.io.IOException;
 import java.io.StringReader;

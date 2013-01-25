@@ -1,4 +1,4 @@
-package preferences;
+package org.nitlanguage.ndt.ui.preferences;
 
 import java.io.File;
 

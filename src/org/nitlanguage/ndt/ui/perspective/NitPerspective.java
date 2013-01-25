@@ -1,4 +1,4 @@
-package perspective;
+package org.nitlanguage.ndt.ui.perspective;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
