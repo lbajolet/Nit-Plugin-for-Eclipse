@@ -1,4 +1,4 @@
-package asthelpers;
+package org.nitlanguage.ndt.core.asthelpers;
 
 import java.util.HashMap;
 

@@ -1,10 +1,9 @@
-package launcher;
+package org.nitlanguage.ndt.core.launcher;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -17,9 +16,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
-
-import plugin.NitActivator;
-import builder.NitNature;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.core.builder.NitNature;
 import org.nitlanguage.ndt.ui.console.NitConsole;
 
 /**

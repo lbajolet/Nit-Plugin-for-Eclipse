@@ -1,4 +1,4 @@
-package plugin;
+package org.nitlanguage.ndt.core.plugin;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package launcher;
+package org.nitlanguage.ndt.core.launcher;
 
 import java.io.File;
 

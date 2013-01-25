@@ -14,11 +14,10 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
  org.eclipse.debug.ui,
  org.eclipse.ui.console;bundle-version="3.5.100"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Activator: plugin.NitActivator
+Bundle-Activator: org.nitlanguage.ndt.core.plugin.NitActivator
 Bundle-ActivationPolicy: lazy
-Export-Package:  asthelpers,
- builder,
- plugin,
+Export-Package:  org.nitlanguage.ndt.core.builder,
+ org.nitlanguage.ndt.core.plugin,
  org.nitlanguage.ndt.ui.editor,
  org.nitlanguage.ndt.ui.newprojectwizard,
  org.nitlanguage.ndt.ui.perspective,

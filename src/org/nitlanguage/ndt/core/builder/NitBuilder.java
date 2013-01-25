@@ -1,4 +1,4 @@
-package builder;
+package org.nitlanguage.ndt.core.builder;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
 
-import plugin.NitActivator;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
  * @author R4PaSs The builder for nit projet, is used to call for the Nit

@@ -1,4 +1,4 @@
-package launcher;
+package org.nitlanguage.ndt.core.launcher;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.debug.core.ILaunchConfiguration;
