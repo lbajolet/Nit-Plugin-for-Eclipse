@@ -4,7 +4,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="editor.NitEditor"
+            class="org.nitlanguage.ndt.ui.editor.NitEditor"
             default="false"
             extensions="nit"
             icon="icons/nit_logo.png"
@@ -50,7 +50,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="preferences.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitPreferencePage"
             id="org.uqam.nit.ndt.NitPreferencePage"
             name="Nit">
       </page>
@@ -59,7 +59,7 @@
          point="org.eclipse.ui.newWizards">
       <wizard
             category="Nit"
-            class="newprojectwizard.NewProjectWizard"
+            class="org.nitlanguage.ndt.ui.newprojectwizard.NewProjectWizard"
             icon="icons/nit_project.png"
             id="org.uqam.nit.ndt.newProjectWizard"
             name="Nit Project"
@@ -78,7 +78,7 @@
    <extension
          point="org.eclipse.ui.perspectives">
       <perspective
-            class="perspective.NitPerspective"
+            class="org.nitlanguage.ndt.ui.perspective.NitPerspective"
             icon="icons/nit_perspective.png"
             id="perspective.NitPerspective"
             name="Nit Development">

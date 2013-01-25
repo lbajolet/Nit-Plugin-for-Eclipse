@@ -20,7 +20,7 @@ import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
 
 import plugin.NitActivator;
 import builder.NitNature;
-import console.NitConsole;
+import org.nitlanguage.ndt.ui.console.NitConsole;
 
 /**
  * @author lucas The launcher class, auto-compiles and executes a nit program

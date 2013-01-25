@@ -1,4 +1,4 @@
-package editor;
+package org.nitlanguage.ndt.ui.editor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

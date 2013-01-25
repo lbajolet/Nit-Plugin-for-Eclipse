@@ -35,7 +35,7 @@ import org.nitlanguage.gen.parser.Parser;
 import org.nitlanguage.gen.parser.ParserException;
 import plugin.NitActivator;
 import builder.NitNature;
-import editor.DocumentBufferStream;
+import org.nitlanguage.ndt.ui.editor.DocumentBufferStream;
 import general_helpers.StringArrayHelp;
 
 /**

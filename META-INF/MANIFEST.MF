@@ -16,13 +16,13 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: plugin.NitActivator
 Bundle-ActivationPolicy: lazy
-Export-Package: asthelpers,
+Export-Package:  asthelpers,
  builder,
- editor,
- newprojectwizard,
- perspective,
  plugin,
- preferences,
+ org.nitlanguage.ndt.ui.editor,
+ org.nitlanguage.ndt.ui.newprojectwizard,
+ org.nitlanguage.ndt.ui.perspective,
+ org.nitlanguage.ndt.ui.preferences,
  org.nitlanguage.gen.analysis,
  org.nitlanguage.gen.lexer,
  org.nitlanguage.gen.node,

@@ -1,4 +1,4 @@
-package newprojectwizard;
+package org.nitlanguage.ndt.ui.newprojectwizard;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
