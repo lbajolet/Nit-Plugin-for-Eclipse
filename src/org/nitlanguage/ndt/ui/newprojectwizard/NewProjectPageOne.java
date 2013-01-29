@@ -3,6 +3,9 @@ package org.nitlanguage.ndt.ui.newprojectwizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 
+/**
+ * @author lucas.bajolet
+ */
 public class NewProjectPageOne extends WizardNewProjectCreationPage {
 
 	/**

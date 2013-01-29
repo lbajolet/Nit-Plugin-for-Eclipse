@@ -9,8 +9,8 @@ import java.io.OutputStream;
 import java.util.Properties;
 
 /**
- * @author lucas A class to help reading and writing in the properties of a
- *         project
+ * A class to help reading and writing in the properties of a project
+ * @author lucas.bajolet
  */
 public class ProjectPropertiesHelper {
 

@@ -17,8 +17,10 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 
 /**
- * @author lucas The editor for nit, bound to the completion methods and the
- *         highlighting functionalities
+ * The editor for nit, bound to the completion methods and the
+ * highlighting functionalities
+ * @author lucas.bajolet
+ * @author nathan.heu
  */
 public class NitEditor extends TextEditor {
 

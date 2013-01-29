@@ -20,10 +20,11 @@ import org.nitlanguage.gen.node.ATopClassdef;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
 import org.nitlanguage.ndt.core.asthelpers.AstParserHelper;
+
+
 /**
- * @author R4PaSs
- * 
- *         Class charged to provide auto completion for the NitEditor
+ * Class charged to provide auto completion for the NitEditor
+ * @author lucas.bajolet
  */
 public class EditorContentAssistProcessor implements IContentAssistProcessor {
 

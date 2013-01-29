@@ -12,7 +12,9 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
- * @author lucas The nit preferences page (Window > Preferences > Nit)
+ * Main plug-in preferences page (Window > Preferences > Nit).
+ * Give access to child preferences pages.
+ * @author lucas.bajolet
  */
 public class NitPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {

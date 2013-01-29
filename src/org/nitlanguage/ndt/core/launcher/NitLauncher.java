@@ -21,14 +21,16 @@ import org.nitlanguage.ndt.core.builder.NitNature;
 import org.nitlanguage.ndt.ui.console.NitConsole;
 
 /**
- * @author lucas The launcher class, auto-compiles and executes a nit program
- *         with the selected configuration
+ * The launcher class, auto-compiles and executes a nit program
+ * with the selected configuration
+ * @author lucas.bajolet 
+ * @author nathan.heu 
  */
 public class NitLauncher implements ILaunchConfigurationDelegate {
 
 	/**
-	 * @author lucas The background job doing the compiling + Executing
-	 *         processes
+	 * The background job doing the compiling + Executing processes
+	 * @author lucas.bajolet 
 	 */
 	private class ExecJob extends Job {
 

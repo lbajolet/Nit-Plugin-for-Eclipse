@@ -16,8 +16,9 @@ import org.eclipse.core.runtime.Status;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
- * @author R4PaSs The builder for nit projet, is used to call for the Nit
- *         Compiler The builder is not incremental since the compiler is not
+ * The builder for Nit Projets. Used to call for the Nit Compiler.
+ * The builder is not incremental since the compiler is not.
+ * @author lucas.bajolet 
  */
 public class NitBuilder extends IncrementalProjectBuilder {
 

@@ -13,10 +13,9 @@ import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
 /**
- * @author R4PaSs
- * 
- *         Provides the methods needed to compute the words to propose via
- *         AutoComplete for the NitEditor
+ * Provides the methods needed to compute the words to propose via
+ * AutoComplete for the NitEditor
+ * @author lucas.bajolet
  */
 public class WordProvider {
 

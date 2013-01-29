@@ -7,7 +7,12 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * @author lucas Shortcut for a nit configuration TODO : Implement me.
+ * Shortcut for a nit configuration
+ * Responsible for interpreting active editor or selection and
+ * launching a Nit application according to the context.
+ * If there is no existing nor reusable run configuration, launch shortcut creates one silently.
+ * @author lucas.bajolet
+ * @author nathan.heu 
  */
 public class nitLaunchShortcut implements ILaunchShortcut2 {
 

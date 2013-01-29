@@ -1,8 +1,9 @@
 package org.nitlanguage.ndt.core;
 
 /**
- * @author lucas Helper for String Array operations such as Join or remove the
- *         lastMember of a String Array
+ * Helper for String Array operations such as Join or remove the
+ * lastMember of a String Array
+ * @author lucas.bajolet
  */
 public class StringArrayHelp {
 

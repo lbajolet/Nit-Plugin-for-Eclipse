@@ -5,8 +5,8 @@ import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IFolderLayout;
 
 /**
- * @author lucas
- * The nit Perspective
+ * The nit Perspective - Defines initial page layout 
+ * @author lucas.bajolet
  */
 public class NitPerspective implements IPerspectiveFactory {
 

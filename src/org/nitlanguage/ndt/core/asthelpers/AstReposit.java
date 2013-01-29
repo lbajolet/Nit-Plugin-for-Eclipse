@@ -5,7 +5,8 @@ import java.util.HashMap;
 import org.nitlanguage.gen.node.Start;
 
 /**
- * Singleton reposit for Abstract Syntax Trees of modules
+ * Singleton deposit for Abstract Syntax Trees of modules
+ * @author lucas.bajolet
  */
 public class AstReposit {
 

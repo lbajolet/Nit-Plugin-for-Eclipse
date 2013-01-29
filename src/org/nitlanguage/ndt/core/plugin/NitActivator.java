@@ -4,8 +4,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
- * @author lucas
- * The plugin activator, singleton
+ * Activator controls the lifecycle of the plug-in
+ * Singleton
+ * @author lucas.bajolet
  */
 public class NitActivator extends AbstractUIPlugin {
 	

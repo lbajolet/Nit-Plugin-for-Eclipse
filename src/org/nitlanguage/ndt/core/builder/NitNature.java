@@ -10,6 +10,10 @@ import org.nitlanguage.ndt.core.asthelpers.AstReposit;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.ProjectPropertiesHelper;
 
+/**
+ * 
+ * @author lucas.bajolet
+ */
 public class NitNature implements IProjectNature {
 
 	/**

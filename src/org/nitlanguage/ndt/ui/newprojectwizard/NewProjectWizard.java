@@ -28,7 +28,8 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.nitlanguage.ndt.core.builder.NitNature;
 
 /**
- * @author lucas The wizard for new Nit Projects
+ * The wizard for new Nit Projects
+ * @author lucas.bajolet
  */
 public class NewProjectWizard extends Wizard implements IWorkbenchWizard {
 
