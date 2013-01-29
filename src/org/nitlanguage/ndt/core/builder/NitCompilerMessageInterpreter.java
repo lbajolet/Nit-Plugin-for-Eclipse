@@ -11,6 +11,10 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
+/**
+ * 
+ * @author lucas.bajolet
+ */
 public class NitCompilerMessageInterpreter {
 
 	/**

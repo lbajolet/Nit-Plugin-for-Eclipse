@@ -17,7 +17,8 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 
 /**
- * @author r4pass Helper to call the Nit Compiler
+ * Helper to call the Nit Compiler
+ * @author lucas.bajolet 
  */
 public class NitCompilerCallerClass {
 

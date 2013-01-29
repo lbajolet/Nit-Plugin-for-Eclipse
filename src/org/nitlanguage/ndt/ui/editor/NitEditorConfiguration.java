@@ -10,7 +10,9 @@ import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
-
+/**
+ * @author lucas.bajolet
+ */
 public class NitEditorConfiguration extends TextSourceViewerConfiguration {
 	private ITokenScanner scanner=null;
 	 

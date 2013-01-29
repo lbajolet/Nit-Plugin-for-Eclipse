@@ -3,8 +3,8 @@ package org.nitlanguage.ndt.core.builder;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
- * @author lucas Class representing a message sent by the nit compiler (better
- *         presentation)
+ * Class representing a message sent by the nit compiler (better presentation)
+ * @author lucas.bajolet 
  */
 public class NitCompilerMessage {
 

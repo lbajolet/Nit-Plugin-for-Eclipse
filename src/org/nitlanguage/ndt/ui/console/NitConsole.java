@@ -7,7 +7,8 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
 /**
- * @author lucas Console wrapper for the Nit plugin (Singleton)
+ * Console wrapper for the Nit plugin (Singleton)
+ * @author lucas.bajolet 
  */
 public class NitConsole {
 

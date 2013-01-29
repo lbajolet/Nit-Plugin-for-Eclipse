@@ -22,10 +22,15 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.core.builder.NitCompilerMessageInterpreter;
 
+/**
+ * 
+ * @author lucas.bajolet
+ */
 public class ProjectAutoParser {
 
 	/**
-	 * @author lucas Job to call compiler on nit files Adds markers on errors
+	 * Job to call compiler on nit files Adds markers on errors
+	 * @author lucas.bajolet
 	 */
 	private class CompilerCallLightJob extends Job {
 

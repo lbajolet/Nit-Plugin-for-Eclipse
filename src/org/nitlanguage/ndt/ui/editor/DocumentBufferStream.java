@@ -8,7 +8,7 @@ import org.eclipse.jface.text.IDocument;
 
 /**
  * Adapts an IDocument used by Eclipse to the NitLexer, which uses a PushbackReader with a Reader as base to read characters from
- * 
+ * @author lucas.bajolet
  */
 public class DocumentBufferStream extends Reader {
 	
