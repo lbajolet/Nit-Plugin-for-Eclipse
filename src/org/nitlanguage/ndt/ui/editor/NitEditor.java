@@ -25,6 +25,7 @@ import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 public class NitEditor extends TextEditor {
 
 	public NitEditor() {
+		setDocumentProvider(new NitDocumentProvider());
 		setSourceViewerConfiguration(new NitEditorConfiguration());
 	}
 
