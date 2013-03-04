@@ -58,6 +58,30 @@
             id="org.uqam.nit.ndt.NitPreferencePage"
             name="Nit">
       </page>
+      <!--<page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitAppearancePage"
+            id="org.nitlanguage.ndt.NitAppearancePage"
+            name="Appearance">
+      </page>
+      <page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitBuildPathPage"
+            id="org.nitlanguage.ndt.NitBuildPathPage"
+            name="Build Path">
+      </page>
+      <page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitCodeStylePage"
+            id="org.nitlanguage.ndt.NitCodeStylePage"
+            name="Code Style">
+      </page>
+      <page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitEditorPage"
+            id="org.nitlanguage.ndt.NitEditorPage"
+            name="Editor">
+      </page>-->
    </extension>
    <extension
          point="org.eclipse.ui.newWizards">
@@ -73,6 +97,14 @@
             name="Nit Project"
             project="true">
       </wizard>
+      <!--<wizard
+            category="org.uqam.nit.ndt.wizard.category"
+            class="org.nitlanguage.ndt.ui.newprojectwizard.NewProjectWizard"
+            icon="icons/adt16.png"
+            id="org.uqam.nit.ndt.newAndroidProjectWizard"
+            name="Nit Project for Android"
+            project="true">
+      </wizard>-->
    </extension>
    <extension
          id="org.nitlanguage.ndt.nature"
@@ -110,6 +142,33 @@
                   description="run description">
             </launchMode>
       </launchConfigurationTabGroup>
+   </extension>
+   <extension point="org.eclipse.debug.ui.launchShortcuts">
+	   <shortcut
+	        class="org.nitlanguage.ndt.core.launcher.NitLaunchShortcut"
+            icon="icons/nit_logo.png"
+	        id="org.uqam.nit.ndt.NitLaunchShortcut"
+	        label="Nit Application"
+	        modes="run, debug">
+		    <contextualLaunch>
+		       <enablement >
+		          <with variable="selection">
+			          <count value="1"/>
+	                  <iterate>
+	                     <test value="*.nit" property="org.eclipse.debug.ui.matchesPattern"/>
+	                  </iterate>
+		          </with>
+		       </enablement>
+		     </contextualLaunch>
+	  </shortcut>
+      <!--<shortcut
+            id="org.uqam.nit.ndt.NitLaunchShortcut"
+            class="org.nitlanguage.ndt.core.launcher.NitLaunchShortcut"
+            icon="icons/nit_logo.png"
+            label="Nit Application"
+            modes="run, debug">
+            <perspective id="org.nitlanguage.ndt.core.perspective.NitPerspective"/>
+      </shortcut>-->
    </extension>
    <extension point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension targetID="org.nitlanguage.ndt.ui.perspective.NitPerspective">
