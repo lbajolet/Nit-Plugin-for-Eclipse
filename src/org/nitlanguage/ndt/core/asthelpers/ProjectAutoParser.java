@@ -18,9 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-
-import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.core.builder.NitCompilerMessageInterpreter;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
  * 
@@ -33,7 +32,11 @@ public class ProjectAutoParser {
 	 * @author lucas.bajolet
 	 */
 	private class CompilerCallLightJob extends Job {
-
+		//Stop after meta-model processing
+		public static final String COMPILER_ARG_ONLY_MM = "--only-metamodel";
+		// Do not use color to display errors and warnings
+		public static final String COMPILER_ARG_NO_COLOR = "--no-color";
+		
 		/**
 		 * Boolean set to true if a job is active at the moment
 		 */
@@ -76,6 +79,22 @@ public class ProjectAutoParser {
 			}
 		}
 
+		private void logCompilerNotFound(){
+			NitActivator
+			.getDefault()
+			.getLog()
+			.log(new Status(
+					Status.ERROR,
+					"Error with nit compiler",
+					"Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?"));
+		}
+		private String constructCompilerCommand(String compilerPath)
+		{
+			return compilerPath + " "
+					+ COMPILER_ARG_ONLY_MM + " "
+					+ COMPILER_ARG_NO_COLOR;
+		}
+		
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
 			this.isActive = true;
@@ -100,45 +119,33 @@ public class ProjectAutoParser {
 
 					// Remove markers of file
 					try {
-						toParse.deleteMarkers(IMarker.PROBLEM, true,
-								IResource.DEPTH_INFINITE);
+						toParse.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
 					} catch (CoreException e2) {
-						if (NitActivator.DEBUG_MODE)
-							e2.printStackTrace();
+						if (NitActivator.DEBUG_MODE) e2.printStackTrace();
 					}
 
 					try {
-						String peon = pathToCompiler
-								+ " --only-metamodel --no-color "
+						String peon = pathToCompiler + " "
+								+ COMPILER_ARG_ONLY_MM + " "
+								+ COMPILER_ARG_NO_COLOR + " " 
 								+ toParse.getLocation().toString();
 
 						// Check if compiler is accessible
 						File comp = new File(pathToCompiler);
-						if (!comp.exists() || !comp.isFile()
-								|| !comp.canExecute()) {
-							NitActivator
-									.getDefault()
-									.getLog()
-									.log(new Status(
-											Status.ERROR,
-											"Error with nit compiler",
-											"Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?"));
+						if (!comp.exists() || !comp.isFile() || !comp.canExecute()) {
+							logCompilerNotFound();
 						}
-
 						compileProcess = Runtime.getRuntime().exec(peon);
 					} catch (IOException e1) {
-						if (NitActivator.DEBUG_MODE)
-							e1.printStackTrace();
+						if (NitActivator.DEBUG_MODE) e1.printStackTrace();
 					}
 
 					try {
 						compileProcess.waitFor();
 					} catch (InterruptedException e) {
-						if (NitActivator.DEBUG_MODE)
-							e.printStackTrace();
+						if (NitActivator.DEBUG_MODE) e.printStackTrace();
 					} catch (NullPointerException e) {
-						if (NitActivator.DEBUG_MODE)
-							e.printStackTrace();
+						if (NitActivator.DEBUG_MODE) e.printStackTrace();
 					}
 
 					try {
@@ -303,8 +310,7 @@ public class ProjectAutoParser {
 			if (NitActivator.DEBUG_MODE)
 				e1.printStackTrace();
 		}
-		ParsingJob pj = new ParsingJob("Parsing project "
-				+ this.projectToParse.getName());
+		ParsingJob pj = new ParsingJob("Parsing project " + this.projectToParse.getName());
 		try {
 			this.nitFilesOfProject.clear();
 			proj.accept(new NitFilesOfProjectParser());

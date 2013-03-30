@@ -3,12 +3,10 @@ package org.nitlanguage.ndt.ui.editor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-
 import org.nitlanguage.gen.node.AConcreteMethPropdef;
 import org.nitlanguage.gen.node.ADeferredMethPropdef;
 import org.nitlanguage.gen.node.AStdClassdef;
 import org.nitlanguage.gen.node.ATopClassdef;
-
 import org.eclipse.jface.text.contentassist.CompletionProposal;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
@@ -86,15 +84,10 @@ public class WordProvider {
 	}
 
 	/**
-	 * @param methsProp
-	 *            Definition of methods proposals (In classes)
-	 * @param defMeths
-	 *            Definition of methods proposals (Top Level)
-	 * @param fromOffset
-	 *            Current offset in IDocument
-	 * @param startsWith
-	 *            String being typed by the user, used to compute intelligent
-	 *            proposals
+	 * @param methsProp Definition of methods proposals (In classes)
+	 * @param defMeths Definition of methods proposals (Top Level)
+	 * @param fromOffset Current offset in IDocument
+	 * @param startsWith String being typed by the user, used to compute intelligent proposals
 	 * @return An array of methods proposals
 	 */
 	public ICompletionProposal[] buildMethProposals(
@@ -128,9 +121,8 @@ public class WordProvider {
 
 		for (String prop : arrayOfStrProps) {
 			if (prop != null) {
-				proposals[count] = new CompletionProposal(prop, fromOffset
-						- startsWith.length(), startsWith.length(),
-						prop.length());
+				proposals[count] = new CompletionProposal(prop, fromOffset - startsWith.length(),
+						startsWith.length(), prop.length());
 				count++;
 			}
 		}

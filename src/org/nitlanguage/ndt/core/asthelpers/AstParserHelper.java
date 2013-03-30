@@ -8,12 +8,22 @@ import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
 import org.nitlanguage.gen.lexer.Lexer;
 import org.nitlanguage.gen.lexer.LexerException;
 import org.nitlanguage.gen.node.AAttrPropdef;
 import org.nitlanguage.gen.node.AConcreteInitPropdef;
 import org.nitlanguage.gen.node.AConcreteMethPropdef;
 import org.nitlanguage.gen.node.ADeferredMethPropdef;
+import org.nitlanguage.gen.node.AInterfaceClasskind;
 import org.nitlanguage.gen.node.AModule;
 import org.nitlanguage.gen.node.AModuleName;
 import org.nitlanguage.gen.node.AModuledecl;
@@ -24,17 +34,11 @@ import org.nitlanguage.gen.node.PClassdef;
 import org.nitlanguage.gen.node.PImport;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.FileEditorInput;
 import org.nitlanguage.gen.parser.Parser;
 import org.nitlanguage.gen.parser.ParserException;
-import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.StringArrayHelp;
 import org.nitlanguage.ndt.core.builder.NitNature;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.editor.DocumentBufferStream;
 import org.nitlanguage.ndt.core.StringArrayHelp;
 
@@ -192,9 +196,7 @@ public class AstParserHelper {
 
 	/**
 	 * Saves a Start node in the AST for the IDocument given
-	 * 
-	 * @param node
-	 *            The node to save into the ASTReposit for the actual project
+	 * @param node The node to save into the ASTReposit for the actual project
 	 * @param fileBound
 	 *            The document bound to the node, used to get the name, project
 	 *            and save into the reposit
@@ -342,11 +344,11 @@ public class AstParserHelper {
 	private Lexer getLexForSource(IFile file) {
 		PushbackReader pbr = null;
 		try {
-			pbr = new PushbackReader(
-					new FileReader(file.getFullPath().toFile()), 2);
+			Path test_path = new Path("/home/nit/runtime-EclipseApplication/" + file.getFullPath().toString());
+			FileReader fr = new FileReader(test_path.toFile());
+			pbr = new PushbackReader(fr, 2);
 		} catch (FileNotFoundException e1) {
-			if (NitActivator.DEBUG_MODE)
-				e1.printStackTrace();
+			if (NitActivator.DEBUG_MODE) e1.printStackTrace();
 		}
 		if (pbr != null) {
 			return new Lexer(pbr);
@@ -399,9 +401,7 @@ public class AstParserHelper {
 	 * @return An ArrayList of class nodes, ready to be used
 	 */
 	public ArrayList<AStdClassdef> getAStdClassesOfModule(AModule module) {
-
 		ArrayList<AStdClassdef> defs = new ArrayList<AStdClassdef>();
-
 		for (PClassdef pclass : module.getClassdefs()) {
 			if (pclass instanceof AStdClassdef) {
 				AStdClassdef amc = (AStdClassdef) pclass;
@@ -491,8 +491,7 @@ public class AstParserHelper {
 	 * Gets the deferred methods definitions (external definitions) in the props
 	 * list
 	 * 
-	 * @param Properties
-	 *            got from the getPropsOfClass
+	 * @param Properties got from the getPropsOfClass
 	 * @return List of deferred method definitions
 	 */
 	public ArrayList<ADeferredMethPropdef> getDeferredMethsInPropList(
@@ -515,16 +514,13 @@ public class AstParserHelper {
 	 *            got from the getPropsOfClass
 	 * @return List of attributes
 	 */
-	public ArrayList<AAttrPropdef> getNonMethPropsInPropList(
-			LinkedList<PPropdef> props) {
+	public ArrayList<AAttrPropdef> getNonMethPropsInPropList(LinkedList<PPropdef> props) {
 		ArrayList<AAttrPropdef> nonMethProps = new ArrayList<AAttrPropdef>();
-
 		for (PPropdef prp : props) {
 			if (prp instanceof AAttrPropdef) {
 				nonMethProps.add((AAttrPropdef) prp);
 			}
 		}
-
 		return nonMethProps;
 	}
 

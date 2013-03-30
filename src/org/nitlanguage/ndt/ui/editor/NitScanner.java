@@ -2,10 +2,6 @@ package org.nitlanguage.ndt.ui.editor;
 
 import java.io.IOException;
 import java.io.PushbackReader;
-
-import org.nitlanguage.gen.lexer.Lexer;
-import org.nitlanguage.gen.lexer.LexerException;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
@@ -16,6 +12,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import org.nitlanguage.gen.lexer.Lexer;
+import org.nitlanguage.gen.lexer.LexerException;
 
 /**
  * Scanner used by the NitEditor to highlight words in the editor

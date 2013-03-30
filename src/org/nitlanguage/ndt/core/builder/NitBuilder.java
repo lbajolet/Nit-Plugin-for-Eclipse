@@ -12,7 +12,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
-
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**

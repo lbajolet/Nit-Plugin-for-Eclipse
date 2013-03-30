@@ -1,6 +1,15 @@
 package org.nitlanguage.ndt.core.plugin;
 
+import java.net.URL;
+
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -15,6 +24,12 @@ public class NitActivator extends AbstractUIPlugin {
 	
 	// Compiler path string
 	public static final String COMPILER_PATH_PREFERENCES_ID = "compilerLocation";
+	
+	// Interpreter path string
+	public static final String INTERPRETER_PATH_PREFERENCES_ID = "interpreterLocation";
+	
+	// Debugger path string
+	public static final String DEBUGGER_PATH_PREFERENCES_ID = "debuggerLocation";
 	
 	// Compiler path string
 	public static final String STDLIB_FOLDER_PREFERENCES_ID = "NitLibEditor";
@@ -60,5 +75,13 @@ public class NitActivator extends AbstractUIPlugin {
 		}
 		return plugin;
 	}
+	
+    /*protected void initializeImageRegistry(ImageRegistry registry) {
+        Bundle bundle = Platform.getBundle(PLUGIN_ID);
+        IPath path = new Path("icons/test.gif");
+        URL url = FileLocator.find(bundle, path, null);
+        ImageDescriptor desc = ImageDescriptor.createFromURL(url);
+        registry.put(IMAGE_ID, desc);
+     }*/
 
 }
