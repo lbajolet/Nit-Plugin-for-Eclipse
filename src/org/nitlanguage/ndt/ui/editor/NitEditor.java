@@ -7,14 +7,18 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.source.Annotation;
+import org.eclipse.jface.text.source.AnnotationModel;
+import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.ui.editor.outline.NitOutlinePage;
 
 /**
  * The editor for nit, bound to the completion methods and the
@@ -24,7 +28,12 @@ import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
  */
 public class NitEditor extends TextEditor {
 
+	ProjectionSupport projectionSupport;
+	AnnotationModel annotationModel;
+	NitOutlinePage outlinePage;
+	
 	public NitEditor() {
+		//clean doc (whitespaces,...)
 		setDocumentProvider(new NitDocumentProvider());
 		setSourceViewerConfiguration(new NitEditorConfiguration());
 	}
@@ -46,15 +55,26 @@ public class NitEditor extends TextEditor {
 		action.setActionDefinitionId(id);
 		setAction("ContentAssist", action);
 	}
-
+	
 	@Override
 	protected void updateMarkerViews(Annotation annotation) {
 		super.updateMarkerViews(annotation);
 	}
 
+	public Object getAdapter(Class required) {
+	      if (IContentOutlinePage.class.equals(required)) {
+	         if (outlinePage == null) {
+	            outlinePage = new NitOutlinePage(this);
+	         }
+	         return outlinePage;
+	      }
+	      return super.getAdapter(required);
+	   }
+
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		super.doSave(monitor);
+		outlinePage.refresh(true);
 		try {
 			ProjectAutoParser pap = new ProjectAutoParser();
 
@@ -74,7 +94,6 @@ public class NitEditor extends TextEditor {
 					}
 				}
 			}
-
 		} catch (Exception e) {
 			if (NitActivator.DEBUG_MODE)
 				e.printStackTrace();

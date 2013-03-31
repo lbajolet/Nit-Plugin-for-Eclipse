@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.PushbackReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
-
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
@@ -36,7 +34,6 @@ import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
 import org.nitlanguage.gen.parser.Parser;
 import org.nitlanguage.gen.parser.ParserException;
-import org.nitlanguage.ndt.StringArrayHelp;
 import org.nitlanguage.ndt.core.builder.NitNature;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.editor.DocumentBufferStream;
