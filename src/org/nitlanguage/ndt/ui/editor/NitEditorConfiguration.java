@@ -5,6 +5,8 @@ import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
 import org.eclipse.jface.text.presentation.IPresentationReconciler;
 import org.eclipse.jface.text.presentation.PresentationReconciler;
+import org.eclipse.jface.text.reconciler.IReconciler;
+import org.eclipse.jface.text.reconciler.MonoReconciler;
 import org.eclipse.jface.text.rules.DefaultDamagerRepairer;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -12,10 +14,16 @@ import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**
  * @author lucas.bajolet
+ * @author nathan.heu
  */
 public class NitEditorConfiguration extends TextSourceViewerConfiguration {
-	private ITokenScanner scanner=null;
+	private ITokenScanner scanner = null;
+	private NitEditor editor = null;
 	 
+	public NitEditorConfiguration(NitEditor editor){
+		this.editor = editor;
+	}
+	
 	@Override
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
@@ -44,4 +52,11 @@ public class NitEditorConfiguration extends TextSourceViewerConfiguration {
 			scanner = new NitScanner();
 		return scanner;
 	}
+	
+    public IReconciler getReconciler(ISourceViewer sourceViewer)
+    {
+        NitReconcilingStrategy strategy = new NitReconcilingStrategy(editor);        
+        MonoReconciler reconciler = new MonoReconciler(strategy,false);        
+        return reconciler;
+    }
 }
