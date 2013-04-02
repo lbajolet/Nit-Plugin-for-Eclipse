@@ -342,7 +342,7 @@ public class AstParserHelper {
 	private Lexer getLexForSource(IFile file) {
 		PushbackReader pbr = null;
 		try {
-			Path test_path = new Path("/home/nathan/runtime-New_configuration/" + file.getFullPath().toString());
+			Path test_path = new Path(NitActivator.getWorkspacePath().toOSString() + file.getFullPath().toString());
 			FileReader fr = new FileReader(test_path.toFile());
 			pbr = new PushbackReader(fr, 2);
 		} catch (FileNotFoundException e1) {

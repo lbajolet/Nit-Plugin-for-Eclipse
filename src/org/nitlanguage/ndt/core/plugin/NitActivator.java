@@ -2,6 +2,8 @@ package org.nitlanguage.ndt.core.plugin;
 
 import java.net.URL;
 
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -74,6 +76,12 @@ public class NitActivator extends AbstractUIPlugin {
 			plugin = new NitActivator();
 		}
 		return plugin;
+	}
+	
+	public static IPath getWorkspacePath(){
+		//get object which represents the workspace  
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();  
+		return workspace.getRoot().getLocation();
 	}
 	
     /*protected void initializeImageRegistry(ImageRegistry registry) {
