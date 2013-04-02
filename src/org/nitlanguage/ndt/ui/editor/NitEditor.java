@@ -27,12 +27,14 @@ import org.nitlanguage.ndt.ui.editor.outline.NitOutlinePage;
  * @author nathan.heu
  */
 public class NitEditor extends TextEditor {
-
+	public static final String NIT_FILE_EXTENSION = "nit";
+	
 	ProjectionSupport projectionSupport;
 	AnnotationModel annotationModel;
 	NitOutlinePage outlinePage;
 	
 	public NitEditor() {
+		super();
 		//clean doc (whitespaces,...)
 		setDocumentProvider(new NitDocumentProvider());
 		setSourceViewerConfiguration(new NitEditorConfiguration());
@@ -89,7 +91,7 @@ public class NitEditor extends TextEditor {
 				if (ed.getEditorInput() instanceof FileEditorInput) {
 					fileBoundToIDocument = ((FileEditorInput) ed
 							.getEditorInput()).getFile();
-					if (fileBoundToIDocument.getFileExtension().contains("nit")) {
+					if (fileBoundToIDocument.getFileExtension().contains(NIT_FILE_EXTENSION)) {
 						pap.addToQueue(fileBoundToIDocument);
 					}
 				}

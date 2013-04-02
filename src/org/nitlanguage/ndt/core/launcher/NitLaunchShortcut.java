@@ -33,6 +33,7 @@ import org.eclipse.ui.PlatformUI;
  * @author nathan.heu 
  */
 public class NitLaunchShortcut implements ILaunchShortcut {
+	public static final String NIT_LAUNCH_CONFIG = "org.nitlanguage.ndt.nitLauncher";
 	
 	@Override
 	public void launch(ISelection selection, String mode) {
@@ -76,7 +77,7 @@ public class NitLaunchShortcut implements ILaunchShortcut {
 		ILaunchConfiguration configuration = null;
 		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type =
-		      manager.getLaunchConfigurationType("org.uqam.nit.ndt.nitLauncher");
+		      manager.getLaunchConfigurationType(NIT_LAUNCH_CONFIG);
 		ILaunchConfiguration[] configurations =
 		      manager.getLaunchConfigurations(type);
 		   for (int i = 0; i < configurations.length; i++) {

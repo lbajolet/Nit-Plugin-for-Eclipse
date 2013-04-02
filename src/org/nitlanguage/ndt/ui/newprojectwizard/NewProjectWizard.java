@@ -32,7 +32,8 @@ import org.nitlanguage.ndt.core.builder.NitNature;
  * @author lucas.bajolet
  */
 public class NewProjectWizard extends Wizard implements IWorkbenchWizard {
-
+	public static final String TITLE_NEWPROJECT_WIZARD_PAGE = "New Nit Project";
+	
 	/**
 	 * The new project to create and attach NitNature to
 	 */
@@ -49,7 +50,7 @@ public class NewProjectWizard extends Wizard implements IWorkbenchWizard {
 	public NewProjectWizard() {
 		super();
 		setNeedsProgressMonitor(true);
-		setWindowTitle("New Nit Project");
+		setWindowTitle(TITLE_NEWPROJECT_WIZARD_PAGE);
 	}
 
 	@Override

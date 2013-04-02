@@ -28,8 +28,7 @@ public class ProjectPropertiesHelper {
 	 * Default constructor, automatically loads the values from the project
 	 * properties file
 	 * 
-	 * @param path
-	 *            Properties file path
+	 * @param path Properties file path
 	 */
 	public ProjectPropertiesHelper(String path) {
 		this.props = new Properties();

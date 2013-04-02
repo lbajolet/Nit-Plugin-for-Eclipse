@@ -20,7 +20,7 @@ public class NitConsole {
 	/**
 	 * Id of the console
 	 */
-	public static String CONSOLE_NAME = "org.uqam.nit.ndt.console";
+	public static String CONSOLE_ID = "org.nitlanguage.ndt.console";
 
 	private NitConsole() {
 	}
@@ -61,8 +61,8 @@ public class NitConsole {
 	 *            The message to write
 	 */
 	public void write(String message) {
-		MessageConsole myConsole = findConsole(CONSOLE_NAME);
-		MessageConsoleStream out = myConsole.newMessageStream();
+		MessageConsole nitConsole = findConsole(CONSOLE_ID);
+		MessageConsoleStream out = nitConsole.newMessageStream();
 		out.println(message);
 	}
 

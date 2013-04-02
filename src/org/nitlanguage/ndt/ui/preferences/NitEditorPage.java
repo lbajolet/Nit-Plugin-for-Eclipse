@@ -11,7 +11,8 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  */
 public class NitEditorPage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage {
-
+	public static final String DESC_EDITOR_PREF_PAGE = "Nit editor preferences";
+			
 	/**
 	 * Create the editor preference page.
 	 */
@@ -25,6 +26,6 @@ public class NitEditorPage extends FieldEditorPreferencePage implements
   @Override
   public void init(IWorkbench workbench) {
     setPreferenceStore(NitActivator.getDefault().getPreferenceStore());
-    setDescription("Nit editor preferences");
+    setDescription(DESC_EDITOR_PREF_PAGE);
   }
 } 

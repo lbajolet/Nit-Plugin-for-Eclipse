@@ -10,7 +10,9 @@ import org.eclipse.ui.console.IConsoleConstants;
  * @author lucas.bajolet
  */
 public class NitPerspective implements IPerspectiveFactory {
-
+	public static final String LOG_VIEW_ID = "org.eclipse.pde.runtime.LogView";
+	public static final String MARKERS_VIEW_ID = "org.eclipse.ui.views.AllMarkersView";
+	
 	/**
 	 * Creates the initial layout for a page.
 	 */
@@ -26,9 +28,9 @@ public class NitPerspective implements IPerspectiveFactory {
 
 		IFolderLayout bottomFolder = layout.createFolder("bottom", IPageLayout.BOTTOM, 0.79f, editorArea);
 		bottomFolder.addView(IConsoleConstants.ID_CONSOLE_VIEW);
-		bottomFolder.addView("org.eclipse.pde.runtime.LogView");
+		bottomFolder.addView(LOG_VIEW_ID);
 		bottomFolder.addView(IPageLayout.ID_PROGRESS_VIEW);
-		bottomFolder.addView("org.eclipse.ui.views.AllMarkersView");
+		bottomFolder.addView(MARKERS_VIEW_ID);
 
 		IFolderLayout folderLayout = layout.createFolder("right", IPageLayout.RIGHT, 0.6f, editorArea);
 		folderLayout.addView(IPageLayout.ID_OUTLINE);

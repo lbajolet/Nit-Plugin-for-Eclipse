@@ -12,15 +12,24 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
  * Helper to call the Nit Compiler
  * @author lucas.bajolet 
  */
 public class NitCompilerCallerClass {
-
+	public static final String MSG_COMPILATION_OK = "All OK";
+	public static final String MSG_COMPILATION_ABORTED = "Error : Compilation aborted";
+	public static final String MSG_BINARY_NOT_FOUND = "Error : Binary cannot be found at specified path";
+	public static final String MSG_FILE_PATH_MISSING = "Error : No file path specified";
+	public static final String CHARSET = "UTF-8";
+	public static final String MSG_ERROR_CAT_COMPILER = "Error with nit compiler";
+	public static final String MSG_COMPILER_NOT_FOUND = "Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?";
+	public static final String COMPILATION_JOB = "Nit Compiler";
+	public static final String COMPILATION_TASK = "Compiling Nit";
+	
 	/**
 	 * Path in the FileSystem to the compiler
 	 */
@@ -50,8 +59,110 @@ public class NitCompilerCallerClass {
 	private String options;
 
 	/**
-	 * @author r4pass The Job used to compile a Nit Project using the default
-	 *         file set by the user
+	 * The default constructor
+	 */
+	public NitCompilerCallerClass() {
+		this.options = "";
+	}
+
+	/**
+	 * Gets the compilation eclipse job
+	 * @return The Nit compile job containing the process
+	 */
+	public NitCompileJob getCompileJob() {
+		return this.eclipseJob;
+	}
+
+	/**
+	 * Sets the target for compilation
+	 * @param file
+	 */
+	public void setTarget(IFile file) {
+		this.target = file;
+	}
+
+	/**
+	 * Set the options for the compilation
+	 * @param newOpt Series of options in one string
+	 */
+	public void setOptions(String newOpt) {
+		this.options = newOpt;
+	}
+
+	/**
+	 * The path for the compiler
+	 * @param newPath Path
+	 */
+	public void setPath(String newPath) {
+		this.path = newPath;
+	}
+
+	/**
+	 * The output folder for the binaries
+	 * @param folder
+	 */
+	public void setOutFolder(String folder) {
+		this.outputFolder = folder;
+	}
+
+	/**
+	 * Checks if the compiler binary exists where specified, adds an error log
+	 * entry otherwise
+	 * @return true if exists, false otherwise
+	 */
+	public boolean checkIfPathToCompilerIsValid() {
+		if (this.path != null) {
+			File compiler = new File(this.path);
+			if (compiler.exists() && compiler.canExecute() && compiler.isFile())
+				return true;
+		}
+		NitActivator
+				.getDefault()
+				.getLog()
+				.log(new Status(
+						Status.ERROR,
+						MSG_ERROR_CAT_COMPILER,
+						MSG_COMPILER_NOT_FOUND));
+		return false;
+	}
+
+	/**
+	 * Calls the compiler on the set target with the set options
+	 */
+	public void call() {
+		if (!NitActivator.getDefault().getPreferenceStore()
+				.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID)
+				.equals("")) {
+			setPath(NitActivator.getDefault().getPreferenceStore()
+					.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID));
+		}
+		if (this.path != null && checkIfPathToCompilerIsValid()
+				&& this.target != null) {
+			// String completeCommand = "cd " +
+			// this.target.getLocation().toString().substring(0,
+			// this.target.getLocation().toString().lastIndexOf("/")) + "; ";
+			String completeCommand = path;
+			completeCommand += " "
+					+ this.target.getLocation().toString()
+					+ " "
+					+ this.options.trim()
+					+ " -o "
+					+ this.outputFolder
+					+ "/"
+					+ this.target.getName().substring(0,
+							this.target.getName().length() - 4);
+			if (eclipseJob == null) {
+				this.eclipseJob = new NitCompileJob(COMPILATION_JOB);
+			}
+			eclipseJob.cancelCurrentProcess();
+			eclipseJob.setPath(completeCommand);
+			// NB : On le lancera en background job
+			eclipseJob.schedule();
+		}
+	}
+	
+	/**
+	 * The Job used to compile a Nit Project using the default file set by the user
 	 */
 	public class NitCompileJob extends Job {
 
@@ -92,7 +203,6 @@ public class NitCompilerCallerClass {
 
 		/**
 		 * Returns boolean saying of the process finished its work or not
-		 * 
 		 * @return true if over, false if not
 		 */
 		public boolean isOver() {
@@ -101,7 +211,6 @@ public class NitCompilerCallerClass {
 
 		/**
 		 * Returns the compilation process
-		 * 
 		 * @return Process representing an instance of nitc
 		 */
 		public Process getCurrentCompileProcess() {
@@ -110,9 +219,7 @@ public class NitCompilerCallerClass {
 
 		/**
 		 * Sets the path of the compiler / target file and options
-		 * 
-		 * @param path
-		 *            Path + arguments for compilation
+		 * @param path Path + arguments for compilation
 		 */
 		public void setPath(String path) {
 			this.path = path;
@@ -120,7 +227,6 @@ public class NitCompilerCallerClass {
 
 		/**
 		 * Returns the message from the compiler process
-		 * 
 		 * @return Message from the compiler
 		 */
 		public String getReturnMessage() {
@@ -129,9 +235,7 @@ public class NitCompilerCallerClass {
 
 		/**
 		 * Default constructor
-		 * 
-		 * @param name
-		 *            Required by super constructor
+		 * @param name Required by super constructor
 		 */
 		public NitCompileJob(String name) {
 			super(name);
@@ -150,10 +254,10 @@ public class NitCompilerCallerClass {
 					e1.printStackTrace();
 			}
 			this.setPriority(BUILD);
-			monitor.beginTask("Compiling Nit", 100);
+			monitor.beginTask(COMPILATION_TASK, 100);
 			cancelCurrentProcess();
 			if (path == null) {
-				this.returnMessage = "Error : No file path specified";
+				this.returnMessage = MSG_FILE_PATH_MISSING;
 				isBeingCalled = false;
 				monitor.setCanceled(true);
 				isOver = true;
@@ -167,21 +271,21 @@ public class NitCompilerCallerClass {
 					try {
 						int endCode = compileProcess.waitFor();
 						if (endCode == -1) {
-							this.returnMessage = "Error : Compilation aborted";
+							this.returnMessage = MSG_COMPILATION_ABORTED;
 							isBeingCalled = false;
 							monitor.setCanceled(true);
 							isOver = true;
 							return Status.CANCEL_STATUS;
 						}
 					} catch (InterruptedException e) {
-						this.returnMessage = "Error : Compilation aborted";
+						this.returnMessage = MSG_COMPILATION_ABORTED;
 						isBeingCalled = false;
 						isOver = true;
 						return Status.OK_STATUS;
 					}
 					monitor.worked(50);
 					InputStream inpt = compileProcess.getErrorStream();
-					Reader in = new InputStreamReader(inpt, "UTF-8");
+					Reader in = new InputStreamReader(inpt, CHARSET);
 					StringBuilder result = new StringBuilder();
 					char[] buf = new char[0x10000];
 					int read = 0;
@@ -207,13 +311,13 @@ public class NitCompilerCallerClass {
 
 					monitor.worked(10);
 
-					this.returnMessage = "All OK";
+					this.returnMessage = MSG_COMPILATION_OK;
 
 					monitor.done();
 					isOver = true;
 					return Status.OK_STATUS;
 				} catch (IOException e) {
-					this.returnMessage = "Error : Binary cannot be found at specified path";
+					this.returnMessage = MSG_BINARY_NOT_FOUND;
 					isBeingCalled = false;
 					monitor.setCanceled(true);
 					monitor.done();
@@ -230,114 +334,4 @@ public class NitCompilerCallerClass {
 		}
 	}
 
-	/**
-	 * The default constructor
-	 */
-	public NitCompilerCallerClass() {
-		this.options = "";
-	}
-
-	/**
-	 * Gets the compilation eclipse job
-	 * 
-	 * @return The Nit compile job containing the process
-	 */
-	public NitCompileJob getCompileJob() {
-		return this.eclipseJob;
-	}
-
-	/**
-	 * Sets the target for compilation
-	 * 
-	 * @param file
-	 */
-	public void setTarget(IFile file) {
-		this.target = file;
-	}
-
-	/**
-	 * Set the options for the compilation
-	 * 
-	 * @param newOpt
-	 *            Series of options in one string
-	 */
-	public void setOptions(String newOpt) {
-		this.options = newOpt;
-	}
-
-	/**
-	 * The path for the compiler
-	 * 
-	 * @param newPath
-	 *            Path
-	 */
-	public void setPath(String newPath) {
-		this.path = newPath;
-	}
-
-	/**
-	 * The output folder for the binaries
-	 * 
-	 * @param folder
-	 */
-	public void setOutFolder(String folder) {
-		this.outputFolder = folder;
-	}
-
-	/**
-	 * Checks if the compiler binary exists where specified, adds an error log
-	 * entry otherwise
-	 * 
-	 * @return true if exists, false otherwise
-	 */
-	public boolean checkIfPathToCompilerIsValid() {
-		if (this.path != null) {
-			File compiler = new File(this.path);
-			if (compiler.exists() && compiler.canExecute() && compiler.isFile())
-				return true;
-		}
-		NitActivator
-				.getDefault()
-				.getLog()
-				.log(new Status(
-						Status.ERROR,
-						"Error with nit compiler",
-						"Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?"));
-		return false;
-	}
-
-	/**
-	 * Calls the compiler on the set target with the set options
-	 */
-	public void call() {
-		if (!NitActivator.getDefault().getPreferenceStore()
-				.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID)
-				.equals("")) {
-			setPath(NitActivator.getDefault().getPreferenceStore()
-					.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID));
-		}
-		if (this.path != null && checkIfPathToCompilerIsValid()
-				&& this.target != null) {
-			// String completeCommand = "cd " +
-			// this.target.getLocation().toString().substring(0,
-			// this.target.getLocation().toString().lastIndexOf("/")) + "; ";
-			String completeCommand = path;
-			completeCommand += " "
-					+ this.target.getLocation().toString()
-					+ " "
-					+ this.options.trim()
-					+ " -o "
-					+ this.outputFolder
-					+ "/"
-					+ this.target.getName().substring(0,
-							this.target.getName().length() - 4);
-			if (eclipseJob == null) {
-				this.eclipseJob = new NitCompileJob("Nit Compiler");
-			}
-			eclipseJob.cancelCurrentProcess();
-			eclipseJob.setPath(completeCommand);
-			// NB : On le lancera en background job
-			eclipseJob.schedule();
-		}
-	}
 }

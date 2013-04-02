@@ -11,7 +11,8 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  */
 public class NitBuildPathPage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage {
-
+	public static final String DESC_BUILDPATH_PREF_PAGE = "Specify the build path entries used as default by the New Nit Project creation wizard";
+	
 	/**
 	 * Create the build path preference page.
 	 */
@@ -25,6 +26,6 @@ public class NitBuildPathPage extends FieldEditorPreferencePage implements
   @Override
   public void init(IWorkbench workbench) {
     setPreferenceStore(NitActivator.getDefault().getPreferenceStore());
-    setDescription("Specify the build path entries used as default by the New Nit Project creation wizard");
+    setDescription(DESC_BUILDPATH_PREF_PAGE);
   }
 } 

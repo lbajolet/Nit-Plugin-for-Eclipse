@@ -26,10 +26,103 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  * @author lucas.bajolet
  */
 public class ProjectAutoParser {
+	public static final String NIT_FILE_EXTENSION = "nit";
+	public static final String PARSING_JOB = "Parsing";
+	public static final String PARSING_TASK = "Parsing nit files";
+	public static final String MSG_PARSING_PROJECT = "Parsing project ";
+	public static final String MSG_ERROR_CAT_COMPILER = "Error with nit compiler";
+	public static final String MSG_COMPILER_NOT_FOUND = "Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?";
+	public static final String PREFERENCE_KEY_COMPILER = "compilerLocation";
+	public static final String CHARSET = "UTF-8";
+	
+	/**
+	 * Project to parse
+	 */
+	private IProject projectToParse;
 
 	/**
-	 * Job to call compiler on nit files Adds markers on errors
-	 * @author lucas.bajolet
+	 * The Parser Helper
+	 */
+	private AstParserHelper aph;
+
+	/**
+	 * Target of parser, updated on every Visit operation
+	 */
+	private IFile target;
+
+	/**
+	 * Reposit of all problematic files in the current project, updated on each
+	 * compilation
+	 */
+	private HashMap<String, IFile> nitFilesOfProject;
+
+	/**
+	 * Job instance, used to keep track of what is executing and to add new
+	 * elements to parse
+	 */
+	private CompilerCallLightJob cclj;
+
+	/**
+	 * Constructor
+	 */
+	public ProjectAutoParser() {
+		this.aph = new AstParserHelper();
+		this.nitFilesOfProject = new HashMap<String, IFile>();
+		this.cclj = new CompilerCallLightJob(PARSING_JOB);
+	}
+
+	/**
+	 * Sets the project to be fully parsed
+	 * @param proj Projet to be set as default
+	 */
+	public void setProject(IProject proj) {
+		this.projectToParse = proj;
+		try {
+			proj.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException e1) {
+			if (NitActivator.DEBUG_MODE)
+				e1.printStackTrace();
+		}
+		ParsingJob pj = new ParsingJob(MSG_PARSING_PROJECT
+				+ this.projectToParse.getName());
+		try {
+			this.nitFilesOfProject.clear();
+			proj.accept(new NitFilesOfProjectParser());
+			pj.schedule();
+		} catch (CoreException e) {
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Launches the job to build the reposit of files in the project
+	 * @param proj The project to parse
+	 * @return Reposit of IFiles for the filenames
+	 */
+	public HashMap<String, IFile> buildFilesInProjectRepo(IProject proj) {
+		this.nitFilesOfProject.clear();
+		try {
+			proj.accept(new NitFilesOfProjectParser());
+		} catch (CoreException e) {
+			if (NitActivator.DEBUG_MODE)
+				e.printStackTrace();
+		}
+		return nitFilesOfProject;
+	}
+
+	/**
+	 * Adds a job to the queue of files to be parsed
+	 * @param fichier The file to add to the parsing queue
+	 */
+	public void addToQueue(IFile fichier) {
+		buildFilesInProjectRepo(fichier.getProject());
+		this.cclj.queueJob(fichier);
+	}
+
+	/**
+	 * Job to call compiler on nit files 
+	 * Adds markers on errors
 	 */
 	private class CompilerCallLightJob extends Job {
 		//Stop after meta-model processing
@@ -102,10 +195,10 @@ public class ProjectAutoParser {
 			int totalFiles = nitFilesOfProject.size();
 			AstParserHelper aph = new AstParserHelper();
 
-			monitor.beginTask("Parsing nit files", totalFiles);
+			monitor.beginTask(PARSING_TASK, totalFiles);
 
 			String pathToCompiler = NitActivator.getDefault()
-					.getPreferenceStore().getString("compilerLocation");
+					.getPreferenceStore().getString(PREFERENCE_KEY_COMPILER);
 
 			if (pathToCompiler != null) {
 
@@ -151,7 +244,7 @@ public class ProjectAutoParser {
 					try {
 						// Get the messages
 						InputStream inpt = compileProcess.getErrorStream();
-						Reader in = new InputStreamReader(inpt, "UTF-8");
+						Reader in = new InputStreamReader(inpt, CHARSET);
 						StringBuilder result = new StringBuilder();
 						char[] buf = new char[0x10000];
 						int read = 0;
@@ -187,34 +280,7 @@ public class ProjectAutoParser {
 	}
 
 	/**
-	 * Project to parse
-	 */
-	private IProject projectToParse;
-
-	/**
-	 * The Parser Helper
-	 */
-	private AstParserHelper aph;
-
-	/**
-	 * Target of parser, updated on every Visit operation
-	 */
-	private IFile target;
-
-	/**
-	 * Reposit of all problematic files in the current project, updated on each
-	 * compilation
-	 */
-	private HashMap<String, IFile> nitFilesOfProject;
-
-	/**
-	 * Job instance, used to keep track of what is executing and to add new
-	 * elements to parse
-	 */
-	CompilerCallLightJob cclj;
-
-	/**
-	 * @author lucas A visitor needed to get the files of a project.
+	 * A visitor needed to get the files of a project.
 	 */
 	private class NitProjectVisitor implements IResourceVisitor {
 
@@ -226,7 +292,7 @@ public class ProjectAutoParser {
 			if (resource instanceof IFile) {
 				IFile fichier = (IFile) resource;
 				String extension = fichier.getFileExtension();
-				if (extension != null && extension.equals("nit")) {
+				if (extension != null && extension.equals(NIT_FILE_EXTENSION)) {
 					if (aph.getAstForDocument(fichier) == null) {
 						cclj.queueJob(fichier);
 					}
@@ -237,7 +303,7 @@ public class ProjectAutoParser {
 	}
 
 	/**
-	 * @author lucas Visitor to get all the files of a project and add them to
+	 * Visitor to get all the files of a project and add them to
 	 *         the Hashmap of files
 	 */
 	private class NitFilesOfProjectParser implements IResourceVisitor {
@@ -247,7 +313,7 @@ public class ProjectAutoParser {
 			if (resource instanceof IFile) {
 				IFile fichier = (IFile) resource;
 				String extension = fichier.getFileExtension();
-				if (extension != null && extension.equals("nit")) {
+				if (extension != null && extension.equals(NIT_FILE_EXTENSION)) {
 					nitFilesOfProject.put(fichier.getName(), fichier);
 				}
 			}
@@ -256,8 +322,7 @@ public class ProjectAutoParser {
 	}
 
 	/**
-	 * @author lucas The Eclipse job used to parse all the files in the project
-	 *         (With compiler)
+	 * The Eclipse job used to parse all the files in the project (with compiler)
 	 */
 	private class ParsingJob extends Job {
 
@@ -273,7 +338,7 @@ public class ProjectAutoParser {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask("Parsing project " + projectToParse.getName(),
+			monitor.beginTask(MSG_PARSING_PROJECT + projectToParse.getName(),
 					100);
 			try {
 				projectToParse.accept(new NitProjectVisitor());
@@ -286,67 +351,4 @@ public class ProjectAutoParser {
 		}
 
 	}
-
-	/**
-	 * Constructor
-	 */
-	public ProjectAutoParser() {
-		this.aph = new AstParserHelper();
-		this.nitFilesOfProject = new HashMap<String, IFile>();
-		this.cclj = new CompilerCallLightJob("Parsing");
-	}
-
-	/**
-	 * Sets the project to be fully parsed
-	 * 
-	 * @param proj
-	 *            Projet to be set as default
-	 */
-	public void setProject(IProject proj) {
-		this.projectToParse = proj;
-		try {
-			proj.deleteMarkers(IMarker.PROBLEM, true, IResource.DEPTH_INFINITE);
-		} catch (CoreException e1) {
-			if (NitActivator.DEBUG_MODE)
-				e1.printStackTrace();
-		}
-		ParsingJob pj = new ParsingJob("Parsing project " + this.projectToParse.getName());
-		try {
-			this.nitFilesOfProject.clear();
-			proj.accept(new NitFilesOfProjectParser());
-			pj.schedule();
-		} catch (CoreException e) {
-			if (NitActivator.DEBUG_MODE)
-				e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Launches the job to build the reposit of files in the project
-	 * 
-	 * @param proj The project to parse
-	 * @return Reposit of IFiles for the filenames
-	 */
-	public HashMap<String, IFile> buildFilesInProjectRepo(IProject proj) {
-		this.nitFilesOfProject.clear();
-		try {
-			proj.accept(new NitFilesOfProjectParser());
-		} catch (CoreException e) {
-			if (NitActivator.DEBUG_MODE)
-				e.printStackTrace();
-		}
-
-		return nitFilesOfProject;
-	}
-
-	/**
-	 * Adds a job to the queue of files to be parsed
-	 * 
-	 * @param fichier The file to add to the parsing queue
-	 */
-	public void addToQueue(IFile fichier) {
-		buildFilesInProjectRepo(fichier.getProject());
-		this.cclj.queueJob(fichier);
-	}
-
 }

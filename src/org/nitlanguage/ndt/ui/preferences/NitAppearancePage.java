@@ -11,7 +11,8 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  */
 public class NitAppearancePage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage {
-
+	public static final String DESC_APPEARANCE_PREF_PAGE = "Appearance of Nit elements in viewers";
+	
 	/**
 	 * Create the appearance preference page.
 	 */
@@ -26,6 +27,6 @@ public class NitAppearancePage extends FieldEditorPreferencePage implements
   @Override
   public void init(IWorkbench workbench) {
     setPreferenceStore(NitActivator.getDefault().getPreferenceStore());
-    setDescription("Appearance of Nit elements in viewers");
+    setDescription(DESC_APPEARANCE_PREF_PAGE);
   }
 } 

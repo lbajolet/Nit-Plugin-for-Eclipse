@@ -17,7 +17,19 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  */
 public class NitPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
-
+	public static final String NIT_BINARIES_DIR = "bin";
+	public static final String NIT_STDLIB_DIR = "lib";
+	
+	public static final String NIT_COMPILER_NAME = "nitc";
+	public static final String NIT_INTERPRETER_NAME = "nit";
+	public static final String NIT_DEBUGGER_NAME = "nit";
+	
+	public static final String LBL_PREFERENCE_PAGE = "General Nit Developer Tools settings"; 
+	public static final String LBL_NITROOT_LOCATION = "Nit Folder Location";
+	public static final String LBL_STDLIB_LOCATION = "Nit StdLib Folder Location";
+	public static final String LBL_COMPILER_LOCATION = "Compiler Location";
+	public static final String LBL_INTERPRETER_LOCATION = "Interpreter Location";
+	public static final String LBL_DEBUGGER_LOCATION = "Debugger Location";
 	/**
 	 * A simple field editor with a special action when changing its value
 	 * Represents the location of the nit global folder
@@ -62,62 +74,62 @@ public class NitPreferencePage extends FieldEditorPreferencePage implements
 					fileSeparator = "\\";
 				}
 
-				File nitComp = new File(dirName + fileSeparator + "bin"
-						+ fileSeparator + "nitc");
+				File nitComp = new File(dirName + fileSeparator + NIT_BINARIES_DIR
+						+ fileSeparator + NIT_COMPILER_NAME);
 				
-				File nitInterpreter = new File(dirName + fileSeparator + "bin"
-						+ fileSeparator + "nit");
+				File nitInterpreter = new File(dirName + fileSeparator + NIT_BINARIES_DIR
+						+ fileSeparator + NIT_INTERPRETER_NAME);
 				
-				File nitDebugger = new File(dirName + fileSeparator + "bin"
-						+ fileSeparator + "nitd");
+				File nitDebugger = new File(dirName + fileSeparator + NIT_BINARIES_DIR
+						+ fileSeparator + NIT_DEBUGGER_NAME);
 
-				File dirLib = new File(dirName + fileSeparator + "lib");
+				File dirLib = new File(dirName + fileSeparator + NIT_STDLIB_DIR);
 
 				if (nitComp.exists() && nitComp.isFile()) {
 					fileFieldEditor.setStringValue(dirName + fileSeparator
-							+ "bin" + fileSeparator + "nitc");
+							+ NIT_BINARIES_DIR + fileSeparator + NIT_COMPILER_NAME);
 					NitActivator
 							.getDefault()
 							.getPreferenceStore()
 							.setValue(
 									NitActivator.COMPILER_PATH_PREFERENCES_ID,
-									dirName + fileSeparator + "bin"
-											+ fileSeparator + "nitc");
+									dirName + fileSeparator + NIT_BINARIES_DIR
+											+ fileSeparator + NIT_COMPILER_NAME);
 				}
 				
 				if (nitInterpreter.exists() && nitInterpreter.isFile()) {
 					interpreterFieldEditor.setStringValue(dirName + fileSeparator
-							+ "bin" + fileSeparator + "nit");
+							+ NIT_BINARIES_DIR + fileSeparator + NIT_INTERPRETER_NAME);
 					NitActivator
 							.getDefault()
 							.getPreferenceStore()
 							.setValue(
 									NitActivator.INTERPRETER_PATH_PREFERENCES_ID,
-									dirName + fileSeparator + "bin"
-											+ fileSeparator + "nit");
+									dirName + fileSeparator + NIT_BINARIES_DIR
+											+ fileSeparator + NIT_INTERPRETER_NAME);
 				}
 
 				if (nitDebugger.exists() && nitDebugger.isFile()) {
-					interpreterFieldEditor.setStringValue(dirName + fileSeparator
-							+ "bin" + fileSeparator + "nit");
+					debuggerFieldEditor.setStringValue(dirName + fileSeparator
+							+ NIT_BINARIES_DIR + fileSeparator + NIT_DEBUGGER_NAME);
 					NitActivator
 							.getDefault()
 							.getPreferenceStore()
 							.setValue(
 									NitActivator.DEBUGGER_PATH_PREFERENCES_ID,
-									dirName + fileSeparator + "bin"
-											+ fileSeparator + "nit");
+									dirName + fileSeparator + NIT_BINARIES_DIR
+											+ fileSeparator + NIT_DEBUGGER_NAME);
 				}
 				
 				if (dirLib.exists() && dirLib.isDirectory()) {
 					libFieldEditor.setStringValue(dirName + fileSeparator
-							+ "lib");
+							+ NIT_STDLIB_DIR);
 					NitActivator
 							.getDefault()
 							.getPreferenceStore()
 							.setValue(
 									NitActivator.STDLIB_FOLDER_PREFERENCES_ID,
-									dirName + fileSeparator + "lib");
+									dirName + fileSeparator + NIT_STDLIB_DIR);
 				}
 			}
 
@@ -140,26 +152,26 @@ public class NitPreferencePage extends FieldEditorPreferencePage implements
 		// Create the field editors
 
 		nitFieldEditor = new NitMainDirFieldEditor("NitFolder",
-				"Nit Folder Location", getFieldEditorParent());
+				LBL_NITROOT_LOCATION, getFieldEditorParent());
 		addField(nitFieldEditor);
 
 		libFieldEditor = new DirectoryFieldEditor(
 				NitActivator.STDLIB_FOLDER_PREFERENCES_ID,
-				"Nit StdLib Folder Location", getFieldEditorParent());
+				LBL_STDLIB_LOCATION, getFieldEditorParent());
 		addField(libFieldEditor);
 
 		fileFieldEditor = new FileFieldEditor(
-				NitActivator.COMPILER_PATH_PREFERENCES_ID, "Compiler Location",
+				NitActivator.COMPILER_PATH_PREFERENCES_ID, LBL_COMPILER_LOCATION,
 				getFieldEditorParent());
 		addField(fileFieldEditor);
 		
 		interpreterFieldEditor = new FileFieldEditor(
-				NitActivator.INTERPRETER_PATH_PREFERENCES_ID, "Interpreter Location",
+				NitActivator.INTERPRETER_PATH_PREFERENCES_ID, LBL_INTERPRETER_LOCATION,
 				getFieldEditorParent());
 		addField(interpreterFieldEditor);
 		
 		debuggerFieldEditor = new FileFieldEditor(
-				NitActivator.DEBUGGER_PATH_PREFERENCES_ID, "Debugger Location",
+				NitActivator.DEBUGGER_PATH_PREFERENCES_ID, LBL_DEBUGGER_LOCATION,
 				getFieldEditorParent());
 		addField(debuggerFieldEditor);
 	}
@@ -169,7 +181,7 @@ public class NitPreferencePage extends FieldEditorPreferencePage implements
 	 */
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(NitActivator.getDefault().getPreferenceStore());
-		setDescription("General Nit Developer Tools settings");
+		setDescription(LBL_PREFERENCE_PAGE);
 	}
 
 }
