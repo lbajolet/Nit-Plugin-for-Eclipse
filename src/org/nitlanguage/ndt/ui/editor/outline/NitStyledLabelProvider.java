@@ -11,22 +11,31 @@ import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.graphics.Image;
 import org.nitlanguage.gen.node.AAttrPropdef;
+import org.nitlanguage.gen.node.ACharExpr;
 import org.nitlanguage.gen.node.AConcreteInitPropdef;
 import org.nitlanguage.gen.node.AConcreteMethPropdef;
 import org.nitlanguage.gen.node.ADeferredMethPropdef;
+import org.nitlanguage.gen.node.AFalseExpr;
+import org.nitlanguage.gen.node.AFloatExpr;
+import org.nitlanguage.gen.node.AIntExpr;
 import org.nitlanguage.gen.node.AInterfaceClasskind;
 import org.nitlanguage.gen.node.AModule;
 import org.nitlanguage.gen.node.AModuledecl;
+import org.nitlanguage.gen.node.ANewExpr;
 import org.nitlanguage.gen.node.AParam;
 import org.nitlanguage.gen.node.APublicVisibility;
 import org.nitlanguage.gen.node.ASignature;
 import org.nitlanguage.gen.node.AStdClassdef;
+import org.nitlanguage.gen.node.AStringExpr;
+import org.nitlanguage.gen.node.ATrueExpr;
+import org.nitlanguage.gen.node.AType;
 import org.nitlanguage.gen.node.PClasskind;
 import org.nitlanguage.gen.node.PMethid;
 import org.nitlanguage.gen.node.PParam;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.PType;
 import org.nitlanguage.gen.node.PVisibility;
+import org.nitlanguage.gen.node.TKwnullable;
 import org.nitlanguage.ndt.ui.editor.NitEditor;
 
 /**
@@ -77,8 +86,67 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
     		} else {
     			cell.setImage(images.getImage(ISharedImages.IMG_FIELD_PRIVATE));
     		}	 
-    		text.append(attr_def.getId2().toString());
-    		text.append(": " + attr_def.getType().toString(), StyledString.COUNTER_STYLER);
+    		//attribut name
+    		String attr_name;
+    		if(attr_def.getId2() != null) {
+    			attr_name = attr_def.getId2().toString();
+    		} else {
+    			attr_name = attr_def.getId().toString();
+    		}
+    		text.append(attr_name);
+    		AType attr_type = (AType)attr_def.getType();
+    		
+    		//typage sans affectation de valeur (: Int, : Bool)
+    		if(attr_type != null){
+        		if(attr_type.getKwnullable() != null){
+        			text.append(": nullable ", StyledString.COUNTER_STYLER);
+        		} else {
+            		text.append(": ", StyledString.COUNTER_STYLER);
+        		}
+        		text.append(attr_type.getId().toString(), StyledString.COUNTER_STYLER);
+        		LinkedList<PType> listTypes = attr_type.getTypes();
+        		if(listTypes != null && listTypes.size() > 0){
+        			StringBuffer buf = new StringBuffer();
+        			buf.append("[");
+            		for(PType type : listTypes){
+            			buf.append(((AType)type).getId() + ", ");
+            		}
+            		buf.replace(buf.length()-3, buf.length()-1, "]");
+            		text.append(buf.toString(), StyledString.COUNTER_STYLER);
+        		}
+    		}
+    		//typage avec affectation de valeur ( = 1, = true, = new String)
+    		else {
+    			if(attr_def.getExpr() instanceof AFalseExpr
+    					|| attr_def.getExpr() instanceof ATrueExpr) {
+    				text.append(": Bool" , StyledString.COUNTER_STYLER);
+    			} else if(attr_def.getExpr() instanceof AIntExpr) {
+    				text.append(": Int" , StyledString.COUNTER_STYLER);
+    			} else if(attr_def.getExpr() instanceof AFloatExpr) {
+    				text.append(": Float" , StyledString.COUNTER_STYLER);
+    			} else if(attr_def.getExpr() instanceof ACharExpr) {
+    				text.append(": Char" , StyledString.COUNTER_STYLER);
+    			} else if(attr_def.getExpr() instanceof AStringExpr) {
+    				text.append(": String" , StyledString.COUNTER_STYLER);
+    			} else if(attr_def.getExpr() instanceof ANewExpr) {
+    				ANewExpr expr = (ANewExpr)attr_def.getExpr();
+    				AType var_type = (AType)expr.getType();
+    				text.append(": " + var_type.getId(), StyledString.COUNTER_STYLER);
+            		LinkedList<PType> listTypes = var_type.getTypes();
+            		if(listTypes != null && listTypes.size() > 0){
+            			StringBuffer buf = new StringBuffer();
+            			buf.append("[");
+                		for(PType type : listTypes){
+                			buf.append(((AType)type).getId() + ", ");
+                		}
+                		buf.replace(buf.length()-3, buf.length()-1, "]");
+                		text.append(buf.toString(), StyledString.COUNTER_STYLER);
+            		}
+    			} else {
+        			text.append(": " + "undefine inferrence");
+    			}
+    		}
+
     	}
     	else if (element instanceof AConcreteInitPropdef){
     		AConcreteInitPropdef init_def = (AConcreteInitPropdef)element;
