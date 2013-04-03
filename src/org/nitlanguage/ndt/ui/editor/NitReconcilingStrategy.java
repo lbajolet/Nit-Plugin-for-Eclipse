@@ -1,8 +1,8 @@
 package org.nitlanguage.ndt.ui.editor;
 
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Stack;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -13,26 +13,16 @@ import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
 
+/**
+ * Reconciling Strategy used by the source viewer to fold code
+ * @author nathan.heu
+ */
 public class NitReconcilingStrategy implements IReconcilingStrategy,
 IReconcilingStrategyExtension {
 	private NitEditor editor = null;
     private IDocument fDocument;
-    /** The offset of the next character to be read */
-    protected int fOffset;
-    /** The end offset of the range to be scanned */
-    protected int fRangeEnd;
-    /**
-     * next character position - used locally and only valid while
-     * {@link #calculatePositions()} is in progress.
-     */
-    protected int cNextPos = 0;
-    /** number of newLines found by {@link #classifyTag()} */
-    protected int cNewLines = 0;
-    /** holds the calculated positions */
-    protected final ArrayList fPositions = new ArrayList();
-    protected char cLastNLChar = ' ';
-    
-    Stack<Declaration> regionOffsets;
+    private final ArrayList<Position> fPositions = new ArrayList<Position>();
+    private Stack<Declaration> regionOffsets;
     
 	public NitReconcilingStrategy(NitEditor editor){
 		this.editor = editor;
@@ -40,14 +30,11 @@ IReconcilingStrategyExtension {
 	
 	@Override
 	public void setProgressMonitor(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void initialReconcile() {
-        fOffset = 0;
-        fRangeEnd = fDocument.getLength();
         calculatePositions();		
 	}
 
@@ -74,7 +61,6 @@ IReconcilingStrategyExtension {
      */
     protected void calculatePositions(){
             fPositions.clear();
-            cNextPos = fOffset;
             try {
 				processRegions();
 			} catch (BadLocationException e) {
@@ -106,6 +92,11 @@ IReconcilingStrategyExtension {
     	}
     }
     
+    /**
+     * Remove all formatting characters from the beginninf of line
+     * @param line
+     * @return
+     */
     private String cleanLine(String line){
     	char sep_line[] = line.toCharArray();
     	int nbBlankChars = 0;
@@ -118,6 +109,12 @@ IReconcilingStrategyExtension {
     	return line;
     }
     
+    /**
+     * Evaluate the kind of the declaration in the line
+     * @param line
+     * @param nextLineIndex
+     * @return
+     */
     private DeclarationType evaluateDeclaration(String line, int nextLineIndex){
     	line = removeModificatorKeyword(cleanLine(line));
     	
@@ -154,6 +151,10 @@ IReconcilingStrategyExtension {
     	return DeclarationType.OTHER;
     }
     
+    /**
+     * Declaration aimed to be stacked on the folding element stack 
+     * @author nathan.heu
+     */
     private class Declaration{
     	private int beginOffset;
     	private DeclarationType type;
@@ -172,10 +173,19 @@ IReconcilingStrategyExtension {
     	}
     }
     
+    /**
+     * Enumeration of available recognized declaration types
+     * @author nathan.heu
+     */
     public enum DeclarationType {
     	MODULE, CLASS, MULTILINE_FUN, INLINE_FUN, END, INLINE_IF, STRUCT, COMMENT, OTHER
     }
     
+    /**
+     * Extract line characters from the document
+     * @param index
+     * @return
+     */
     public String extractLineValue(int index){
 		try {
 			IRegion lineRegion = fDocument.getLineInformation(index);
@@ -213,7 +223,7 @@ IReconcilingStrategyExtension {
     			else if(type_decl == DeclarationType.END)
     			{
     				if(regionOffsets.isEmpty()) {
-    					System.out.println("problem : try to pop an empty stack");
+    					System.out.println("[NitReconcilingStrategy] Folding error : try to pop an empty stack : there is more closing section clauses (end) than opening clauses.");
     					continue;
     				}
     				Declaration dec = regionOffsets.pop();
@@ -236,6 +246,11 @@ IReconcilingStrategyExtension {
     		}
     }
     
+    /**
+     * Add folding regions position
+     * @param startOffset Folding region begin
+     * @param length Folding region length
+     */
     protected void emitPosition(int startOffset, int length) {
             fPositions.add(new Position(startOffset, length));
     }

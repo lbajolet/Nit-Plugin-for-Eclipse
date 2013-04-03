@@ -8,6 +8,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -21,6 +23,7 @@ import org.eclipse.swt.custom.ExtendedModifyEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
@@ -54,6 +57,10 @@ public class NitEditor extends TextEditor {
 		setSourceViewerConfiguration(new NitEditorConfiguration(this));
 	}
 	
+	  public IFile getCurrentFile(){
+		  return ((IFileEditorInput)this.getEditorInput()).getFile();
+	  }
+	
 	@Override
 	public void createPartControl(Composite parent){
 	    super.createPartControl(parent);
@@ -76,13 +83,13 @@ public class NitEditor extends TextEditor {
 		return viewer;
 	}
 	
-	public void updateFoldingStructure(ArrayList positions)
+	public void updateFoldingStructure(ArrayList<Position> positions)
 	{
 		Annotation[] annotations = new Annotation[positions.size()];
 		
 		//this will hold the new annotations along
 		//with their corresponding positions
-		HashMap newAnnotations = new HashMap();
+		HashMap<Annotation, Position> newAnnotations = new HashMap<Annotation, Position>();
 		
 		for(int i =0;i<positions.size();i++)
 		{
