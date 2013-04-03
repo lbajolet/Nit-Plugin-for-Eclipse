@@ -7,6 +7,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -59,7 +60,10 @@ public class NitCompilerMessageInterpreter {
 					IDocument doc = provider.getDocument(fichier);
 					startOffset = doc.getLineInformation(
 							currentMessage.getLine() - 1).getOffset();
-				} catch (Exception e) {
+				} catch (BadLocationException e) {
+					System.out.println("[NitCompilerMessageInterpreter] Impossible to set marker error on document : invalid line");
+					e.printStackTrace();
+				} catch (CoreException e) {
 					e.printStackTrace();
 				}
 				try {
