@@ -37,15 +37,23 @@ public class NitOutlineContentProvider implements ITreeContentProvider {
 		  this.aph = new AstParserHelper(); 
 	  }
 	  
-	  public IFile getCurrentFile(){
-		  return ((IFileEditorInput)editor.getEditorInput()).getFile();
-	  }
-	  
-	  private void updateContent()
+	  private boolean updateContent()
 	  {      
-	      Start st = aph.getAstForDocument(getCurrentFile());
-	      module = aph.getModuleOfAST(st);     
-	      astd_classes = aph.getAStdClassesOfModule(module);	
+		  Start st = aph.getAstForDocument(editor.getCurrentFile());
+		  if(st != null){
+			  try {
+				  	module = aph.getModuleOfAST(st);
+			  } catch (Exception e) {
+					e.printStackTrace();
+					return false;
+			  }     
+			  astd_classes = aph.getAStdClassesOfModule(module);
+			  return true;
+		  } else {
+			  System.out.println("Outline update impossible : file parsing has failed");
+			  return false;
+		  }
+
 	  }
 	  
 	  public Object[] combine(Object[] a, Object[] b)
@@ -89,8 +97,12 @@ public class NitOutlineContentProvider implements ITreeContentProvider {
 	  @Override
 	  //Called just for the first-level objects.
 	  public Object[] getElements(Object inputElement) {
-		  updateContent();
-		  return combine(module, astd_classes.toArray());
+		  if(updateContent()){
+			  return combine(module, astd_classes.toArray());
+		  } else {
+			  return new Object[]{};
+		  }
+
 	  }
 	
 	  @Override

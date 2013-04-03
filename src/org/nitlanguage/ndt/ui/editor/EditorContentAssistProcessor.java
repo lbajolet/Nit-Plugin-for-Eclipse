@@ -96,7 +96,12 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
 		if (st != null) {
 
-			AModule mod = aph.getModuleOfAST(st);
+			AModule mod = null;
+			try {
+				mod = aph.getModuleOfAST(st);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			if (mod != null) {
 				ArrayList<AStdClassdef> astdclass = aph
@@ -125,8 +130,14 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 						Start importStartNode = aph
 								.getAstForDocument(imp, from);
 						if (importStartNode != null) {
-							AModule modImp = aph
-									.getModuleOfAST(importStartNode);
+							AModule modImp = null;
+							try {
+								modImp = aph
+										.getModuleOfAST(importStartNode);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 							if (modImp != null) {
 								ArrayList<AStdClassdef> astimpclass = aph
 										.getAStdClassesOfModule(modImp);
