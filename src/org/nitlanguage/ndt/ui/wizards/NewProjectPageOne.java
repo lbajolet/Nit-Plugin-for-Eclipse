@@ -1,4 +1,4 @@
-package org.nitlanguage.ndt.ui.newprojectwizard;
+package org.nitlanguage.ndt.ui.wizards;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;

@@ -18,13 +18,13 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.5.0",
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Activator: org.nitlanguage.ndt.core.plugin.NitActivator
 Bundle-ActivationPolicy: lazy
-Export-Package:  org.nitlanguage.ndt.core.builder,
- org.nitlanguage.ndt.core.plugin,
- org.nitlanguage.ndt.ui.editor,
- org.nitlanguage.ndt.ui.newprojectwizard,
- org.nitlanguage.ndt.ui.perspective,
- org.nitlanguage.ndt.ui.preferences,
- org.nitlanguage.gen.analysis,
+Export-Package: org.nitlanguage.gen.analysis,
  org.nitlanguage.gen.lexer,
  org.nitlanguage.gen.node,
- org.nitlanguage.gen.parser
+ org.nitlanguage.gen.parser,
+ org.nitlanguage.ndt.core.builder,
+ org.nitlanguage.ndt.core.plugin,
+ org.nitlanguage.ndt.ui.editor,
+ org.nitlanguage.ndt.ui.perspective,
+ org.nitlanguage.ndt.ui.preferences,
+ org.nitlanguage.ndt.ui.wizards

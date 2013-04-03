@@ -1,4 +1,4 @@
-package org.nitlanguage.ndt.ui.newprojectwizard;
+package org.nitlanguage.ndt.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
@@ -61,9 +61,7 @@ public class NewProjectWizard extends Wizard implements IWorkbenchWizard {
 
 	@Override
 	public boolean performFinish() {
-
 		createNewProject();
-
 		return true;
 	}
 

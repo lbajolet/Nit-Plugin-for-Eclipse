@@ -91,7 +91,7 @@
       </category>
       <wizard
             category="org.uqam.nit.ndt.wizard.category"
-            class="org.nitlanguage.ndt.ui.newprojectwizard.NewProjectWizard"
+            class="org.nitlanguage.ndt.ui.wizards.NewProjectWizard"
             icon="icons/nit_project.png"
             id="org.uqam.nit.ndt.newProjectWizard"
             name="Nit Project"
@@ -120,14 +120,14 @@
             delegate="org.nitlanguage.ndt.core.launcher.NitLauncher"
 	    delegateName="Nit Launcher"            
 	    delegateDescription="The Nit Application Launcher supports running Nit on UNIX based operating systems."
-            id="org.uqam.nit.ndt.nitLauncher"
+            id="org.nitlanguage.ndt.nitLauncher"
             modes="run, debug"
             name="Nit Application">
       </launchConfigurationType>
    </extension>
    <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
-            configTypeID="org.uqam.nit.ndt.nitLauncher"
+            configTypeID="org.nitlanguage.ndt.nitLauncher"
             icon="icons/nit_logo.png"
             id="org.uqam.nit.ndt.nitLauncherImage">
       </launchConfigurationTypeImage>
@@ -136,7 +136,7 @@
       <launchConfigurationTabGroup
             class="org.nitlanguage.ndt.core.launcher.NitLauncherTabGroup"
             id="org.uqam.nit.ndt.nitLaunchProgram"
-            type="org.uqam.nit.ndt.nitLauncher">
+            type="org.nitlanguage.ndt.nitLauncher">
             <launchMode
                   mode="run"
                   description="run description">
@@ -161,14 +161,17 @@
 		       </enablement>
 		     </contextualLaunch>
 	  </shortcut>
-      <!--<shortcut
+      <!--
+      OLD WAY TO REGISTER SHORTCUT
+      <shortcut
             id="org.uqam.nit.ndt.NitLaunchShortcut"
             class="org.nitlanguage.ndt.core.launcher.NitLaunchShortcut"
             icon="icons/nit_logo.png"
             label="Nit Application"
             modes="run, debug">
             <perspective id="org.nitlanguage.ndt.core.perspective.NitPerspective"/>
-      </shortcut>-->
+      </shortcut>
+      -->
    </extension>
    <extension point="org.eclipse.ui.perspectiveExtensions">
       <perspectiveExtension targetID="org.nitlanguage.ndt.ui.perspective.NitPerspective">
