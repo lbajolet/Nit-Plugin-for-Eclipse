@@ -1,15 +1,12 @@
 package org.nitlanguage.ndt.ui.editor.outline;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.StyledString;
 import org.eclipse.jface.viewers.ViewerCell;
-import org.eclipse.swt.graphics.Image;
 import org.nitlanguage.gen.node.AAttrPropdef;
 import org.nitlanguage.gen.node.ACharExpr;
 import org.nitlanguage.gen.node.AConcreteInitPropdef;
@@ -17,6 +14,7 @@ import org.nitlanguage.gen.node.AConcreteMethPropdef;
 import org.nitlanguage.gen.node.ADeferredMethPropdef;
 import org.nitlanguage.gen.node.AFalseExpr;
 import org.nitlanguage.gen.node.AFloatExpr;
+import org.nitlanguage.gen.node.AFormaldef;
 import org.nitlanguage.gen.node.AIntExpr;
 import org.nitlanguage.gen.node.AInterfaceClasskind;
 import org.nitlanguage.gen.node.AModule;
@@ -30,12 +28,13 @@ import org.nitlanguage.gen.node.AStringExpr;
 import org.nitlanguage.gen.node.ATrueExpr;
 import org.nitlanguage.gen.node.AType;
 import org.nitlanguage.gen.node.PClasskind;
-import org.nitlanguage.gen.node.PMethid;
+import org.nitlanguage.gen.node.PFormaldef;
 import org.nitlanguage.gen.node.PParam;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.PType;
 import org.nitlanguage.gen.node.PVisibility;
-import org.nitlanguage.gen.node.TKwnullable;
+import org.nitlanguage.ndt.core.builder.NitNature;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.editor.NitEditor;
 
 /**
@@ -45,7 +44,8 @@ import org.nitlanguage.ndt.ui.editor.NitEditor;
  */
 public class NitStyledLabelProvider extends StyledCellLabelProvider {
   private NitEditor editor;
-
+  private String nullableChar = "\u2205";
+  
   public NitStyledLabelProvider(NitEditor editor) {
 	  this.editor = editor;
   }
@@ -65,7 +65,12 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
     if (element instanceof AModule) {
     	cell.setImage(images.getImage(ISharedImages.IMG_OBJS_PACKAGE));
 		AModuledecl mod_dec = (AModuledecl)((AModule)element).getModuledecl();
-    	text.append(mod_dec.getName().toString());   	
+		if(mod_dec != null) {
+	    	text.append(mod_dec.getName().toString());  
+		} else {
+	    	text.append(editor.getCurrentFile().getName().replace(".nit", ""));  
+		}
+ 	
     }
     else if (element instanceof AStdClassdef) {
     	  AStdClassdef class_def = (AStdClassdef)element;
@@ -76,6 +81,17 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
 			  cell.setImage(images.getImage(ISharedImages.IMG_OBJS_CLASS));
 		  }
 		  text.append(class_def.getId().getText());
+		  
+		  LinkedList<PFormaldef> listFormalParams = class_def.getFormaldefs();
+		  if(listFormalParams.size() > 0){
+				StringBuffer buf = new StringBuffer();
+				buf.append("[");
+				for(PFormaldef type : listFormalParams){
+					buf.append(((AFormaldef)type).getId() + ", ");
+				}
+				buf.replace(buf.length()-3, buf.length()-1, "]");
+				text.append(buf.toString(), StyledString.COUNTER_STYLER);
+		  }
     }
     else if (element instanceof PPropdef) {
     	if (element instanceof AAttrPropdef){
@@ -92,6 +108,7 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
     			attr_name = attr_def.getId2().toString();
     		} else {
     			attr_name = attr_def.getId().toString();
+    			cell.setImage(images.getImage(ISharedImages.IMG_FIELD_PRIVATE));
     		}
     		text.append(attr_name);
     		AType attr_type = (AType)attr_def.getType();
@@ -99,7 +116,7 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
     		//typage sans affectation de valeur (: Int, : Bool)
     		if(attr_type != null){
         		if(attr_type.getKwnullable() != null){
-        			text.append(": nullable ", StyledString.COUNTER_STYLER);
+        			text.append(": " + nullableChar, StyledString.COUNTER_STYLER);    			
         		} else {
             		text.append(": ", StyledString.COUNTER_STYLER);
         		}
