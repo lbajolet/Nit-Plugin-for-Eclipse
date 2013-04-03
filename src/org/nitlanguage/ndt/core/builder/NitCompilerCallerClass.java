@@ -130,34 +130,35 @@ public class NitCompilerCallerClass {
 	 * Calls the compiler on the set target with the set options
 	 */
 	public void call() {
-		if (!NitActivator.getDefault().getPreferenceStore()
-				.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID)
-				.equals("")) {
-			setPath(NitActivator.getDefault().getPreferenceStore()
-					.getString(NitActivator.COMPILER_PATH_PREFERENCES_ID));
-		}
-		if (this.path != null && checkIfPathToCompilerIsValid()
-				&& this.target != null) {
-			// String completeCommand = "cd " +
-			// this.target.getLocation().toString().substring(0,
-			// this.target.getLocation().toString().lastIndexOf("/")) + "; ";
-			String completeCommand = path;
-			completeCommand += " "
-					+ this.target.getLocation().toString()
-					+ " "
-					+ this.options.trim()
-					+ " -o "
-					+ this.outputFolder
-					+ "/"
-					+ this.target.getName().substring(0,
-							this.target.getName().length() - 4);
-			if (eclipseJob == null) {
-				this.eclipseJob = new NitCompileJob(COMPILATION_JOB);
+		
+		if (NitActivator.getDefault().getNitInstallation().isFunctional()) {
+			setPath(NitActivator.getDefault().getNitInstallation().getCompiler());
+
+			if (this.path != null && checkIfPathToCompilerIsValid()
+					&& this.target != null) {
+				// String completeCommand = "cd " +
+				// this.target.getLocation().toString().substring(0,
+				// this.target.getLocation().toString().lastIndexOf("/")) + "; ";
+				String completeCommand = path;
+				completeCommand += " "
+						+ this.target.getLocation().toString()
+						+ " "
+						+ this.options.trim()
+						+ " -o "
+						+ this.outputFolder
+						+ "/"
+						+ this.target.getName().substring(0,
+								this.target.getName().length() - 4);
+				if (eclipseJob == null) {
+					this.eclipseJob = new NitCompileJob(COMPILATION_JOB);
+				}
+				eclipseJob.cancelCurrentProcess();
+				eclipseJob.setPath(completeCommand);
+				// NB : On le lancera en background job
+				eclipseJob.schedule();
 			}
-			eclipseJob.cancelCurrentProcess();
-			eclipseJob.setPath(completeCommand);
-			// NB : On le lancera en background job
-			eclipseJob.schedule();
+		} else {
+			NitActivator.getDefault().checkNitInstallation();
 		}
 	}
 	

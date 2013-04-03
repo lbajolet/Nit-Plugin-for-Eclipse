@@ -105,9 +105,8 @@ public class NitBuilder extends IncrementalProjectBuilder {
 				if (self != null) {
 					IFile defaultFile = self.getDefaultFile();
 					if (defaultFile != null) {
-						String path = NitActivator.getDefault()
-								.getPreferenceStore()
-								.getString(PREFERENCE_KEY_COMPILER);
+						NitActivator.getDefault().checkNitInstallation();
+						String path = NitActivator.getDefault().getNitInstallation().getCompiler();
 						if (path != null && path != "") {
 							NitCompilerCallerClass ncc = self
 									.getCompilerCaller();
