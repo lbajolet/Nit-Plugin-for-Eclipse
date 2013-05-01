@@ -187,4 +187,37 @@
              natureId="org.uqam.nit.ndt.nature">
        </image>
     </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+       <command
+             defaultHandler="org.nitlanguage.ndt.ui.commands.ToggleCommentHandler"
+             id="org.nitlanguage.ndt.ui.commands.ToggleComment"
+             name="Toggle Comment">
+       </command>
+    </extension>
+    <extension
+          point="org.eclipse.ui.menus">
+       <menuContribution
+             allPopups="false"
+             locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+          <menu
+                id="sourceMenu"
+                label="Source">
+             <command
+                   commandId="org.nitlanguage.ndt.ui.commands.ToggleComment"
+                   label="Toggle Comment"
+                   style="push">
+             </command>
+          </menu>
+       </menuContribution>
+    </extension>
+    <extension
+         point="org.eclipse.ui.bindings">
+			<key
+				commandId="org.nitlanguage.ndt.ui.commands.ToggleComment"
+				contextId="org.eclipse.ui.contexts.window"
+				sequence="M1+SHIFT+/"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+			</key>
+    </extension>
 </plugin>

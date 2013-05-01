@@ -41,11 +41,8 @@ public class NitScanner implements ITokenScanner {
 	protected Lexer lex;
 
 	/**
-	 * @param document
-	 *            : The document to set
-	 * 
-	 *            Changes the document to scan for tokens
-	 * 
+	 * @param document : The document to set
+	 * Changes the document to scan for tokens
 	 */
 	public void setDocument(IDocument document) {
 		if (document != null) {
