@@ -4,21 +4,17 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.text.source.Annotation;
-import org.eclipse.jface.text.source.AnnotationModel;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.text.source.projection.ProjectionAnnotation;
@@ -26,9 +22,6 @@ import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.custom.ExtendedModifyEvent;
-import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
@@ -37,7 +30,6 @@ import org.eclipse.ui.editors.text.TextEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
@@ -51,6 +43,7 @@ import org.nitlanguage.ndt.ui.editor.outline.NitOutlinePage;
  */
 public class NitEditor extends TextEditor {
 	public static final String NIT_FILE_EXTENSION = "nit";
+	char comment = '#';
 	
 	ProjectionSupport projectionSupport;
 	Annotation[] oldAnnotations;
@@ -65,10 +58,18 @@ public class NitEditor extends TextEditor {
 		setSourceViewerConfiguration(new NitEditorConfiguration(this));
 	}
 	
+	/**
+	 * Get the file being edited
+	 * @return
+	 */
 	public IFile getCurrentFile(){
 		 return ((IFileEditorInput)this.getEditorInput()).getFile();
 	}
 	
+	/**
+	 * Get the portion of text selected in the editor
+	 * @return
+	 */
 	public TextSelection getSelection(){
 		ISelection infos = doGetSelection();
 		if(infos.isEmpty()) return null;
@@ -80,11 +81,20 @@ public class NitEditor extends TextEditor {
 		else return null;
 	}
 	
+	/**
+	 * Defines the portion of text selected in the editor
+	 * @param offset
+	 * @param length
+	 */
 	public void setSelection(int offset, int length){
 		TextSelection selection = new TextSelection(offset, length);
 		doSetSelection(selection);
 	}
 	
+	/**
+	 * Returns a map containing the text selected in the editor line by line with the associated line number as key
+	 * @return
+	 */
 	public HashMap<Integer, String> getSelectedLines(){
 		TextSelection selection = getSelection();
 		if(selection == null) return null;
@@ -108,20 +118,30 @@ public class NitEditor extends TextEditor {
 		return lines;
 	}
 	
+	/**
+	 * Add a comment clause at the beginning of each line specified by the set
+	 * @param lines
+	 * @return
+	 */
 	public boolean comment(Set<Integer> lines){
 		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
 		for(int line : lines){
 			try {
 				IRegion line_infos = doc.getLineInformation(line);
 				String value = doc.get(line_infos.getOffset(), line_infos.getLength());
-				doc.replace(line_infos.getOffset(), line_infos.getLength(), "#".concat(value));
+				doc.replace(line_infos.getOffset(), line_infos.getLength(), Character.toString(comment) + value);
 			} catch (BadLocationException e) {
 				return false;
 			} 
 		}
 		return true;
 	}
-		
+	
+	/**
+	 * Remove the comment clause at the beginning of each line specified by the set
+	 * @param lines
+	 * @return
+	 */
 	public boolean uncomment(Set<Integer> lines){
 		IDocument doc = getDocumentProvider().getDocument(getEditorInput());
 		for(int line : lines){
@@ -130,7 +150,7 @@ public class NitEditor extends TextEditor {
 				String value = doc.get(line_infos.getOffset(), line_infos.getLength());
 				for(int i = 0; i < value.length(); i++ ){
 					if(Character.isWhitespace(value.charAt(i))) continue;
-					else if(value.charAt(i) == '#'){
+					else if(value.charAt(i) == comment){
 						String new_value = value.substring(0, i) + value.substring(i+1, value.length());
 						doc.replace(line_infos.getOffset(), line_infos.getLength(), new_value);
 					}
@@ -167,23 +187,18 @@ public class NitEditor extends TextEditor {
 	
 	public void updateFoldingStructure(ArrayList<Position> positions)
 	{
-		Annotation[] annotations = new Annotation[positions.size()];
-		
+		Annotation[] annotations = new Annotation[positions.size()];		
 		//this will hold the new annotations along
 		//with their corresponding positions
 		HashMap<Annotation, Position> newAnnotations = new HashMap<Annotation, Position>();
 		
 		for(int i =0;i<positions.size();i++)
 		{
-			ProjectionAnnotation annotation = new ProjectionAnnotation();
-			
-			newAnnotations.put(annotation,positions.get(i));
-			
+			ProjectionAnnotation annotation = new ProjectionAnnotation();			
+			newAnnotations.put(annotation,positions.get(i));		
 			annotations[i]=annotation;
-		}
-		
-		annotationModel.modifyAnnotations(oldAnnotations,newAnnotations,null);
-		
+		}		
+		annotationModel.modifyAnnotations(oldAnnotations,newAnnotations,null);		
 		oldAnnotations=annotations;
 	}
 	
@@ -210,6 +225,10 @@ public class NitEditor extends TextEditor {
 		super.updateMarkerViews(annotation);
 	}
 
+	/**
+	 * Returns an object which is an instance of the given class associated with this object. 
+	 * Returns null if no such object can be found.
+	 */
 	public Object getAdapter(Class required) {
 	      if (IContentOutlinePage.class.equals(required)) {
 	         if (outlinePage == null) {
