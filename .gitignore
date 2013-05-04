@@ -1,3 +1,4 @@
-bin/*
+plugins/org.nitlanguage.ndt/bin/*
+plugins/org.nitlanguage.ndt/target/*
 /*.xml~
 /pom.xml
