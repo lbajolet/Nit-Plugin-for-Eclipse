@@ -13,7 +13,8 @@ import org.eclipse.text.undo.IDocumentUndoManager;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 
 /**
- * 
+ * Cleans the content of the document:
+ * 	- trim whitespace(s)  
  * @author nathan.heu
  */
 public class NitDocumentProvider extends TextFileDocumentProvider{

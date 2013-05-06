@@ -13,6 +13,7 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 
 /**
+ * Bundles the configuration space of a source viewer.
  * @author lucas.bajolet
  * @author nathan.heu
  */

@@ -12,6 +12,8 @@ import org.eclipse.jface.text.reconciler.DirtyRegion;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategy;
 import org.eclipse.jface.text.reconciler.IReconcilingStrategyExtension;
 import org.eclipse.swt.widgets.Display;
+import org.nitlanguage.ndt.ui.docmodel.Declaration;
+import org.nitlanguage.ndt.ui.docmodel.DeclarationType;
 
 /**
  * Reconciling Strategy used by the source viewer to fold code
@@ -74,128 +76,6 @@ IReconcilingStrategyExtension {
     }
     
     /**
-     * Remove visibility (public, protected, private) and refinment (redef) keywords
-     * @param line
-     * @return
-     */
-    private String removeModificatorKeyword(String line){
-    	if(line.startsWith("redef ")){
-    		return line.substring(5, line.length()-1).trim();
-    	} else if(line.startsWith("public ")){
-    		return line.substring(6, line.length()-1).trim();
-    	} else if(line.startsWith("protected ")){
-    		return line.substring(9, line.length()-1).trim();
-    	} else if(line.startsWith("private ")){
-    		return line.substring(7, line.length()-1).trim();
-    	} else {
-    		return line;
-    	}
-    }
-    
-    /**
-     * Remove all formatting characters from the beginninf of line
-     * @param line
-     * @return
-     */
-    private String cleanLine(String line){
-    	char sep_line[] = line.toCharArray();
-    	int nbBlankChars = 0;
-    	for(char c : sep_line)
-    	{
-    		if(c == '\t' || c == '\n' || c == ' ') nbBlankChars++;
-    		else break;
-    	}
-    	if (nbBlankChars > 0) return line.substring(nbBlankChars);
-    	return line;
-    }
-    
-    /**
-     * Evaluate the kind of the declaration in the line
-     * @param line
-     * @param nextLineIndex
-     * @return
-     */
-    private DeclarationType evaluateDeclaration(String line, int nextLineIndex){
-    	line = removeModificatorKeyword(cleanLine(line));
-    	
-    	if(line.startsWith("#")){
-    		return DeclarationType.COMMENT;
-    	} else if(line.startsWith("module ")){
-    		return DeclarationType.MODULE;
-    	} else if(line.startsWith("class ") 
-    				|| line.startsWith("interface ")){
-    		return DeclarationType.CLASS;
-    	} else if(line.startsWith("fun ") 
-    				|| line.startsWith("init ")
-    				|| line.startsWith("init(")){
-    		String nextLine = cleanLine(extractLineValue(nextLineIndex));
-    		if(line.endsWith(" end") || 
-    				(!line.endsWith(" do") && !nextLine.equals("do"))){
-    			return DeclarationType.INLINE_FUN;
-    		}
-    		return DeclarationType.MULTILINE_FUN;
-    	} else if(line.startsWith("do ")
-					|| line.startsWith("while ")
-    				|| line.startsWith("loop ") 
-    				|| line.startsWith("assert ")
-    				|| line.startsWith("for ")){
-    		return DeclarationType.STRUCT;
-    	} else if(line.startsWith("if ")){
-    		if(line.endsWith("then")){
-        		return DeclarationType.STRUCT;
-    		}
-    		else return DeclarationType.INLINE_IF;
-    	} else if(line.equals("end")){
-    		return DeclarationType.END;
-    	}
-    	return DeclarationType.OTHER;
-    }
-    
-    /**
-     * Declaration aimed to be stacked on the folding element stack 
-     * @author nathan.heu
-     */
-    private class Declaration{
-    	private int beginOffset;
-    	private DeclarationType type;
-    	
-    	public Declaration(int beginOffset, DeclarationType type){
-    		this.beginOffset = beginOffset;
-    		this.type = type;
-    	}
-    	
-    	public int getBeginOffset(){
-    		return beginOffset; 
-    	}
-    	
-    	public DeclarationType getType(){
-    		return type;
-    	}
-    }
-    
-    /**
-     * Enumeration of available recognized declaration types
-     * @author nathan.heu
-     */
-    public enum DeclarationType {
-    	MODULE, CLASS, MULTILINE_FUN, INLINE_FUN, END, INLINE_IF, STRUCT, COMMENT, OTHER
-    }
-    
-    /**
-     * Extract line characters from the document
-     * @param index
-     * @return
-     */
-    public String extractLineValue(int index){
-		try {
-			IRegion lineRegion = fDocument.getLineInformation(index);
-			return fDocument.get(lineRegion.getOffset(), lineRegion.getLength());
-		} catch (BadLocationException e) {
-			return null;
-		}
-    }
-    
-    /**
      * emits tokens to {@link #fPositions}.
      * @throws BadLocationException 
      */
@@ -208,7 +88,7 @@ IReconcilingStrategyExtension {
     			int beginOffset = currentLine.getOffset();
     			int endOffset = currentLine.getLength();
     			String rawLine = fDocument.get(beginOffset, endOffset);
-    			DeclarationType type_decl = evaluateDeclaration(rawLine, i+1);
+    			DeclarationType type_decl = Declaration.evaluateDeclaration(rawLine, editor.lineAt(i+1));
     			
     			if(type_decl == DeclarationType.OTHER
     					|| type_decl == DeclarationType.COMMENT)
@@ -217,7 +97,8 @@ IReconcilingStrategyExtension {
     			} 
     			else if(type_decl == DeclarationType.MODULE)
     			{
-    				emitPosition(beginOffset, fDocument.getLength());
+    				//is this correct to fold module? there is just one module per file...
+    				//emitPosition(beginOffset, fDocument.getLength());
     				continue;
     			} 
     			else if(type_decl == DeclarationType.END)
@@ -239,6 +120,7 @@ IReconcilingStrategyExtension {
     				//emitPosition(beginOffset, endOffset);	
     			}
     			else if(type_decl == DeclarationType.MULTILINE_FUN 
+    						|| type_decl == DeclarationType.MULTILINE_FUN_CLEAN
     						|| type_decl == DeclarationType.CLASS
     						|| type_decl == DeclarationType.STRUCT){
     				regionOffsets.push(new Declaration(beginOffset, type_decl));
