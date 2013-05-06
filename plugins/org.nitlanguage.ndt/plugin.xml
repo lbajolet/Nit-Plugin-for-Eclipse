@@ -194,6 +194,16 @@
              id="org.nitlanguage.ndt.ui.commands.ToggleComment"
              name="Toggle Comment">
        </command>
+       <command
+             defaultHandler="org.nitlanguage.ndt.ui.commands.CorrectIndentationHandler"
+             id="org.nitlanguage.ndt.ui.commands.CorrectIndentation"
+             name="Correct Indentation">
+       </command>
+       <command
+             defaultHandler="org.nitlanguage.ndt.ui.commands.FormatSourceHandler"
+             id="org.nitlanguage.ndt.ui.commands.FormatSource"
+             name="Format Source">
+       </command>
     </extension>
     <extension
           point="org.eclipse.ui.menus">
@@ -208,6 +218,16 @@
                    label="Toggle Comment"
                    style="push">
              </command>
+             <command
+                   commandId="org.nitlanguage.ndt.ui.commands.CorrectIndentation"
+                   label="Correct Indentation"
+                   style="push">
+             </command>
+             <command
+                   commandId="org.nitlanguage.ndt.ui.commands.FormatSource"
+                   label="Format"
+                   style="push">
+             </command>
           </menu>
        </menuContribution>
     </extension>
@@ -217,6 +237,18 @@
 				commandId="org.nitlanguage.ndt.ui.commands.ToggleComment"
 				contextId="org.eclipse.ui.contexts.window"
 				sequence="M1+SHIFT+/"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+			</key>
+			<key
+				commandId="org.nitlanguage.ndt.ui.commands.CorrectIndentation"
+				contextId="org.eclipse.ui.contexts.window"
+				sequence="M1+I"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+			</key>
+			<key
+				commandId="org.nitlanguage.ndt.ui.commands.FormatSource"
+				contextId="org.eclipse.ui.contexts.window"
+				sequence="M1+SHIFT+F"
 				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 			</key>
     </extension>
