@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.ui.UiMsg;
 
 /**
  * Plug-in preferences page - define editor related parameters.
@@ -11,8 +12,6 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  */
 public class NitEditorPage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage {
-	public static final String DESC_EDITOR_PREF_PAGE = "Nit editor preferences";
-			
 	/**
 	 * Create the editor preference page.
 	 */
@@ -26,6 +25,6 @@ public class NitEditorPage extends FieldEditorPreferencePage implements
   @Override
   public void init(IWorkbench workbench) {
     setPreferenceStore(NitActivator.getDefault().getPreferenceStore());
-    setDescription(DESC_EDITOR_PREF_PAGE);
+    setDescription(UiMsg.DESC_EDITOR_PREF_PAGE);
   }
 } 

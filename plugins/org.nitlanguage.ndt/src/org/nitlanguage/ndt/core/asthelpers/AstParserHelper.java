@@ -35,6 +35,7 @@ import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
 import org.nitlanguage.gen.parser.Parser;
 import org.nitlanguage.gen.parser.ParserException;
+import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.StringArrayHelp;
 import org.nitlanguage.ndt.core.builder.NitBuilder;
 import org.nitlanguage.ndt.core.builder.NitNature;
@@ -128,7 +129,7 @@ public class AstParserHelper {
 			// Check if a file with .nit extension exists, else, try to find a
 			// directory with that name and get the file bearing this name in
 			// that directory if there is
-			File toCheck = new File(sah.join(separatedPath, "/") + NitBuilder.NIT_EXTENSION);
+			File toCheck = new File(sah.join(separatedPath, "/") + PluginParams.NIT_EXTENSION);
 
 			if (toCheck.exists() && toCheck.isFile()) {
 				Start node = this.getAstForDocumentBody(this
@@ -138,7 +139,7 @@ public class AstParserHelper {
 							node,
 							toCheck,
 							(NitNature) fileToSeekFrom.getProject().getNature(
-									NitNature.NATURE_ID));
+									PluginParams.NATURE_ID));
 				} catch (CoreException e) {
 					if (NitActivator.DEBUG_MODE)
 						e.printStackTrace();
@@ -149,7 +150,7 @@ public class AstParserHelper {
 				if (dir.exists() && dir.isDirectory()) {
 					File finalFile = new File(sah.join(separatedPath, "/")
 							+ "/" + separatedPath[separatedPath.length - 1]
-							+ NitBuilder.NIT_EXTENSION);
+							+ PluginParams.NIT_EXTENSION);
 
 					if (finalFile.exists() && finalFile.isFile()) {
 						Start node = this.getAstForDocumentBody(this
@@ -158,7 +159,7 @@ public class AstParserHelper {
 							try {
 								saveStartNodeInAST(node, finalFile,
 										(NitNature) fileToSeekFrom.getProject()
-												.getNature(NitNature.NATURE_ID));
+												.getNature(PluginParams.NATURE_ID));
 							} catch (CoreException e) {
 								if (NitActivator.DEBUG_MODE)
 									e.printStackTrace();
@@ -185,7 +186,7 @@ public class AstParserHelper {
 	 */
 	private void saveStartNodeInAST(Start node, IFile fileBound) {
 		try {
-			((NitNature) fileBound.getProject().getNature(NitNature.NATURE_ID))
+			((NitNature) fileBound.getProject().getNature(PluginParams.NATURE_ID))
 					.getAstReposit().addOrReplaceAST(fileBound.getName(), node);
 		} catch (Exception e) {
 			if (NitActivator.DEBUG_MODE)
@@ -215,9 +216,9 @@ public class AstParserHelper {
 					FileEditorInput fed = (FileEditorInput) editor
 							.getEditorInput();
 					String fileName = fed.getFile().getName();
-					if (fileName.equals(modName.trim() + NitBuilder.NIT_EXTENSION)) {
+					if (fileName.equals(modName.trim() + PluginParams.NIT_EXTENSION)) {
 						NitNature nnat = (NitNature) fed.getFile().getProject()
-								.getNature(NitNature.NATURE_ID);
+								.getNature(PluginParams.NATURE_ID);
 						nnat.getAstReposit().addOrReplaceAST(fileName, node);
 						break;
 					}
@@ -296,7 +297,7 @@ public class AstParserHelper {
 
 			try {
 				nnat = (NitNature) fileBoundToIDocument.getProject().getNature(
-						NitNature.NATURE_ID);
+						PluginParams.NATURE_ID);
 				nnat.getProjectAutoParser().addToQueue(fileBoundToIDocument);
 			} catch (Exception e) {
 				if (NitActivator.DEBUG_MODE)

@@ -12,28 +12,20 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.nitlanguage.ndt.core.BuildMsg;
+import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
- * The builder for Nit Projets. Used to call for the Nit Compiler.
- * The builder is not incremental since the compiler is not.
- * @author lucas.bajolet 
+ * The builder for Nit Projets. Used to call for the Nit Compiler. The builder
+ * is not incremental since the compiler is not.
+ * 
+ * @author lucas.bajolet
  */
 public class NitBuilder extends IncrementalProjectBuilder {
-	//public static final String BUILDER_ID = "org.uqam.nit.ndt.builder";
-	public static final String BUILDER_ID = "org.nitlanguage.ndt.builder";
-	public static final String NIT_EXTENSION = ".nit";
-	public static final String MSG_CAT_COMPILER = "Nit Compiling Process";
-	public static final String MSG_COMPILER_MISSING = "You need to set the Nit compiler location in Window/Properties/Nit";
-	public static final String PREFERENCE_KEY_COMPILER = "compilerLocation";
-	
-	//Do not use color to display errors and warnings
-	public static final String NIT_COMPILER_PARAM_NO_COLOR = "--no-color";
-	//Output file
-	public static final String NIT_COMPILER_PARAM_OUTPUT = "-o";
-	
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.eclipse.core.internal.events.InternalBuilder#build(int,
 	 * java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
@@ -47,10 +39,13 @@ public class NitBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Checks the nit text in every nit file of the project
-	 * @param resource The IResource (File...) to build
+	 * 
+	 * @param resource
+	 *            The IResource (File...) to build
 	 */
 	void checkNit(IResource resource) {
-		if (resource instanceof IFile && resource.getName().endsWith(NIT_EXTENSION)) {
+		if (resource instanceof IFile
+				&& resource.getName().endsWith(PluginParams.NIT_EXTENSION)) {
 			IFile file = (IFile) resource;
 			try {
 				file.deleteMarkers(IMarker.PROBLEM, true,
@@ -63,7 +58,9 @@ public class NitBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Performs a full build (the only way to compile Nit at the moment)
-	 * @param monitor Progress bar in the Eclipse UI
+	 * 
+	 * @param monitor
+	 *            Progress bar in the Eclipse UI
 	 * @throws CoreException
 	 */
 	protected void fullBuild(final IProgressMonitor monitor)
@@ -73,6 +70,7 @@ public class NitBuilder extends IncrementalProjectBuilder {
 
 	/**
 	 * Performs a full build (the only way to compile Nit at the moment)
+	 * 
 	 * @param delta
 	 *            Used by Eclipse to store the modifications since the last
 	 *            compiling attempt
@@ -82,14 +80,14 @@ public class NitBuilder extends IncrementalProjectBuilder {
 	 */
 	protected void incrementalBuild(IResourceDelta delta,
 			IProgressMonitor monitor) throws CoreException {
-		
+
 		fullBuild(monitor);
-		
+
 	}
-	
+
 	/**
-	 * Visitor for the files of the project
-	 * Visits every element of a Project to build it
+	 * Visitor for the files of the project Visits every element of a Project to
+	 * build it
 	 */
 	class NitResourceVisitor implements IResourceVisitor {
 		public boolean visit(IResource resource) {
@@ -97,7 +95,7 @@ public class NitBuilder extends IncrementalProjectBuilder {
 				IProject proj = resource.getProject();
 				NitNature self = null;
 				try {
-					self = (NitNature) proj.getNature(NitNature.NATURE_ID);
+					self = (NitNature) proj.getNature(PluginParams.NATURE_ID);
 				} catch (CoreException e) {
 					// If an exception is thrown, the project was not a Nit
 					// Project, therefore, cannot be used to build Nit
@@ -106,13 +104,16 @@ public class NitBuilder extends IncrementalProjectBuilder {
 					IFile defaultFile = self.getDefaultFile();
 					if (defaultFile != null) {
 						NitActivator.getDefault().checkNitInstallation();
-						String path = NitActivator.getDefault().getNitInstallation().getCompiler();
+						String path = NitActivator.getDefault()
+								.getNitInstallation().getCompiler();
 						if (path != null && path != "") {
 							NitCompilerCallerClass ncc = self
 									.getCompilerCaller();
 							ncc.setPath(path
-									+ NIT_COMPILER_PARAM_NO_COLOR + " "
-									+ NIT_COMPILER_PARAM_OUTPUT + " "
+									+ BuildMsg.COMPILER_ARG_NO_COLOR
+									+ " "
+									+ BuildMsg.COMPILER_ARG_OUTPUT
+									+ " "
 									+ defaultFile
 											.getLocation()
 											.toString()
@@ -128,9 +129,12 @@ public class NitBuilder extends IncrementalProjectBuilder {
 							NitActivator
 									.getDefault()
 									.getLog()
-									.log(new Status(Status.ERROR, MSG_CAT_COMPILER, MSG_COMPILER_MISSING));
+									.log(new Status(Status.ERROR,
+											BuildMsg.MSG_CAT_COMPILER,
+											BuildMsg.ERROR_COMPILER_MISSING));
 						}
-					} else {}
+					} else {
+					}
 				}
 			}
 			return true;

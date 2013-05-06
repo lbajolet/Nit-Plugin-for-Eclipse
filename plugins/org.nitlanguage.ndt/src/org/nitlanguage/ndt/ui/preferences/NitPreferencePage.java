@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.ui.UiMsg;
 
 /**
  * Main plug-in preferences page (Window > Preferences > Nit).
@@ -20,10 +21,7 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  */
 public class NitPreferencePage extends PreferencePage implements
 		IWorkbenchPreferencePage {
-	public static final String NAME_NIT_INSTALL_WIZARD_PAGE = "PreferencenceNitInstallationPage";
-	public static final String LBL_PREFERENCE_PAGE = "General Nit Developer Tools settings"; 
-	public static final String LBL_NIT_INSTALL_PAGE = "General Nit Developer Tools settings"; 
-	
+
 	/**
 	 * A simple field editor with a special action when changing its value
 	 * Represents the location of the nit global folder
@@ -34,14 +32,14 @@ public class NitPreferencePage extends PreferencePage implements
 	 * Default constructor
 	 */
 	public NitPreferencePage() {
-		super(NAME_NIT_INSTALL_WIZARD_PAGE);
+		super(UiMsg.NAME_NIT_INSTALL_WIZARD_PAGE);
 	}
 	
 	@Override
 	public void init(IWorkbench workbench) {
 		// TODO Auto-generated method stub
-		setTitle(LBL_NIT_INSTALL_PAGE);
-		setDescription(LBL_PREFERENCE_PAGE);
+		setTitle(UiMsg.LBL_NIT_INSTALL_PAGE);
+		setDescription(UiMsg.LBL_PREFERENCE_PAGE);
 	}
 	
 	@Override

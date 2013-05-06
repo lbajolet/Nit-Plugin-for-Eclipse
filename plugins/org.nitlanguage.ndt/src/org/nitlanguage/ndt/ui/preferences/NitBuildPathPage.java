@@ -4,6 +4,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.ui.UiMsg;
 
 /**
  * Plug-in preferences page - define build path related parameters.
@@ -11,8 +12,7 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  */
 public class NitBuildPathPage extends FieldEditorPreferencePage implements
     IWorkbenchPreferencePage {
-	public static final String DESC_BUILDPATH_PREF_PAGE = "Specify the build path entries used as default by the New Nit Project creation wizard";
-	
+
 	/**
 	 * Create the build path preference page.
 	 */
@@ -26,6 +26,6 @@ public class NitBuildPathPage extends FieldEditorPreferencePage implements
   @Override
   public void init(IWorkbench workbench) {
     setPreferenceStore(NitActivator.getDefault().getPreferenceStore());
-    setDescription(DESC_BUILDPATH_PREF_PAGE);
+    setDescription(UiMsg.DESC_BUILDPATH_PREF_PAGE);
   }
 } 

@@ -32,9 +32,6 @@ import org.osgi.framework.BundleContext;
  */
 public class NitActivator extends AbstractUIPlugin {
 	
-	// The plug-in ID
-	public static final String PLUGIN_ID = "org.nitlanguage.ndt.plugin"; //$NON-NLS-1$
-	
 	// Debug trigger
 	public static final boolean DEBUG_MODE = false;
 

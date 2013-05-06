@@ -9,6 +9,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.nitlanguage.ndt.core.PluginParams;
 import org.osgi.service.prefs.BackingStoreException;
 
 //import com.sun.xml.internal.ws.util.StringUtils;
@@ -70,7 +71,7 @@ public class NitInstallation {
 	}
 	
 	private void init(){
-		prefs = InstanceScope.INSTANCE.getNode(NitActivator.PLUGIN_ID); 
+		prefs = InstanceScope.INSTANCE.getNode(PluginParams.PLUGIN_ID); 
 		root = prefs.get(ROOT_PATH_ID, null);
 		compiler = prefs.get(COMPILER_PATH_ID, null);
 		debugger = prefs.get(DEBUGGER_PATH_ID, null);

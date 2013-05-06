@@ -23,6 +23,8 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
+import org.nitlanguage.ndt.core.BuildMsg;
+import org.nitlanguage.ndt.core.PluginParams;
 
 /**
  * Shortcut for a nit configuration
@@ -33,8 +35,6 @@ import org.eclipse.ui.PlatformUI;
  * @author nathan.heu 
  */
 public class NitLaunchShortcut implements ILaunchShortcut {
-	public static final String NIT_LAUNCH_CONFIG = "org.nitlanguage.ndt.nitLauncher";
-	
 	@Override
 	public void launch(ISelection selection, String mode) {
 		if(selection instanceof IStructuredSelection) {
@@ -77,7 +77,7 @@ public class NitLaunchShortcut implements ILaunchShortcut {
 		ILaunchConfiguration configuration = null;
 		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfigurationType type =
-		      manager.getLaunchConfigurationType(NIT_LAUNCH_CONFIG);
+		      manager.getLaunchConfigurationType(PluginParams.NIT_LAUNCH_CONFIG);
 		ILaunchConfiguration[] configurations =
 		      manager.getLaunchConfigurations(type);
 		   for (int i = 0; i < configurations.length; i++) {

@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.nitlanguage.ndt.core.BuildMsg;
+import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.builder.NitCompilerMessageInterpreter;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
@@ -26,14 +28,7 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  * @author lucas.bajolet
  */
 public class ProjectAutoParser {
-	public static final String NIT_FILE_EXTENSION = "nit";
-	public static final String PARSING_JOB = "Parsing";
-	public static final String PARSING_TASK = "Parsing nit files";
-	public static final String MSG_PARSING_PROJECT = "Parsing project ";
-	public static final String MSG_ERROR_CAT_COMPILER = "Error with nit compiler";
-	public static final String MSG_COMPILER_NOT_FOUND = "Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?";
-	public static final String PREFERENCE_KEY_COMPILER = "compilerLocation";
-	public static final String CHARSET = "UTF-8";
+
 	
 	/**
 	 * Project to parse
@@ -68,7 +63,7 @@ public class ProjectAutoParser {
 	public ProjectAutoParser() {
 		this.aph = new AstParserHelper();
 		this.nitFilesOfProject = new HashMap<String, IFile>();
-		this.cclj = new CompilerCallLightJob(PARSING_JOB);
+		this.cclj = new CompilerCallLightJob(BuildMsg.PARSING);
 	}
 
 	/**
@@ -83,7 +78,7 @@ public class ProjectAutoParser {
 			if (NitActivator.DEBUG_MODE)
 				e1.printStackTrace();
 		}
-		ParsingJob pj = new ParsingJob(MSG_PARSING_PROJECT
+		ParsingJob pj = new ParsingJob(BuildMsg.PARSING_PROJECT
 				+ this.projectToParse.getName());
 		try {
 			this.nitFilesOfProject.clear();
@@ -124,12 +119,7 @@ public class ProjectAutoParser {
 	 * Job to call compiler on nit files 
 	 * Adds markers on errors
 	 */
-	private class CompilerCallLightJob extends Job {
-		//Stop after meta-model processing
-		public static final String COMPILER_ARG_ONLY_MM = "--only-metamodel";
-		// Do not use color to display errors and warnings
-		public static final String COMPILER_ARG_NO_COLOR = "--no-color";
-		
+	private class CompilerCallLightJob extends Job {		
 		/**
 		 * Boolean set to true if a job is active at the moment
 		 */
@@ -178,14 +168,14 @@ public class ProjectAutoParser {
 			.getLog()
 			.log(new Status(
 					Status.ERROR,
-					"Error with nit compiler",
-					"Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?"));
+					BuildMsg.COMPILATION_ERROR,
+					BuildMsg.ERROR_COMPILER_NOT_FOUND));
 		}
 		private String constructCompilerCommand(String compilerPath)
 		{
 			return compilerPath + " "
-					+ COMPILER_ARG_ONLY_MM + " "
-					+ COMPILER_ARG_NO_COLOR;
+					+ BuildMsg.COMPILER_ARG_ONLY_MM + " "
+					+ BuildMsg.COMPILER_ARG_NO_COLOR;
 		}
 		
 		@Override
@@ -195,10 +185,10 @@ public class ProjectAutoParser {
 			int totalFiles = nitFilesOfProject.size();
 			AstParserHelper aph = new AstParserHelper();
 
-			monitor.beginTask(PARSING_TASK, totalFiles);
+			monitor.beginTask(BuildMsg.PARSING_TASK, totalFiles);
 
 			String pathToCompiler = NitActivator.getDefault()
-					.getPreferenceStore().getString(PREFERENCE_KEY_COMPILER);
+					.getPreferenceStore().getString(BuildMsg.PREFERENCE_KEY_COMPILER);
 
 			if (pathToCompiler != null) {
 
@@ -219,8 +209,8 @@ public class ProjectAutoParser {
 
 					try {
 						String peon = pathToCompiler + " "
-								+ COMPILER_ARG_ONLY_MM + " "
-								+ COMPILER_ARG_NO_COLOR + " " 
+								+ BuildMsg.COMPILER_ARG_ONLY_MM + " "
+								+ BuildMsg.COMPILER_ARG_NO_COLOR + " " 
 								+ toParse.getLocation().toString();
 
 						// Check if compiler is accessible
@@ -244,7 +234,7 @@ public class ProjectAutoParser {
 					try {
 						// Get the messages
 						InputStream inpt = compileProcess.getErrorStream();
-						Reader in = new InputStreamReader(inpt, CHARSET);
+						Reader in = new InputStreamReader(inpt, PluginParams.CHARSET);
 						StringBuilder result = new StringBuilder();
 						char[] buf = new char[0x10000];
 						int read = 0;
@@ -292,7 +282,7 @@ public class ProjectAutoParser {
 			if (resource instanceof IFile) {
 				IFile fichier = (IFile) resource;
 				String extension = fichier.getFileExtension();
-				if (extension != null && extension.equals(NIT_FILE_EXTENSION)) {
+				if (extension != null && extension.equals(PluginParams.NIT_FILE_EXTENSION)) {
 					if (aph.getAstForDocument(fichier) == null) {
 						cclj.queueJob(fichier);
 					}
@@ -313,7 +303,7 @@ public class ProjectAutoParser {
 			if (resource instanceof IFile) {
 				IFile fichier = (IFile) resource;
 				String extension = fichier.getFileExtension();
-				if (extension != null && extension.equals(NIT_FILE_EXTENSION)) {
+				if (extension != null && extension.equals(PluginParams.NIT_FILE_EXTENSION)) {
 					nitFilesOfProject.put(fichier.getName(), fichier);
 				}
 			}
@@ -338,7 +328,7 @@ public class ProjectAutoParser {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask(MSG_PARSING_PROJECT + projectToParse.getName(),
+			monitor.beginTask(BuildMsg.PARSING_PROJECT + projectToParse.getName(),
 					100);
 			try {
 				projectToParse.accept(new NitProjectVisitor());

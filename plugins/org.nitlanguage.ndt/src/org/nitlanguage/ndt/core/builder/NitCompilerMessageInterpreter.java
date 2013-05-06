@@ -84,19 +84,14 @@ public class NitCompilerMessageInterpreter {
 						break;
 					case 2:
 						m = fichier.createMarker(IMarker.PROBLEM);
-						m.setAttribute(IMarker.PRIORITY,
-								IMarker.PRIORITY_NORMAL);
-						m.setAttribute(IMarker.SEVERITY,
-								IMarker.SEVERITY_WARNING);
+						m.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_NORMAL);
+						m.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
 						m.setAttribute(IMarker.CHAR_START,
 								currentMessage.getStartIndex() - 1
 										+ startOffset);
-						m.setAttribute(IMarker.CHAR_END,
-								currentMessage.getEndIndex() + startOffset);
-						m.setAttribute(IMarker.LINE_NUMBER,
-								currentMessage.getLine());
-						m.setAttribute(IMarker.MESSAGE,
-								currentMessage.getRealMessage());
+						m.setAttribute(IMarker.CHAR_END, currentMessage.getEndIndex() + startOffset);
+						m.setAttribute(IMarker.LINE_NUMBER, currentMessage.getLine());
+						m.setAttribute(IMarker.MESSAGE, currentMessage.getRealMessage());
 						break;
 					case 3:
 						m = fichier.createMarker(IMarker.PROBLEM);

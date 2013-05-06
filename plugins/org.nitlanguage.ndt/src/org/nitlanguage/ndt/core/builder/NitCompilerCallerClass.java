@@ -12,6 +12,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.nitlanguage.ndt.core.BuildMsg;
+import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
@@ -20,16 +22,6 @@ import org.nitlanguage.ndt.core.plugin.NitActivator;
  * @author lucas.bajolet 
  */
 public class NitCompilerCallerClass {
-	public static final String MSG_COMPILATION_OK = "All OK";
-	public static final String MSG_COMPILATION_ABORTED = "Error : Compilation aborted";
-	public static final String MSG_BINARY_NOT_FOUND = "Error : Binary cannot be found at specified path";
-	public static final String MSG_FILE_PATH_MISSING = "Error : No file path specified";
-	public static final String CHARSET = "UTF-8";
-	public static final String MSG_ERROR_CAT_COMPILER = "Error with nit compiler";
-	public static final String MSG_COMPILER_NOT_FOUND = "Nit compiler cannot be found or cannot be run, are you sure the path you have set is valid ?";
-	public static final String COMPILATION_JOB = "Nit Compiler";
-	public static final String COMPILATION_TASK = "Compiling Nit";
-	
 	/**
 	 * Path in the FileSystem to the compiler
 	 */
@@ -121,8 +113,8 @@ public class NitCompilerCallerClass {
 				.getLog()
 				.log(new Status(
 						Status.ERROR,
-						MSG_ERROR_CAT_COMPILER,
-						MSG_COMPILER_NOT_FOUND));
+						BuildMsg.ERROR_COMPILER,
+						BuildMsg.ERROR_COMPILER_NOT_FOUND));
 		return false;
 	}
 
@@ -144,13 +136,13 @@ public class NitCompilerCallerClass {
 						+ this.target.getLocation().toString()
 						+ " "
 						+ this.options.trim()
-						+ " -o "
+						+ " " + BuildMsg.COMPILER_ARG_OUTPUT + " "
 						+ this.outputFolder
 						+ "/"
 						+ this.target.getName().substring(0,
 								this.target.getName().length() - 4);
 				if (eclipseJob == null) {
-					this.eclipseJob = new NitCompileJob(COMPILATION_JOB);
+					this.eclipseJob = new NitCompileJob(BuildMsg.COMPILATION_JOB);
 				}
 				eclipseJob.cancelCurrentProcess();
 				eclipseJob.setPath(completeCommand);
@@ -248,17 +240,17 @@ public class NitCompilerCallerClass {
 			isOver = false;
 			try {
 				((NitNature) (target.getProject()
-						.getNature(NitNature.NATURE_ID)))
+						.getNature(PluginParams.NATURE_ID)))
 						.getProjectAutoParser().setProject(target.getProject());
 			} catch (CoreException e1) {
 				if (NitActivator.DEBUG_MODE)
 					e1.printStackTrace();
 			}
 			this.setPriority(BUILD);
-			monitor.beginTask(COMPILATION_TASK, 100);
+			monitor.beginTask(BuildMsg.COMPILATION_TASK, 100);
 			cancelCurrentProcess();
 			if (path == null) {
-				this.returnMessage = MSG_FILE_PATH_MISSING;
+				this.returnMessage = BuildMsg.FILE_PATH_MISSING;
 				isBeingCalled = false;
 				monitor.setCanceled(true);
 				isOver = true;
@@ -272,21 +264,21 @@ public class NitCompilerCallerClass {
 					try {
 						int endCode = compileProcess.waitFor();
 						if (endCode == -1) {
-							this.returnMessage = MSG_COMPILATION_ABORTED;
+							this.returnMessage = BuildMsg.COMPILATION_ABORTED;
 							isBeingCalled = false;
 							monitor.setCanceled(true);
 							isOver = true;
 							return Status.CANCEL_STATUS;
 						}
 					} catch (InterruptedException e) {
-						this.returnMessage = MSG_COMPILATION_ABORTED;
+						this.returnMessage = BuildMsg.COMPILATION_ABORTED;
 						isBeingCalled = false;
 						isOver = true;
 						return Status.OK_STATUS;
 					}
 					monitor.worked(50);
 					InputStream inpt = compileProcess.getErrorStream();
-					Reader in = new InputStreamReader(inpt, CHARSET);
+					Reader in = new InputStreamReader(inpt, PluginParams.CHARSET);
 					StringBuilder result = new StringBuilder();
 					char[] buf = new char[0x10000];
 					int read = 0;
@@ -312,13 +304,13 @@ public class NitCompilerCallerClass {
 
 					monitor.worked(10);
 
-					this.returnMessage = MSG_COMPILATION_OK;
+					this.returnMessage = BuildMsg.COMPILATION_OK;
 
 					monitor.done();
 					isOver = true;
 					return Status.OK_STATUS;
 				} catch (IOException e) {
-					this.returnMessage = MSG_BINARY_NOT_FOUND;
+					this.returnMessage = BuildMsg.BINARY_NOT_FOUND;
 					isBeingCalled = false;
 					monitor.setCanceled(true);
 					monitor.done();

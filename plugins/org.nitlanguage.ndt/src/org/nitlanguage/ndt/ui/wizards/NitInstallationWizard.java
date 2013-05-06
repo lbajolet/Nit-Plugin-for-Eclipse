@@ -6,14 +6,13 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.ui.UiMsg;
 
 /**
  * The wizard for nit installation
  * @author nathan.heu
  */
 public class NitInstallationWizard extends Wizard implements IWorkbenchWizard {
-	public static final String TITLE_NIT_INSTALLATION_WIZARD_PAGE = "";
-	
 	/**
 	 * The new project to create and attach NitNature to
 	 */
@@ -30,7 +29,7 @@ public class NitInstallationWizard extends Wizard implements IWorkbenchWizard {
 	public NitInstallationWizard() {
 		super();
 		setNeedsProgressMonitor(true);
-		setWindowTitle(TITLE_NIT_INSTALLATION_WIZARD_PAGE);
+		setWindowTitle(UiMsg.TITLE_NIT_INSTALLATION_WIZARD_PAGE);
 	}
 
 	@Override

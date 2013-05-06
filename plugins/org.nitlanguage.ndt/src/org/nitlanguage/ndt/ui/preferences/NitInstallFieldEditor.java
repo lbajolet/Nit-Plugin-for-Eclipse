@@ -9,6 +9,7 @@ import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.core.plugin.NitInstallation;
+import org.nitlanguage.ndt.ui.UiMsg;
 
 /**
  * DirectoryFieldEditor having a special treatment done when
@@ -18,12 +19,6 @@ import org.nitlanguage.ndt.core.plugin.NitInstallation;
  * @author nathan.heu
  */
 public class NitInstallFieldEditor extends DirectoryFieldEditor {
-	public static final String LBL_NITROOT_LOCATION = "Nit Folder Location";
-	public static final String LBL_STDLIB_LOCATION = "Nit StdLib Folder Location";
-	public static final String LBL_COMPILER_LOCATION = "Compiler Location";
-	public static final String LBL_INTERPRETER_LOCATION = "Interpreter Location";
-	public static final String LBL_DEBUGGER_LOCATION = "Debugger Location";		
-	
 	private NitInstallation infos;
 	private List<FieldEditor> fields;
 	private Composite parent;
@@ -50,7 +45,7 @@ public class NitInstallFieldEditor extends DirectoryFieldEditor {
 	 * @param parent
 	 */
 	public NitInstallFieldEditor(Composite parent) {
-		super("NitFolder", LBL_NITROOT_LOCATION, parent);
+		super("NitFolder", UiMsg.LBL_NITROOT_LOCATION, parent);
 		this.parent = parent;
 		infos = NitActivator.getDefault().getNitInstallation();
 		init();
@@ -60,16 +55,16 @@ public class NitInstallFieldEditor extends DirectoryFieldEditor {
 	public void init(){
 
 		libFieldEditor = new DirectoryFieldEditor("stdlib",
-				LBL_STDLIB_LOCATION, parent);
+				 UiMsg.LBL_STDLIB_LOCATION, parent);
 		
 		compilerFieldEditor = new FileFieldEditor("compiler",
-				LBL_COMPILER_LOCATION, parent);
+				 UiMsg.LBL_COMPILER_LOCATION, parent);
 		
 		interpreterFieldEditor = new FileFieldEditor("interpreter", 
-				LBL_INTERPRETER_LOCATION, parent);
+				 UiMsg.LBL_INTERPRETER_LOCATION, parent);
 				
 		debuggerFieldEditor = new FileFieldEditor("debugger",
-				LBL_DEBUGGER_LOCATION, parent);
+				 UiMsg.LBL_DEBUGGER_LOCATION, parent);
 		
 		fields = new ArrayList<FieldEditor>();
 		fields.add(this);

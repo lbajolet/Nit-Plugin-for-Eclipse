@@ -26,14 +26,13 @@ import org.eclipse.ui.internal.wizards.newresource.ResourceMessages;
 import org.eclipse.ui.statushandlers.StatusAdapter;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.nitlanguage.ndt.core.builder.NitNature;
+import org.nitlanguage.ndt.ui.UiMsg;
 
 /**
  * The wizard for new Nit Projects
  * @author lucas.bajolet
  */
 public class NewProjectWizard extends Wizard implements IWorkbenchWizard {
-	public static final String TITLE_NEWPROJECT_WIZARD_PAGE = "New Nit Project";
-	
 	/**
 	 * The new project to create and attach NitNature to
 	 */
@@ -50,7 +49,7 @@ public class NewProjectWizard extends Wizard implements IWorkbenchWizard {
 	public NewProjectWizard() {
 		super();
 		setNeedsProgressMonitor(true);
-		setWindowTitle(TITLE_NEWPROJECT_WIZARD_PAGE);
+		setWindowTitle(UiMsg.TITLE_NEWPROJECT_WIZARD_PAGE);
 	}
 
 	@Override

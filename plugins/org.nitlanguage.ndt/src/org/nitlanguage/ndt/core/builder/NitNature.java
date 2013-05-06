@@ -6,6 +6,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
+import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.asthelpers.AstReposit;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.ProjectPropertiesHelper;
@@ -15,13 +16,6 @@ import org.nitlanguage.ndt.core.plugin.ProjectPropertiesHelper;
  * @author lucas.bajolet
  */
 public class NitNature implements IProjectNature {
-
-	/**
-	 * ID of this project nature
-	 */
-	public static final String NATURE_ID = "org.uqam.nit.ndt.nature";
-	//public static final String NATURE_ID = "org.nitlanguage.ndt.nature";
-
 	/**
 	 * Project bound to a nature
 	 */
@@ -80,7 +74,7 @@ public class NitNature implements IProjectNature {
 		ICommand[] commands = desc.getBuildSpec();
 
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(NitBuilder.BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(PluginParams.BUILDER_ID)) {
 				return;
 			}
 		}
@@ -88,7 +82,7 @@ public class NitNature implements IProjectNature {
 		ICommand[] newCommands = new ICommand[commands.length + 1];
 		System.arraycopy(commands, 0, newCommands, 0, commands.length);
 		ICommand command = desc.newCommand();
-		command.setBuilderName(NitBuilder.BUILDER_ID);
+		command.setBuilderName(PluginParams.BUILDER_ID);
 		newCommands[newCommands.length - 1] = command;
 		desc.setBuildSpec(newCommands);
 
@@ -96,7 +90,7 @@ public class NitNature implements IProjectNature {
 		String[] natures = desc.getNatureIds();
 		String[] newNatures = new String[natures.length + 1];
 		System.arraycopy(natures, 0, newNatures, 0, natures.length);
-		newNatures[natures.length] = NitNature.NATURE_ID;
+		newNatures[natures.length] = PluginParams.NATURE_ID;
 		desc.setNatureIds(newNatures);
 		project.setDescription(desc, null);
 	}
@@ -110,7 +104,7 @@ public class NitNature implements IProjectNature {
 		IProjectDescription description = getProject().getDescription();
 		ICommand[] commands = description.getBuildSpec();
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(NitBuilder.BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(PluginParams.BUILDER_ID)) {
 				ICommand[] newCommands = new ICommand[commands.length - 1];
 				System.arraycopy(commands, 0, newCommands, 0, i);
 				System.arraycopy(commands, i + 1, newCommands, i,

@@ -5,6 +5,7 @@ import java.io.Reader;
 
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.nitlanguage.ndt.ui.ErrorMsg;
 
 /**
  * Adapts an IDocument used by Eclipse to the NitLexer, which uses a PushbackReader with a Reader as base to read characters from
@@ -12,7 +13,6 @@ import org.eclipse.jface.text.IDocument;
  */
 public class DocumentBufferStream extends Reader {
 	
-	public static final String MSG_ERROR_UNSET_DOC = "Trying to read un unset document";
 	/**	Start range of the parsing (useful for the DamageRepairer and Presenter of the Eclipse Editor) */
 	protected int fStartRange;
 	/**	End range of the parsing (useful for the DamageRepairer and Presenter of the Eclipse Editor) */
@@ -124,7 +124,7 @@ public class DocumentBufferStream extends Reader {
 	@Override
 	public int read(char[] cbuf, int off, int len) throws IOException {
 		if(this.doc == null){
-			throw new IOException(MSG_ERROR_UNSET_DOC);
+			throw new IOException(ErrorMsg.UNSET_DOCUMENT);
 		}else{
 			for(int i = 0; i < cbuf.length; i++){
 				try {

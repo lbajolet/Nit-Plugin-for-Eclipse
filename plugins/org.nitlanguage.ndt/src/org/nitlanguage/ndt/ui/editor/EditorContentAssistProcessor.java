@@ -20,6 +20,7 @@ import org.nitlanguage.gen.node.ATopClassdef;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
 import org.nitlanguage.ndt.core.asthelpers.AstParserHelper;
+import org.nitlanguage.ndt.ui.ErrorMsg;
 
 
 /**
@@ -28,7 +29,6 @@ import org.nitlanguage.ndt.core.asthelpers.AstParserHelper;
  */
 public class EditorContentAssistProcessor implements IContentAssistProcessor {
 
-	public static final String MSG_ERROR_NO_CONTEXT_INFOS = "No Context Information available";
 	private String lastError;
 
 	@Override
@@ -189,7 +189,7 @@ public class EditorContentAssistProcessor implements IContentAssistProcessor {
 	@Override
 	public IContextInformation[] computeContextInformation(
 			ITextViewer itextviewer, int i) {
-		lastError = MSG_ERROR_NO_CONTEXT_INFOS;
+		lastError = ErrorMsg.NO_CONTEXT_INFOS;
 		return null;
 	}
 

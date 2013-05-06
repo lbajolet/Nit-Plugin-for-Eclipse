@@ -16,6 +16,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
+import org.nitlanguage.ndt.core.BuildMsg;
+import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.builder.NitNature;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.console.NitConsole;
@@ -27,9 +29,6 @@ import org.nitlanguage.ndt.ui.console.NitConsole;
  * @author nathan.heu 
  */
 public class NitLauncher implements ILaunchConfigurationDelegate {
-	public static final String EXECUTION_TASK = "Executing program";
-	public static final String LAUNCHING_TASK = "Compile and Run Nit";
-	public static final String EXECUTION_JOB = "Execution";
 	/**
 	 * The background job doing the compiling + Executing processes
 	 * @author lucas.bajolet 
@@ -71,7 +70,7 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 
 		@Override
 		protected IStatus run(IProgressMonitor monitor) {
-			monitor.beginTask(EXECUTION_TASK, 100);
+			monitor.beginTask(BuildMsg.EXECUTION_TASK, 100);
 			// Get arguments for execution
 			try {
 				if (nnat != null && nnat.getCompilerCaller() != null
@@ -151,7 +150,7 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask(LAUNCHING_TASK, 100);
+		monitor.beginTask(BuildMsg.LAUNCHING_TASK, 100);
 
 		if (mode.equals("run")) {
 			// Get the file to compile
@@ -169,7 +168,7 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 
 				// Then get the nature of the project
 				NitNature nnat = (NitNature) proj
-						.getNature(NitNature.NATURE_ID);
+						.getNature(PluginParams.NATURE_ID);
 
 				// Call the compiler with this information
 				nnat.setDefaultFile(fichier);
@@ -194,7 +193,7 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 				nnat.getCompilerCaller().call();
 				monitor.worked(40);
 
-				ExecJob ej = new ExecJob(EXECUTION_JOB);
+				ExecJob ej = new ExecJob(BuildMsg.EXECUTION_JOB);
 
 				ej.setArgsForExec(" "
 						+ configuration.getAttribute(
