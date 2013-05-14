@@ -10,6 +10,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProvider;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**
  * 
@@ -60,7 +61,8 @@ public class NitCompilerMessageInterpreter {
 					startOffset = doc.getLineInformation(
 							currentMessage.getLine() - 1).getOffset();
 				} catch (BadLocationException e) {
-					System.out.println("[NitCompilerMessageInterpreter] Impossible to set marker error on document : invalid line");
+					System.out
+							.println("[NitCompilerMessageInterpreter] Impossible to set marker error on document : invalid line");
 					e.printStackTrace();
 				} catch (CoreException e) {
 					e.printStackTrace();
@@ -83,14 +85,19 @@ public class NitCompilerMessageInterpreter {
 						break;
 					case 2:
 						m = fichier.createMarker(IMarker.PROBLEM);
-						m.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_NORMAL);
-						m.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_WARNING);
+						m.setAttribute(IMarker.PRIORITY,
+								IMarker.PRIORITY_NORMAL);
+						m.setAttribute(IMarker.SEVERITY,
+								IMarker.SEVERITY_WARNING);
 						m.setAttribute(IMarker.CHAR_START,
 								currentMessage.getStartIndex() - 1
 										+ startOffset);
-						m.setAttribute(IMarker.CHAR_END, currentMessage.getEndIndex() + startOffset);
-						m.setAttribute(IMarker.LINE_NUMBER, currentMessage.getLine());
-						m.setAttribute(IMarker.MESSAGE, currentMessage.getRealMessage());
+						m.setAttribute(IMarker.CHAR_END,
+								currentMessage.getEndIndex() + startOffset);
+						m.setAttribute(IMarker.LINE_NUMBER,
+								currentMessage.getLine());
+						m.setAttribute(IMarker.MESSAGE,
+								currentMessage.getRealMessage());
 						break;
 					case 3:
 						m = fichier.createMarker(IMarker.PROBLEM);
