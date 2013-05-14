@@ -43,9 +43,6 @@ import org.nitlanguage.ndt.ui.docmodel.Declaration;
 import org.nitlanguage.ndt.ui.docmodel.DeclarationType;
 import org.nitlanguage.ndt.ui.editor.outline.NitOutlinePage;
 
-import com.sun.org.apache.bcel.internal.generic.DCONST;
-import com.sun.org.glassfish.gmbal.Impact;
-
 /**
  * The editor for nit, bound to the completion methods and the
  * highlighting functionalities

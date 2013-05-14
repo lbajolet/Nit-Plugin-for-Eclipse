@@ -61,7 +61,7 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
     Object element = cell.getElement();
     StyledString text = new StyledString();
 	ISharedImages images = JavaUI.getSharedImages();
-	  
+
     if (element instanceof AModule) {
     	cell.setImage(images.getImage(ISharedImages.IMG_OBJS_PACKAGE));
 		AModuledecl mod_dec = (AModuledecl)((AModule)element).getModuledecl();
@@ -81,7 +81,7 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
 			  cell.setImage(images.getImage(ISharedImages.IMG_OBJS_CLASS));
 		  }
 		  text.append(class_def.getId().getText());
-		  
+
 		  LinkedList<PFormaldef> listFormalParams = class_def.getFormaldefs();
 		  if(listFormalParams.size() > 0){
 				StringBuffer buf = new StringBuffer();
@@ -98,6 +98,7 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
     		AAttrPropdef attr_def = (AAttrPropdef)element;
     		PVisibility vis = attr_def.getVisibility();
     		if (vis instanceof APublicVisibility){
+    			//ne devrait pas être possible - pas d'attributs publics en nit
     			cell.setImage(images.getImage(ISharedImages.IMG_FIELD_PUBLIC));
     		} else {
     			cell.setImage(images.getImage(ISharedImages.IMG_FIELD_PRIVATE));
@@ -217,13 +218,36 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
 		  buf.append('(');
 		  for(PParam input : inputs)
 		  {
-			  buf.append(((AParam)input).getType().toString() + ", ");
+			  AParam ainput = (AParam)input;
+      		  if(((AType)ainput.getType()).getKwnullable() != null){
+      			  buf.append(nullableChar);    			
+				  /*AType atype = ((AType)ainput.getType());
+				  LinkedList<PType> listformalTypes = atype.getTypes();    		
+	      		  if(listformalTypes != null && listformalTypes.size() > 0){
+	      			buf.append("[");
+	          		for(PType type : listformalTypes){
+	          			buf.append(((AType)type).getId() + ", ");
+	          		}
+	          		buf.replace(buf.length()-3, buf.length()-1, "]");
+	      		  }      		  */
+      		  }
+      		  buf.append(((AParam)input).getType().toString() + ", ");	  
 		  }
 		  buf.replace(buf.length()-3, buf.length()-1, ")");
 		  out.append(buf.toString());
 	  } 
 	  //method output param
 	  PType output = signature.getType();
-	  if(output != null) out.append(" : " + output.toString(), StyledString.COUNTER_STYLER);
+	  if(output != null){
+		  evaluateType(output, out);
+	  }
+  }
+  
+  private void evaluateType(PType type, StyledString out){
+	  out.append(" : ", StyledString.COUNTER_STYLER);
+	  if(type instanceof AType && ((AType)type).getKwnullable() != null){
+			  out.append(nullableChar, StyledString.COUNTER_STYLER);   
+	  } 
+	  out.append(((AType)type).getId().getText(), StyledString.COUNTER_STYLER);
   }
 }
