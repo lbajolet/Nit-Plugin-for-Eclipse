@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.nitlanguage.ndt.ui.perspective.NitPerspective"
+            icon="icons/nit_perspective.png"
+            id="org.nitlanguage.ndt.ui.perspective.NitPerspective"
+            name="Nit">
+      </perspective>
+   </extension>
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            class="org.nitlanguage.ndt.ui.editor.NitEditor"
+            default="false"
+            extensions="nit"
+            icon="icons/nit_logo.png"
+            id="org.nitlanguage.ndt.ui.editor.NitEditor"
+            name="Nit Editor">
+      </editor>
+   </extension>
+   <extension
+         id="org.uqam.nit.ndt.builder"
+         name="Nit Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="org.nitlanguage.ndt.core.builder.NitBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="org.uqam.nit.ndt.nature"
+         name="Nit Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.nitlanguage.ndt.core.builder.NitNature">
+         </run>
+      </runtime>
+      <builder
+            id="org.uqam.nit.ndt.builder">
+      </builder>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent value="true"/>
+   </extension>
+   <extension point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.nitlanguage.ndt.ui.preferences.NitPreferencePage"
+            id="org.uqam.nit.ndt.NitPreferencePage"
+            name="Nit">
+      </page>
+      <!--<page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitAppearancePage"
+            id="org.nitlanguage.ndt.NitAppearancePage"
+            name="Appearance">
+      </page>
+      <page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitBuildPathPage"
+            id="org.nitlanguage.ndt.NitBuildPathPage"
+            name="Build Path">
+      </page>
+      <page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitCodeStylePage"
+            id="org.nitlanguage.ndt.NitCodeStylePage"
+            name="Code Style">
+      </page>
+      <page
+            category="org.uqam.nit.ndt.NitPreferencePage"
+            class="org.nitlanguage.ndt.ui.preferences.NitEditorPage"
+            id="org.nitlanguage.ndt.NitEditorPage"
+            name="Editor">
+      </page>-->
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="org.uqam.nit.ndt.wizard.category"
+            name="Nit">
+      </category>
+      <wizard
+            category="org.uqam.nit.ndt.wizard.category"
+            class="org.nitlanguage.ndt.ui.wizards.NewProjectWizard"
+            icon="icons/nit_project.png"
+            id="org.uqam.nit.ndt.newProjectWizard"
+            name="Nit Project"
+            project="true">
+      </wizard>
+      <!--<wizard
+            category="org.uqam.nit.ndt.wizard.category"
+            class="org.nitlanguage.ndt.ui.newprojectwizard.NewProjectWizard"
+            icon="icons/adt16.png"
+            id="org.uqam.nit.ndt.newAndroidProjectWizard"
+            name="Nit Project for Android"
+            project="true">
+      </wizard>-->
+   </extension>
+   <extension
+         id="org.nitlanguage.ndt.nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.nitlanguage.ndt.core.builder.NitNature">
+         </run>
+      </runtime>
+   </extension>
+   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            delegate="org.nitlanguage.ndt.core.launcher.NitLauncher"
+	    delegateName="Nit Launcher"            
+	    delegateDescription="The Nit Application Launcher supports running Nit on UNIX based operating systems."
+            id="org.nitlanguage.ndt.nitLauncher"
+            modes="run, debug"
+            name="Nit Application">
+      </launchConfigurationType>
+   </extension>
+   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            configTypeID="org.nitlanguage.ndt.nitLauncher"
+            icon="icons/nit_logo.png"
+            id="org.uqam.nit.ndt.nitLauncherImage">
+      </launchConfigurationTypeImage>
+   </extension>
+   <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            class="org.nitlanguage.ndt.core.launcher.NitLauncherTabGroup"
+            id="org.uqam.nit.ndt.nitLaunchProgram"
+            type="org.nitlanguage.ndt.nitLauncher">
+            <launchMode
+                  mode="run"
+                  description="run description">
+            </launchMode>
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension point="org.eclipse.debug.ui.launchShortcuts">
+	   <shortcut
+	        class="org.nitlanguage.ndt.core.launcher.NitLaunchShortcut"
+            icon="icons/nit_logo.png"
+	        id="org.uqam.nit.ndt.NitLaunchShortcut"
+	        label="Nit Application"
+	        modes="run, debug">
+		    <contextualLaunch>
+		       <enablement >
+		          <with variable="selection">
+			          <count value="1"/>
+	                  <iterate>
+	                     <test value="*.nit" property="org.eclipse.debug.ui.matchesPattern"/>
+	                  </iterate>
+		          </with>
+		       </enablement>
+		     </contextualLaunch>
+	  </shortcut>
+      <!--
+      OLD WAY TO REGISTER SHORTCUT
+      <shortcut
+            id="org.uqam.nit.ndt.NitLaunchShortcut"
+            class="org.nitlanguage.ndt.core.launcher.NitLaunchShortcut"
+            icon="icons/nit_logo.png"
+            label="Nit Application"
+            modes="run, debug">
+            <perspective id="org.nitlanguage.ndt.core.perspective.NitPerspective"/>
+      </shortcut>
+      -->
+   </extension>
+   <extension point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension targetID="org.nitlanguage.ndt.ui.perspective.NitPerspective">
+         <actionSet
+               id="org.eclipse.debug.ui.launchActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
+    <extension point="org.eclipse.ui.ide.projectNatureImages">
+       <image
+             icon="icons/nit_project.png"
+             id="org.uqam.nit.ndt.nature.project_img"
+             natureId="org.uqam.nit.ndt.nature">
+       </image>
+    </extension>
+    <extension
+          point="org.eclipse.ui.commands">
+       <command
+             defaultHandler="org.nitlanguage.ndt.ui.commands.ToggleCommentHandler"
+             id="org.nitlanguage.ndt.ui.commands.ToggleComment"
+             name="Toggle Comment">
+       </command>
+       <command
+             defaultHandler="org.nitlanguage.ndt.ui.commands.CorrectIndentationHandler"
+             id="org.nitlanguage.ndt.ui.commands.CorrectIndentation"
+             name="Correct Indentation">
+       </command>
+       <command
+             defaultHandler="org.nitlanguage.ndt.ui.commands.FormatSourceHandler"
+             id="org.nitlanguage.ndt.ui.commands.FormatSource"
+             name="Format Source">
+       </command>
+    </extension>
+    <extension
+          point="org.eclipse.ui.menus">
+       <menuContribution
+             allPopups="false"
+             locationURI="menu:org.eclipse.ui.main.menu?after=edit">
+          <menu
+                id="sourceMenu"
+                label="Source">
+             <command
+                   commandId="org.nitlanguage.ndt.ui.commands.ToggleComment"
+                   label="Toggle Comment"
+                   style="push">
+             </command>
+             <command
+                   commandId="org.nitlanguage.ndt.ui.commands.CorrectIndentation"
+                   label="Correct Indentation"
+                   style="push">
+             </command>
+             <command
+                   commandId="org.nitlanguage.ndt.ui.commands.FormatSource"
+                   label="Format"
+                   style="push">
+             </command>
+          </menu>
+       </menuContribution>
+    </extension>
+    <extension
+         point="org.eclipse.ui.bindings">
+			<key
+				commandId="org.nitlanguage.ndt.ui.commands.ToggleComment"
+				contextId="org.eclipse.ui.contexts.window"
+				sequence="M1+SHIFT+/"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+			</key>
+			<key
+				commandId="org.nitlanguage.ndt.ui.commands.CorrectIndentation"
+				contextId="org.eclipse.ui.contexts.window"
+				sequence="M1+I"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+			</key>
+			<key
+				commandId="org.nitlanguage.ndt.ui.commands.FormatSource"
+				contextId="org.eclipse.ui.contexts.window"
+				sequence="M1+SHIFT+F"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+			</key>
+    </extension>
+</plugin>

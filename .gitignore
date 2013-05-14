@@ -1,2 +1,7 @@
-bin/*
+site/org.nitlanguage.p2updatesite/target/*
+features/org.nitlanguage.feature/target/*
+plugins/org.nitlanguage.ndt/bin/*
+plugins/org.nitlanguage.ndt/target/*
 /*.xml~
+/pom.xml
+*.class
