@@ -204,6 +204,11 @@
              id="org.nitlanguage.ndt.ui.commands.FormatSource"
              name="Format Source">
        </command>
+       <command
+             defaultHandler="org.nitlanguage.ndt.ui.commands.TrimWhitespacesHandler"
+             id="org.nitlanguage.ndt.ui.commands.TrimWhitespaces"
+             name="Trim Whitespaces">
+       </command>
     </extension>
     <extension
           point="org.eclipse.ui.menus">
@@ -228,6 +233,11 @@
                    label="Format"
                    style="push">
              </command>
+              <command
+                   commandId="org.nitlanguage.ndt.ui.commands.TrimWhitespaces"
+                   label="Trim Whitespaces"
+                   style="push">
+             </command>
           </menu>
        </menuContribution>
     </extension>
@@ -249,6 +259,12 @@
 				commandId="org.nitlanguage.ndt.ui.commands.FormatSource"
 				contextId="org.eclipse.ui.contexts.window"
 				sequence="M1+SHIFT+F"
+				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+			</key>
+			<key
+				commandId="org.nitlanguage.ndt.ui.commands.TrimWhitespaces"
+				contextId="org.eclipse.ui.contexts.window"
+				sequence="M1+SHIFT+C"
 				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 			</key>
     </extension>

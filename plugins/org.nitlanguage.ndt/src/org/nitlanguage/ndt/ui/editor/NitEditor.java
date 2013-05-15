@@ -29,6 +29,9 @@ import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.text.edits.DeleteEdit;
+import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.text.edits.TextEdit;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PlatformUI;
@@ -62,7 +65,7 @@ public class NitEditor extends TextEditor {
 	public NitEditor() {
 		super();
 		//clean doc (whitespaces,...)
-		setDocumentProvider(new NitDocumentProvider());
+		//setDocumentProvider(new NitDocumentProvider());
 		setSourceViewerConfiguration(new NitEditorConfiguration(this));
 	}
 	
@@ -307,6 +310,16 @@ public class NitEditor extends TextEditor {
 			if (NitActivator.DEBUG_MODE)
 				e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Removes whitespaces at the end of each line of the document (if present) 
+	 * Prevent versioning conflicts
+	 */
+	public void trimWhitespaces() 
+	{
+		NitDocumentProvider provider = new NitDocumentProvider();
+		provider.performCleanActions(getDocument());
 	}
 	
 	public void clean(){
