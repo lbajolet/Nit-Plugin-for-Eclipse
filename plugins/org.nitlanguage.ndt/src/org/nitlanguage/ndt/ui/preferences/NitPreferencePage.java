@@ -44,7 +44,7 @@ public class NitPreferencePage extends PreferencePage implements
 	
 	@Override
 	public boolean performOk() {
-		nitFieldEditor.saveChanges();
+		nitFieldEditor.save();
 		return true;
 	}
 	
