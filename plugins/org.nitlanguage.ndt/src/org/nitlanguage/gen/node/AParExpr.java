@@ -2,12 +2,14 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AParExpr extends PExpr
 {
+    private TOpar _opar_;
     private PExpr _expr_;
+    private TCpar _cpar_;
 
     public AParExpr()
     {
@@ -15,10 +17,16 @@ public final class AParExpr extends PExpr
     }
 
     public AParExpr(
-        @SuppressWarnings("hiding") PExpr _expr_)
+        @SuppressWarnings("hiding") TOpar _opar_,
+        @SuppressWarnings("hiding") PExpr _expr_,
+        @SuppressWarnings("hiding") TCpar _cpar_)
     {
         // Constructor
+        setOpar(_opar_);
+
         setExpr(_expr_);
+
+        setCpar(_cpar_);
 
     }
 
@@ -26,12 +34,40 @@ public final class AParExpr extends PExpr
     public Object clone()
     {
         return new AParExpr(
-            cloneNode(this._expr_));
+            cloneNode(this._opar_),
+            cloneNode(this._expr_),
+            cloneNode(this._cpar_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAParExpr(this);
+    }
+
+    public TOpar getOpar()
+    {
+        return this._opar_;
+    }
+
+    public void setOpar(TOpar node)
+    {
+        if(this._opar_ != null)
+        {
+            this._opar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._opar_ = node;
     }
 
     public PExpr getExpr()
@@ -59,20 +95,59 @@ public final class AParExpr extends PExpr
         this._expr_ = node;
     }
 
+    public TCpar getCpar()
+    {
+        return this._cpar_;
+    }
+
+    public void setCpar(TCpar node)
+    {
+        if(this._cpar_ != null)
+        {
+            this._cpar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._cpar_ = node;
+    }
+
     @Override
     public String toString()
     {
         return ""
-            + toString(this._expr_);
+            + toString(this._opar_)
+            + toString(this._expr_)
+            + toString(this._cpar_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
+        if(this._opar_ == child)
+        {
+            this._opar_ = null;
+            return;
+        }
+
         if(this._expr_ == child)
         {
             this._expr_ = null;
+            return;
+        }
+
+        if(this._cpar_ == child)
+        {
+            this._cpar_ = null;
             return;
         }
 
@@ -83,9 +158,21 @@ public final class AParExpr extends PExpr
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
+        if(this._opar_ == oldChild)
+        {
+            setOpar((TOpar) newChild);
+            return;
+        }
+
         if(this._expr_ == oldChild)
         {
             setExpr((PExpr) newChild);
+            return;
+        }
+
+        if(this._cpar_ == oldChild)
+        {
+            setCpar((TCpar) newChild);
             return;
         }
 

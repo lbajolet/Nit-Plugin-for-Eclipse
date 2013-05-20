@@ -2,14 +2,18 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ASignature extends PSignature
 {
+    private TOpar _opar_;
     private final LinkedList<PParam> _params_ = new LinkedList<PParam>();
+    private TCpar _cpar_;
     private PType _type_;
     private final LinkedList<PClosureDecl> _closureDecls_ = new LinkedList<PClosureDecl>();
 
@@ -19,12 +23,18 @@ public final class ASignature extends PSignature
     }
 
     public ASignature(
-        @SuppressWarnings("hiding") List<PParam> _params_,
+        @SuppressWarnings("hiding") TOpar _opar_,
+        @SuppressWarnings("hiding") List<?> _params_,
+        @SuppressWarnings("hiding") TCpar _cpar_,
         @SuppressWarnings("hiding") PType _type_,
-        @SuppressWarnings("hiding") List<PClosureDecl> _closureDecls_)
+        @SuppressWarnings("hiding") List<?> _closureDecls_)
     {
         // Constructor
+        setOpar(_opar_);
+
         setParams(_params_);
+
+        setCpar(_cpar_);
 
         setType(_type_);
 
@@ -36,14 +46,42 @@ public final class ASignature extends PSignature
     public Object clone()
     {
         return new ASignature(
+            cloneNode(this._opar_),
             cloneList(this._params_),
+            cloneNode(this._cpar_),
             cloneNode(this._type_),
             cloneList(this._closureDecls_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseASignature(this);
+    }
+
+    public TOpar getOpar()
+    {
+        return this._opar_;
+    }
+
+    public void setOpar(TOpar node)
+    {
+        if(this._opar_ != null)
+        {
+            this._opar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._opar_ = node;
     }
 
     public LinkedList<PParam> getParams()
@@ -51,19 +89,50 @@ public final class ASignature extends PSignature
         return this._params_;
     }
 
-    public void setParams(List<PParam> list)
+    public void setParams(List<?> list)
     {
-        this._params_.clear();
-        this._params_.addAll(list);
-        for(PParam e : list)
+        for(PParam e : this._params_)
         {
+            e.parent(null);
+        }
+        this._params_.clear();
+
+        for(Object obj_e : list)
+        {
+            PParam e = (PParam) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._params_.add(e);
         }
+    }
+
+    public TCpar getCpar()
+    {
+        return this._cpar_;
+    }
+
+    public void setCpar(TCpar node)
+    {
+        if(this._cpar_ != null)
+        {
+            this._cpar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._cpar_ = node;
     }
 
     public PType getType()
@@ -96,18 +165,24 @@ public final class ASignature extends PSignature
         return this._closureDecls_;
     }
 
-    public void setClosureDecls(List<PClosureDecl> list)
+    public void setClosureDecls(List<?> list)
     {
-        this._closureDecls_.clear();
-        this._closureDecls_.addAll(list);
-        for(PClosureDecl e : list)
+        for(PClosureDecl e : this._closureDecls_)
         {
+            e.parent(null);
+        }
+        this._closureDecls_.clear();
+
+        for(Object obj_e : list)
+        {
+            PClosureDecl e = (PClosureDecl) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._closureDecls_.add(e);
         }
     }
 
@@ -115,7 +190,9 @@ public final class ASignature extends PSignature
     public String toString()
     {
         return ""
+            + toString(this._opar_)
             + toString(this._params_)
+            + toString(this._cpar_)
             + toString(this._type_)
             + toString(this._closureDecls_);
     }
@@ -124,8 +201,20 @@ public final class ASignature extends PSignature
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
+        if(this._opar_ == child)
+        {
+            this._opar_ = null;
+            return;
+        }
+
         if(this._params_.remove(child))
         {
+            return;
+        }
+
+        if(this._cpar_ == child)
+        {
+            this._cpar_ = null;
             return;
         }
 
@@ -147,6 +236,12 @@ public final class ASignature extends PSignature
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
+        if(this._opar_ == oldChild)
+        {
+            setOpar((TOpar) newChild);
+            return;
+        }
+
         for(ListIterator<PParam> i = this._params_.listIterator(); i.hasNext();)
         {
             if(i.next() == oldChild)
@@ -163,6 +258,12 @@ public final class ASignature extends PSignature
                 oldChild.parent(null);
                 return;
             }
+        }
+
+        if(this._cpar_ == oldChild)
+        {
+            setCpar((TCpar) newChild);
+            return;
         }
 
         if(this._type_ == oldChild)

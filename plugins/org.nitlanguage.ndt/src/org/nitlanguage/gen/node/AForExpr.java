@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AForExpr extends PExpr
@@ -23,7 +25,7 @@ public final class AForExpr extends PExpr
 
     public AForExpr(
         @SuppressWarnings("hiding") TKwfor _kwfor_,
-        @SuppressWarnings("hiding") List<TId> _ids_,
+        @SuppressWarnings("hiding") List<?> _ids_,
         @SuppressWarnings("hiding") PExpr _expr_,
         @SuppressWarnings("hiding") TKwdo _kwdo_,
         @SuppressWarnings("hiding") PExpr _block_,
@@ -56,6 +58,7 @@ public final class AForExpr extends PExpr
             cloneNode(this._label_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAForExpr(this);
@@ -91,18 +94,24 @@ public final class AForExpr extends PExpr
         return this._ids_;
     }
 
-    public void setIds(List<TId> list)
+    public void setIds(List<?> list)
     {
-        this._ids_.clear();
-        this._ids_.addAll(list);
-        for(TId e : list)
+        for(TId e : this._ids_)
         {
+            e.parent(null);
+        }
+        this._ids_.clear();
+
+        for(Object obj_e : list)
+        {
+            TId e = (TId) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._ids_.add(e);
         }
     }
 

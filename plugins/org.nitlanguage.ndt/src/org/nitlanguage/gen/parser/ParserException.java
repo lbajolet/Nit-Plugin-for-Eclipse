@@ -2,12 +2,12 @@
 
 package org.nitlanguage.gen.parser;
 
-import org.nitlanguage.gen.node.*;
+import org.nitlanguage.gen.node.Token;
 
 @SuppressWarnings("serial")
 public class ParserException extends Exception
 {
-    Token token;
+    private Token token;
 
     public ParserException(@SuppressWarnings("hiding") Token token, String  message)
     {

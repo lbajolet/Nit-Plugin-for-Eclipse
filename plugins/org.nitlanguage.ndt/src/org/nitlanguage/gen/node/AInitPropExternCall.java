@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AInitPropExternCall extends PExternCall
@@ -29,6 +29,7 @@ public final class AInitPropExternCall extends PExternCall
             cloneNode(this._classid_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAInitPropExternCall(this);

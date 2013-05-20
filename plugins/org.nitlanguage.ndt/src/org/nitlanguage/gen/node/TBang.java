@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class TBang extends Token
@@ -25,6 +25,7 @@ public final class TBang extends Token
       return new TBang(getLine(), getPos());
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseTBang(this);

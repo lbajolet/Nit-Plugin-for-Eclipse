@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ALtMethid extends PMethid
@@ -29,6 +29,7 @@ public final class ALtMethid extends PMethid
             cloneNode(this._lt_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseALtMethid(this);

@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class APublicVisibility extends PVisibility
@@ -19,6 +19,7 @@ public final class APublicVisibility extends PVisibility
         return new APublicVisibility();
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAPublicVisibility(this);

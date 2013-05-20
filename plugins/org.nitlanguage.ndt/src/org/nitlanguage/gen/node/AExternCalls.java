@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AExternCalls extends PExternCalls
@@ -19,7 +21,7 @@ public final class AExternCalls extends PExternCalls
 
     public AExternCalls(
         @SuppressWarnings("hiding") TKwimport _kwimport_,
-        @SuppressWarnings("hiding") List<PExternCall> _externCalls_)
+        @SuppressWarnings("hiding") List<?> _externCalls_)
     {
         // Constructor
         setKwimport(_kwimport_);
@@ -36,6 +38,7 @@ public final class AExternCalls extends PExternCalls
             cloneList(this._externCalls_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAExternCalls(this);
@@ -71,18 +74,24 @@ public final class AExternCalls extends PExternCalls
         return this._externCalls_;
     }
 
-    public void setExternCalls(List<PExternCall> list)
+    public void setExternCalls(List<?> list)
     {
-        this._externCalls_.clear();
-        this._externCalls_.addAll(list);
-        for(PExternCall e : list)
+        for(PExternCall e : this._externCalls_)
         {
+            e.parent(null);
+        }
+        this._externCalls_.clear();
+
+        for(Object obj_e : list)
+        {
+            PExternCall e = (PExternCall) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._externCalls_.add(e);
         }
     }
 

@@ -139,6 +139,10 @@ public interface Analysis extends Switch
     void caseAAsCastExpr(AAsCastExpr node);
     void caseAAsNotnullExpr(AAsNotnullExpr node);
     void caseAIssetAttrExpr(AIssetAttrExpr node);
+    void caseADebugTypeExpr(ADebugTypeExpr node);
+    void caseAListExprs(AListExprs node);
+    void caseAParExprs(AParExprs node);
+    void caseABraExprs(ABraExprs node);
     void caseAPlusAssignOp(APlusAssignOp node);
     void caseAMinusAssignOp(AMinusAssignOp node);
     void caseAClosureDef(AClosureDef node);
@@ -154,6 +158,8 @@ public interface Analysis extends Switch
     void caseACastAsExternCall(ACastAsExternCall node);
     void caseAAsNullableExternCall(AAsNullableExternCall node);
     void caseAAsNotNullableExternCall(AAsNotNullableExternCall node);
+    void caseAInLanguage(AInLanguage node);
+    void caseAExternCodeBlock(AExternCodeBlock node);
     void caseAQualified(AQualified node);
     void caseADoc(ADoc node);
 
@@ -166,7 +172,6 @@ public interface Analysis extends Switch
     void caseTKwabstract(TKwabstract node);
     void caseTKwinterface(TKwinterface node);
     void caseTKwenum(TKwenum node);
-    void caseTKwspecial(TKwspecial node);
     void caseTKwend(TKwend node);
     void caseTKwmeth(TKwmeth node);
     void caseTKwtype(TKwtype node);
@@ -209,6 +214,7 @@ public interface Analysis extends Switch
     void caseTKwnullable(TKwnullable node);
     void caseTKwisset(TKwisset node);
     void caseTKwlabel(TKwlabel node);
+    void caseTKwdebug(TKwdebug node);
     void caseTOpar(TOpar node);
     void caseTCpar(TCpar node);
     void caseTObra(TObra node);
@@ -249,5 +255,7 @@ public interface Analysis extends Switch
     void caseTEndString(TEndString node);
     void caseTBadChar(TBadChar node);
     void caseTBadString(TBadString node);
+    void caseTExternCodeSegment(TExternCodeSegment node);
     void caseEOF(EOF node);
+    void caseInvalidToken(InvalidToken node);
 }

@@ -2,15 +2,17 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AAsNotnullExpr extends PExpr
 {
     private PExpr _expr_;
     private TKwas _kwas_;
+    private TOpar _opar_;
     private TKwnot _kwnot_;
     private TKwnull _kwnull_;
+    private TCpar _cpar_;
 
     public AAsNotnullExpr()
     {
@@ -20,17 +22,23 @@ public final class AAsNotnullExpr extends PExpr
     public AAsNotnullExpr(
         @SuppressWarnings("hiding") PExpr _expr_,
         @SuppressWarnings("hiding") TKwas _kwas_,
+        @SuppressWarnings("hiding") TOpar _opar_,
         @SuppressWarnings("hiding") TKwnot _kwnot_,
-        @SuppressWarnings("hiding") TKwnull _kwnull_)
+        @SuppressWarnings("hiding") TKwnull _kwnull_,
+        @SuppressWarnings("hiding") TCpar _cpar_)
     {
         // Constructor
         setExpr(_expr_);
 
         setKwas(_kwas_);
 
+        setOpar(_opar_);
+
         setKwnot(_kwnot_);
 
         setKwnull(_kwnull_);
+
+        setCpar(_cpar_);
 
     }
 
@@ -40,10 +48,13 @@ public final class AAsNotnullExpr extends PExpr
         return new AAsNotnullExpr(
             cloneNode(this._expr_),
             cloneNode(this._kwas_),
+            cloneNode(this._opar_),
             cloneNode(this._kwnot_),
-            cloneNode(this._kwnull_));
+            cloneNode(this._kwnull_),
+            cloneNode(this._cpar_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAsNotnullExpr(this);
@@ -99,6 +110,31 @@ public final class AAsNotnullExpr extends PExpr
         this._kwas_ = node;
     }
 
+    public TOpar getOpar()
+    {
+        return this._opar_;
+    }
+
+    public void setOpar(TOpar node)
+    {
+        if(this._opar_ != null)
+        {
+            this._opar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._opar_ = node;
+    }
+
     public TKwnot getKwnot()
     {
         return this._kwnot_;
@@ -149,14 +185,41 @@ public final class AAsNotnullExpr extends PExpr
         this._kwnull_ = node;
     }
 
+    public TCpar getCpar()
+    {
+        return this._cpar_;
+    }
+
+    public void setCpar(TCpar node)
+    {
+        if(this._cpar_ != null)
+        {
+            this._cpar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._cpar_ = node;
+    }
+
     @Override
     public String toString()
     {
         return ""
             + toString(this._expr_)
             + toString(this._kwas_)
+            + toString(this._opar_)
             + toString(this._kwnot_)
-            + toString(this._kwnull_);
+            + toString(this._kwnull_)
+            + toString(this._cpar_);
     }
 
     @Override
@@ -175,6 +238,12 @@ public final class AAsNotnullExpr extends PExpr
             return;
         }
 
+        if(this._opar_ == child)
+        {
+            this._opar_ = null;
+            return;
+        }
+
         if(this._kwnot_ == child)
         {
             this._kwnot_ = null;
@@ -184,6 +253,12 @@ public final class AAsNotnullExpr extends PExpr
         if(this._kwnull_ == child)
         {
             this._kwnull_ = null;
+            return;
+        }
+
+        if(this._cpar_ == child)
+        {
+            this._cpar_ = null;
             return;
         }
 
@@ -206,6 +281,12 @@ public final class AAsNotnullExpr extends PExpr
             return;
         }
 
+        if(this._opar_ == oldChild)
+        {
+            setOpar((TOpar) newChild);
+            return;
+        }
+
         if(this._kwnot_ == oldChild)
         {
             setKwnot((TKwnot) newChild);
@@ -215,6 +296,12 @@ public final class AAsNotnullExpr extends PExpr
         if(this._kwnull_ == oldChild)
         {
             setKwnull((TKwnull) newChild);
+            return;
+        }
+
+        if(this._cpar_ == oldChild)
+        {
+            setCpar((TCpar) newChild);
             return;
         }
 

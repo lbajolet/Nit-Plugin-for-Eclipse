@@ -2,16 +2,14 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
-
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AInitExpr extends PExpr
 {
     private PExpr _expr_;
     private TKwinit _kwinit_;
-    private final LinkedList<PExpr> _args_ = new LinkedList<PExpr>();
+    private PExprs _args_;
 
     public AInitExpr()
     {
@@ -21,7 +19,7 @@ public final class AInitExpr extends PExpr
     public AInitExpr(
         @SuppressWarnings("hiding") PExpr _expr_,
         @SuppressWarnings("hiding") TKwinit _kwinit_,
-        @SuppressWarnings("hiding") List<PExpr> _args_)
+        @SuppressWarnings("hiding") PExprs _args_)
     {
         // Constructor
         setExpr(_expr_);
@@ -38,9 +36,10 @@ public final class AInitExpr extends PExpr
         return new AInitExpr(
             cloneNode(this._expr_),
             cloneNode(this._kwinit_),
-            cloneList(this._args_));
+            cloneNode(this._args_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAInitExpr(this);
@@ -96,24 +95,29 @@ public final class AInitExpr extends PExpr
         this._kwinit_ = node;
     }
 
-    public LinkedList<PExpr> getArgs()
+    public PExprs getArgs()
     {
         return this._args_;
     }
 
-    public void setArgs(List<PExpr> list)
+    public void setArgs(PExprs node)
     {
-        this._args_.clear();
-        this._args_.addAll(list);
-        for(PExpr e : list)
+        if(this._args_ != null)
         {
-            if(e.parent() != null)
+            this._args_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
             {
-                e.parent().removeChild(e);
+                node.parent().removeChild(node);
             }
 
-            e.parent(this);
+            node.parent(this);
         }
+
+        this._args_ = node;
     }
 
     @Override
@@ -141,8 +145,9 @@ public final class AInitExpr extends PExpr
             return;
         }
 
-        if(this._args_.remove(child))
+        if(this._args_ == child)
         {
+            this._args_ = null;
             return;
         }
 
@@ -165,22 +170,10 @@ public final class AInitExpr extends PExpr
             return;
         }
 
-        for(ListIterator<PExpr> i = this._args_.listIterator(); i.hasNext();)
+        if(this._args_ == oldChild)
         {
-            if(i.next() == oldChild)
-            {
-                if(newChild != null)
-                {
-                    i.set((PExpr) newChild);
-                    newChild.parent(this);
-                    oldChild.parent(null);
-                    return;
-                }
-
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
+            setArgs((PExprs) newChild);
+            return;
         }
 
         throw new RuntimeException("Not a child.");
