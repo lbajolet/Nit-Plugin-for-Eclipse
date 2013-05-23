@@ -1,20 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.nitlanguage.feature"
-      label="Feature"
+      label="Nit Development Tools"
       version="1.0.0.qualifier">
 
    <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+      This feature contains several plug-ins to integrate Nit language inside the modular Eclipse Plateform
    </description>
 
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
+   <copyright url="http://nitlanguage.org">
+      This product includes software developed as part of the Nit Language
+project ( http://nitlanguage.org ).
+
+		Files: *
+		Copyright: 2004-2012 Jean Privat &lt;jean@pryen.org&gt;
+				 2006-2008 Floréal Morandat &lt;morandat@lirmm.fr&gt;
+				 2009-2011 Jean-Sebastien Gelinas &lt;calestar@gmail.com&gt;
+				 2009-2012 Alexis Laferrière &lt;alexis.laf@xymus.net&gt;
+				 2009 Julien Chevalier &lt;chevjulien@gmail.com&gt;
+				 2011-2012 Alexandre Terrasa &lt;alexandre@moz-concept.com&gt;
+		License: Apache 2.0 (see LICENSE)
+		Comment: The main license of the work, exept for the following exceptions
+
+		Files: lib/*
+			  clib/*
+			  share/nitdoc/*
+		Copyright: 2004-2012 Jean Privat &lt;jean@pryen.org&gt;
+				 2006-2008 Floréal Morandat &lt;morandat@lirmm.fr&gt;
+				 2009-2011 Jean-Sebastien Gelinas &lt;calestar@gmail.com&gt;
+				 2009-2012 Alexis Laferrière &lt;alexis.laf@xymus.net&gt;
+				 2009 Julien Chevalier &lt;chevjulien@gmail.com&gt;
+				 2011-2012 Alexandre Terrasa &lt;alexandre@moz-concept.com&gt;
+		Licence: BSD 2 (see LICENSE-BSD)
+		Comment: Use of libraries and resources is basically unrestricted. We hold the copyright
+			    on the compiler and the tools but not on the programs made by the users.
+
+		Files: share/nitdoc/scripts/jquery-1.7.1.min.js
+		Copyright: 2011 John Resig, http://jquery.com/
+		Licence: BSD 2 (see LICENSE-BSD)
+
+		Files: /misc/gtksourceview/nit.lang
+		Copyright: 2009-2012 Alexis Laferrière &lt;alexis.laf@xymus.net&gt;
+				 Based on ruby.lang from
+				 2004 Archit Baweja &lt;bighead@users.sourceforge.net&gt;
+				 2005 Michael Witrant &lt;mike@lepton.fr&gt;
+				 2006 Gabriel Bauman &lt;gbauman@gmail.com&gt;
+		License: GPL 2.0 (see LICENSE-GPL-2)
+		Comment: GPL because the original work is GPL
    </copyright>
 
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
+   <license url="http://www.apache.org/licenses/LICENSE-2.0.html">
+                                      Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
    </license>
+
+   <url>
+	<update label="Eclipse Nit" url="http://nitlanguage.org/eclipse"/>
+	<discovery label="The Nit Programming Language WebSite" url="http://nitlanguage.org/"/>
+</url>
 
    <plugin
          id="org.nitlanguage.ndt"
