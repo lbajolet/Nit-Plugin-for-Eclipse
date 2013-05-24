@@ -2,6 +2,7 @@ package org.nitlanguage.ndt.ui.editor;
 
 import java.io.IOException;
 import java.io.PushbackReader;
+
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;

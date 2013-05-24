@@ -1,7 +1,6 @@
 package org.nitlanguage.ndt.ui.editor.outline;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;

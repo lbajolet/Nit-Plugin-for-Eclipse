@@ -1,20 +1,12 @@
 package org.nitlanguage.ndt.ui.editor.outline;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.IFileEditorInput;
-import org.nitlanguage.gen.node.AConcreteMethPropdef;
-import org.nitlanguage.gen.node.ADeferredMethPropdef;
 import org.nitlanguage.gen.node.AModule;
 import org.nitlanguage.gen.node.AStdClassdef;
-import org.nitlanguage.gen.node.PClassdef;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
 import org.nitlanguage.ndt.core.asthelpers.AstParserHelper;

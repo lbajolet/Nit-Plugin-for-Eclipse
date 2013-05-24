@@ -1,7 +1,6 @@
 package org.nitlanguage.ndt.ui.editor.outline;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
@@ -19,9 +18,7 @@ import org.nitlanguage.gen.node.APublicVisibility;
 import org.nitlanguage.gen.node.ASignature;
 import org.nitlanguage.gen.node.AStdClassdef;
 import org.nitlanguage.gen.node.PClasskind;
-import org.nitlanguage.gen.node.PMethid;
 import org.nitlanguage.gen.node.PParam;
-import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.PType;
 import org.nitlanguage.gen.node.PVisibility;
 import org.nitlanguage.ndt.ui.editor.NitEditor;

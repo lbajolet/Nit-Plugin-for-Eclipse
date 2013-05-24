@@ -2,6 +2,7 @@ package org.nitlanguage.ndt.ui.editor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;

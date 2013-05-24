@@ -1,11 +1,7 @@
 package org.nitlanguage.ndt.core.plugin;
 
 import java.io.File;
-import java.nio.file.Paths;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;

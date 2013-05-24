@@ -1,8 +1,6 @@
 package org.nitlanguage.ndt.ui.wizards;
 
 import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.nitlanguage.ndt.ui.UiMsg;
 import org.nitlanguage.ndt.ui.preferences.NitInstallFieldEditor;

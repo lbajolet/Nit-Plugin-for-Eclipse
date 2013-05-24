@@ -33,8 +33,6 @@ import org.nitlanguage.gen.node.PParam;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.PType;
 import org.nitlanguage.gen.node.PVisibility;
-import org.nitlanguage.ndt.core.builder.NitNature;
-import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.editor.NitEditor;
 
 /**
