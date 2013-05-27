@@ -22,6 +22,7 @@ import org.nitlanguage.ndt.core.BuildMsg;
 import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.builder.NitCompilerMessageInterpreter;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.core.plugin.NitInstallation;
 
 /**
  * 
@@ -187,8 +188,7 @@ public class ProjectAutoParser {
 
 			monitor.beginTask(BuildMsg.PARSING_TASK, totalFiles);
 
-			String pathToCompiler = NitActivator.getDefault()
-					.getPreferenceStore().getString(BuildMsg.PREFERENCE_KEY_COMPILER);
+			String pathToCompiler = NitActivator.getDefault().getNitInstallation().getCompiler();
 
 			if (pathToCompiler != null) {
 

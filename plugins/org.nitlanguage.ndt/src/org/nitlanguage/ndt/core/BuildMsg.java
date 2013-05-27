@@ -15,7 +15,7 @@ public class BuildMsg {
 	// public static final String BUILDER_ID = "org.uqam.nit.ndt.builder";
 	public static final String MSG_CAT_COMPILER = "Nit Compiling Process";
 	public static final String ERROR_COMPILER_MISSING = "You need to set the Nit compiler location in Window/Properties/Nit";
-	public static final String PREFERENCE_KEY_COMPILER = "compilerLocation";
+	public static final String PREFERENCE_KEY_COMPILER = "nitc";
 	// Do not use color to display errors and warnings
 	public static final String COMPILER_ARG_NO_COLOR = "--no-color";
 	// Output file

@@ -40,7 +40,7 @@ public class NitInstallation {
 		return installation;
 	}
 	
-	public NitInstallation(IPreferenceStore store){	
+	private NitInstallation(IPreferenceStore store){	
 		this.store = store;
 		init();
 	}
