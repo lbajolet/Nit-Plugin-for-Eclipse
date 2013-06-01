@@ -50,6 +50,67 @@ public class NitOutlinePage extends ContentOutlinePage implements IAdaptable {
 		refresh(false);
     }
     
+    /**
+     * Selects the text in the editor corresponding to the newly selected tree item
+     */
+    public void selectionChanged(SelectionChangedEvent event) {
+    	super.selectionChanged(event);
+    	TreeSelection selection = (TreeSelection)event.getSelection();
+    	Object item = selection.getFirstElement();
+    	int line = -1, position = -1, length = -1;
+    	if(item instanceof AModule){
+    		AModuledecl modDec = (AModuledecl)((AModule)item).getModuledecl();
+    		TId moduleId = ((AModuleName)modDec.getName()).getId();
+    		line = moduleId.getLine();
+    		position = moduleId.getPos();
+    		length = moduleId.getText().length();
+    	} else if(item instanceof AStdClassdef){
+    		TClassid classId = ((AStdClassdef)item).getId(); 
+    		line = classId.getLine();
+    		position = classId.getPos();
+    		length = classId.getText().length();
+    	} else if(item instanceof PPropdef){
+    		if(item instanceof AAttrPropdef){
+    			AAttrPropdef attrDef = (AAttrPropdef)item;
+    			if(attrDef.getId2() != null) {
+            		line = attrDef.getId2().getLine();
+            		position = attrDef.getId2().getPos();
+            		length = attrDef.getId2().getText().length();
+    			} else {
+            		line = attrDef.getId().getLine();
+            		position = attrDef.getId().getPos();
+            		length = attrDef.getId().getText().length();
+    			}
+    		} else if(item instanceof AConcreteInitPropdef){
+    			TKwinit initId = ((AConcreteInitPropdef)item).getKwinit();
+    			line = initId.getLine();
+    			position = initId.getPos();
+    			length = initId.getText().length();
+    		} else if(item instanceof AConcreteMethPropdef){
+    			PMethid methId = ((AConcreteMethPropdef)item).getMethid();
+    			TId id = ((AIdMethid)methId).getId();
+    			line = id.getLine();
+    			position = id.getPos();
+    			length = id.getText().length();
+    		} else if(item instanceof ADeferredMethPropdef){
+      			PMethid methId = ((ADeferredMethPropdef)item).getMethid();
+    			TId id = ((AIdMethid)methId).getId();
+    			line = id.getLine();
+    			position = id.getPos();
+    			length = id.getText().length();
+    		}   		
+    	} 
+    	if(line != -1 && position != -1 && length != -1){
+    		try {
+				int offset = editor.getDocument().getLineOffset(line - 1);
+	    		editor.selectAndReveal(offset + position - 1, length);
+			} catch (BadLocationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    }
+    
 	public void refresh(Boolean isUpdate) {
 		if(contentViewer == null) return;
 		//Object[] expandedElements = contentViewer.getExpandedElements();
