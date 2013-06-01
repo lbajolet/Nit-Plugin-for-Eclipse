@@ -25,6 +25,13 @@ import org.eclipse.jface.text.source.projection.ProjectionAnnotationModel;
 import org.eclipse.jface.text.source.projection.ProjectionSupport;
 import org.eclipse.jface.text.source.projection.ProjectionViewer;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ExtendedModifyEvent;
+import org.eclipse.swt.custom.ExtendedModifyListener;
+import org.eclipse.swt.custom.LineBackgroundEvent;
+import org.eclipse.swt.custom.LineBackgroundListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorReference;
@@ -35,7 +42,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ContentAssistAction;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.model.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.docmodel.Declaration;
 import org.nitlanguage.ndt.ui.docmodel.DeclarationType;
@@ -61,7 +68,7 @@ public class NitEditor extends TextEditor {
 		super();
 		//clean doc (whitespaces,...)
 		//setDocumentProvider(new NitDocumentProvider());
-		setSourceViewerConfiguration(new NitEditorConfiguration(this));
+		setSourceViewerConfiguration(new NitSourceViewerConfiguration(this));
 	}
 	
 	/**
@@ -526,6 +533,18 @@ public class NitEditor extends TextEditor {
 			return false;
 		}
     }
+    
+	/*API not supported anymore*/
+    /*public void changeLinesColor(int start, int nbLines, Color c){
+    	getSourceViewer().getTextWidget().setLineBackground(start, nbLines, c);
+    }*/
+    
+    /**
+     * Adds a listener responsible to determine the background color of a line 
+     */
+	public void addLineBackgroundListener(LineBackgroundListener listener) {
+		getSourceViewer().getTextWidget().addLineBackgroundListener(listener);	
+	}
     
     /**
      * Set the correct offset for each line of the document

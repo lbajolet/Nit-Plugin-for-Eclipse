@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.nitlanguage.ndt.core.BuildMsg;
 import org.nitlanguage.ndt.core.PluginParams;
-import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.model.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 
 /**

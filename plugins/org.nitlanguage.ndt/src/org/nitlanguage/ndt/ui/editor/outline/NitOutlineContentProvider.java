@@ -9,7 +9,7 @@ import org.nitlanguage.gen.node.AModule;
 import org.nitlanguage.gen.node.AStdClassdef;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
-import org.nitlanguage.ndt.core.asthelpers.AstParserHelper;
+import org.nitlanguage.ndt.core.model.asthelpers.AstParserHelper;
 import org.nitlanguage.ndt.ui.editor.NitEditor;
 
 /**
