@@ -46,7 +46,7 @@ import org.nitlanguage.ndt.core.model.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.docmodel.Declaration;
 import org.nitlanguage.ndt.ui.docmodel.DeclarationType;
-import org.nitlanguage.ndt.ui.editor.outline.NitOutlinePage;
+import org.nitlanguage.ndt.ui.outline.NitOutlinePage;
 
 /**
  * The editor for nit, bound to the completion methods and the

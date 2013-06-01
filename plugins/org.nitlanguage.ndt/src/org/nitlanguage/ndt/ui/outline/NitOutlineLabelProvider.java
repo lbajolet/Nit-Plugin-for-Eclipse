@@ -1,4 +1,4 @@
-package org.nitlanguage.ndt.ui.editor.outline;
+package org.nitlanguage.ndt.ui.outline;
 
 import java.util.LinkedList;
 

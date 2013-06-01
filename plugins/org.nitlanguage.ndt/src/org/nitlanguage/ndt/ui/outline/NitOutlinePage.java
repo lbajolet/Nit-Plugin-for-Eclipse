@@ -1,9 +1,31 @@
-package org.nitlanguage.ndt.ui.editor.outline;
+package org.nitlanguage.ndt.ui.outline;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.debug.ui.actions.ToggleMethodBreakpointActionDelegate;
+import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.nitlanguage.gen.node.AAttrPropdef;
+import org.nitlanguage.gen.node.AConcreteInitPropdef;
+import org.nitlanguage.gen.node.AConcreteMethPropdef;
+import org.nitlanguage.gen.node.ADeferredMethPropdef;
+import org.nitlanguage.gen.node.AIdMethid;
+import org.nitlanguage.gen.node.AMethPropdef;
+import org.nitlanguage.gen.node.AModule;
+import org.nitlanguage.gen.node.AModuleName;
+import org.nitlanguage.gen.node.AModuledecl;
+import org.nitlanguage.gen.node.AStdClassdef;
+import org.nitlanguage.gen.node.PMethid;
+import org.nitlanguage.gen.node.PModuledecl;
+import org.nitlanguage.gen.node.PPropdef;
+import org.nitlanguage.gen.node.TAttrid;
+import org.nitlanguage.gen.node.TClassid;
+import org.nitlanguage.gen.node.TId;
+import org.nitlanguage.gen.node.TKwif;
+import org.nitlanguage.gen.node.TKwinit;
+import org.nitlanguage.gen.node.TKwmeth;
 import org.nitlanguage.ndt.ui.editor.NitEditor;
 
 /**
@@ -26,11 +48,6 @@ public class NitOutlinePage extends ContentOutlinePage implements IAdaptable {
 		contentViewer.setContentProvider(new NitOutlineContentProvider(editor));
 		contentViewer.setLabelProvider(new NitStyledLabelProvider(editor));
 		refresh(false);
-    }
-    
-    public void selectionChanged(SelectionChangedEvent event) {
-    	super.selectionChanged(event);
-    	editor.selectAndReveal(0, 20);
     }
     
 	public void refresh(Boolean isUpdate) {
