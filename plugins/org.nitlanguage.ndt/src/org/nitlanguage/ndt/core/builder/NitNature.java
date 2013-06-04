@@ -1,5 +1,7 @@
 package org.nitlanguage.ndt.core.builder;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -9,6 +11,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.asthelpers.AstReposit;
 import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.core.plugin.NitInstallation;
 import org.nitlanguage.ndt.core.plugin.ProjectPropertiesHelper;
 
 /**
@@ -58,6 +62,7 @@ public class NitNature implements IProjectNature {
 
 	/**
 	 * Gets the ASTReposit for this project nature
+	 * 
 	 * @return ASTReposit
 	 */
 	public AstReposit getAstReposit() {
@@ -142,7 +147,9 @@ public class NitNature implements IProjectNature {
 
 	/**
 	 * Sets the file to be targeted by the compilation process
-	 * @param file File of the project
+	 * 
+	 * @param file
+	 *            File of the project
 	 */
 	public void setDefaultFile(IFile file) {
 		this.defaultFile = file;
@@ -151,6 +158,7 @@ public class NitNature implements IProjectNature {
 
 	/**
 	 * Gets the properties helper object for this nature
+	 * 
 	 * @return ProjectPropertiesHelper
 	 */
 	public ProjectPropertiesHelper getPropertiesHelper() {
@@ -159,6 +167,7 @@ public class NitNature implements IProjectNature {
 
 	/**
 	 * Gets the project auto parser helper for this nature
+	 * 
 	 * @return ProjectAutoParser
 	 */
 	public ProjectAutoParser getProjectAutoParser() {
@@ -167,6 +176,7 @@ public class NitNature implements IProjectNature {
 
 	/**
 	 * Gets the default target file for compilation
+	 * 
 	 * @return The file set as target for compilation
 	 */
 	public IFile getDefaultFile() {
@@ -175,10 +185,19 @@ public class NitNature implements IProjectNature {
 
 	/**
 	 * Gets the compiler caller
+	 * 
 	 * @return The Compiler Caller object with the informations to compile the
 	 *         current project
 	 */
 	public NitCompilerCallerClass getCompilerCaller() {
 		return this.compilerCaller;
+	}
+
+	public String[] buildDebuggerCommand(String targetPath) {
+		ArrayList<String> command = new ArrayList<String>();
+		NitInstallation infos = NitActivator.getDefault().getNitInstallation();
+		command.add(infos.getDebugger());
+		command.add(targetPath);
+		return command.toArray(new String[command.size()]);
 	}
 }

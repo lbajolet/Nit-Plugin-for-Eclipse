@@ -34,8 +34,10 @@ import org.eclipse.ui.dialogs.ContainerSelectionDialog;
 import org.eclipse.ui.dialogs.ResourceSelectionDialog;
 
 /**
- * The Main tab for run configurations contains all the arguments and targets needed for compilation
- * @author lucas.bajolet 
+ * The Main tab for run configurations contains all the arguments and targets
+ * needed for compilation
+ * 
+ * @author lucas.bajolet
  * @author nathan.heu
  */
 public class NitMainTab extends AbstractLaunchConfigurationTab {

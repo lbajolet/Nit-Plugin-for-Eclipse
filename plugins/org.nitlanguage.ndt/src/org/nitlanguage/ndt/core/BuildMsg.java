@@ -34,4 +34,6 @@ public class BuildMsg {
 	public static final String EXECUTION_TASK = "Executing program";
 	public static final String LAUNCHING_TASK = "Compile and Run Nit";
 	public static final String EXECUTION_JOB = "Execution";
+	public static final String DEBUGGING_TASK = "Launching the debugger on a Nit Program";
+	public static final String DEBUGGING_JOB = "Debugging";
 }

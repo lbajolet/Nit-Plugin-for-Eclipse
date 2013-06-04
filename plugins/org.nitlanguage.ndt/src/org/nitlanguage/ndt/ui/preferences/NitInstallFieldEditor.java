@@ -112,7 +112,7 @@ public class NitInstallFieldEditor extends DirectoryFieldEditor {
 				compilerFieldEditor.setStringValue(infos.getCompiler());
 			if(infos.setInterpreter(binPath + "nit"))
 				interpreterFieldEditor.setStringValue(infos.getInterpreter());
-			if(infos.setDebugger(binPath + "nitd"))
+			if(infos.setDebugger(binPath + "netdbg"))
 				debuggerFieldEditor.setStringValue(infos.getDebugger());
 			if(infos.setStdLib(nitPath + "lib"))
 				libFieldEditor.setStringValue(infos.getStdLib());
