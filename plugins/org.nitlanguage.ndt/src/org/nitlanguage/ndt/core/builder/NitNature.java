@@ -7,8 +7,8 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 import org.nitlanguage.ndt.core.PluginParams;
-import org.nitlanguage.ndt.core.asthelpers.AstReposit;
-import org.nitlanguage.ndt.core.asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.model.asthelpers.AstReposit;
+import org.nitlanguage.ndt.core.model.asthelpers.ProjectAutoParser;
 import org.nitlanguage.ndt.core.plugin.ProjectPropertiesHelper;
 
 /**

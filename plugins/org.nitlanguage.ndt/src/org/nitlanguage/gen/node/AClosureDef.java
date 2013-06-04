@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AClosureDef extends PClosureDef
@@ -24,7 +26,7 @@ public final class AClosureDef extends PClosureDef
     public AClosureDef(
         @SuppressWarnings("hiding") TBang _bang_,
         @SuppressWarnings("hiding") PClosureId _id_,
-        @SuppressWarnings("hiding") List<TId> _ids_,
+        @SuppressWarnings("hiding") List<?> _ids_,
         @SuppressWarnings("hiding") TKwdo _kwdo_,
         @SuppressWarnings("hiding") PExpr _expr_,
         @SuppressWarnings("hiding") PLabel _label_)
@@ -56,6 +58,7 @@ public final class AClosureDef extends PClosureDef
             cloneNode(this._label_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAClosureDef(this);
@@ -116,18 +119,24 @@ public final class AClosureDef extends PClosureDef
         return this._ids_;
     }
 
-    public void setIds(List<TId> list)
+    public void setIds(List<?> list)
     {
-        this._ids_.clear();
-        this._ids_.addAll(list);
-        for(TId e : list)
+        for(TId e : this._ids_)
         {
+            e.parent(null);
+        }
+        this._ids_.clear();
+
+        for(Object obj_e : list)
+        {
+            TId e = (TId) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._ids_.add(e);
         }
     }
 

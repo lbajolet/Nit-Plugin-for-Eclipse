@@ -2,9 +2,100 @@
 
 package org.nitlanguage.gen.parser;
 
-import org.nitlanguage.gen.analysis.*;
-import org.nitlanguage.gen.node.*;
-
+import org.nitlanguage.gen.analysis.AnalysisAdapter;
+import org.nitlanguage.gen.node.EOF;
+import org.nitlanguage.gen.node.TAssign;
+import org.nitlanguage.gen.node.TAttrid;
+import org.nitlanguage.gen.node.TBadChar;
+import org.nitlanguage.gen.node.TBadString;
+import org.nitlanguage.gen.node.TBang;
+import org.nitlanguage.gen.node.TCbra;
+import org.nitlanguage.gen.node.TChar;
+import org.nitlanguage.gen.node.TClassid;
+import org.nitlanguage.gen.node.TColumn;
+import org.nitlanguage.gen.node.TComma;
+import org.nitlanguage.gen.node.TComment;
+import org.nitlanguage.gen.node.TCpar;
+import org.nitlanguage.gen.node.TDot;
+import org.nitlanguage.gen.node.TDotdot;
+import org.nitlanguage.gen.node.TDotdotdot;
+import org.nitlanguage.gen.node.TEndString;
+import org.nitlanguage.gen.node.TEol;
+import org.nitlanguage.gen.node.TEq;
+import org.nitlanguage.gen.node.TExternCodeSegment;
+import org.nitlanguage.gen.node.TFloat;
+import org.nitlanguage.gen.node.TGe;
+import org.nitlanguage.gen.node.TGg;
+import org.nitlanguage.gen.node.TGt;
+import org.nitlanguage.gen.node.TId;
+import org.nitlanguage.gen.node.TKwabort;
+import org.nitlanguage.gen.node.TKwabstract;
+import org.nitlanguage.gen.node.TKwand;
+import org.nitlanguage.gen.node.TKwas;
+import org.nitlanguage.gen.node.TKwassert;
+import org.nitlanguage.gen.node.TKwbreak;
+import org.nitlanguage.gen.node.TKwclass;
+import org.nitlanguage.gen.node.TKwcontinue;
+import org.nitlanguage.gen.node.TKwdebug;
+import org.nitlanguage.gen.node.TKwdo;
+import org.nitlanguage.gen.node.TKwelse;
+import org.nitlanguage.gen.node.TKwend;
+import org.nitlanguage.gen.node.TKwenum;
+import org.nitlanguage.gen.node.TKwextern;
+import org.nitlanguage.gen.node.TKwfalse;
+import org.nitlanguage.gen.node.TKwfor;
+import org.nitlanguage.gen.node.TKwif;
+import org.nitlanguage.gen.node.TKwimport;
+import org.nitlanguage.gen.node.TKwin;
+import org.nitlanguage.gen.node.TKwinit;
+import org.nitlanguage.gen.node.TKwinterface;
+import org.nitlanguage.gen.node.TKwintern;
+import org.nitlanguage.gen.node.TKwintrude;
+import org.nitlanguage.gen.node.TKwis;
+import org.nitlanguage.gen.node.TKwisa;
+import org.nitlanguage.gen.node.TKwisset;
+import org.nitlanguage.gen.node.TKwlabel;
+import org.nitlanguage.gen.node.TKwloop;
+import org.nitlanguage.gen.node.TKwmeth;
+import org.nitlanguage.gen.node.TKwmodule;
+import org.nitlanguage.gen.node.TKwnew;
+import org.nitlanguage.gen.node.TKwnot;
+import org.nitlanguage.gen.node.TKwnull;
+import org.nitlanguage.gen.node.TKwnullable;
+import org.nitlanguage.gen.node.TKwonce;
+import org.nitlanguage.gen.node.TKwor;
+import org.nitlanguage.gen.node.TKwprivate;
+import org.nitlanguage.gen.node.TKwprotected;
+import org.nitlanguage.gen.node.TKwreadable;
+import org.nitlanguage.gen.node.TKwredef;
+import org.nitlanguage.gen.node.TKwreturn;
+import org.nitlanguage.gen.node.TKwself;
+import org.nitlanguage.gen.node.TKwsuper;
+import org.nitlanguage.gen.node.TKwthen;
+import org.nitlanguage.gen.node.TKwtrue;
+import org.nitlanguage.gen.node.TKwtype;
+import org.nitlanguage.gen.node.TKwvar;
+import org.nitlanguage.gen.node.TKwwhile;
+import org.nitlanguage.gen.node.TKwwritable;
+import org.nitlanguage.gen.node.TLe;
+import org.nitlanguage.gen.node.TLl;
+import org.nitlanguage.gen.node.TLt;
+import org.nitlanguage.gen.node.TMidString;
+import org.nitlanguage.gen.node.TMinus;
+import org.nitlanguage.gen.node.TMinuseq;
+import org.nitlanguage.gen.node.TNe;
+import org.nitlanguage.gen.node.TNumber;
+import org.nitlanguage.gen.node.TObra;
+import org.nitlanguage.gen.node.TOpar;
+import org.nitlanguage.gen.node.TPercent;
+import org.nitlanguage.gen.node.TPlus;
+import org.nitlanguage.gen.node.TPluseq;
+import org.nitlanguage.gen.node.TQuad;
+import org.nitlanguage.gen.node.TSlash;
+import org.nitlanguage.gen.node.TStar;
+import org.nitlanguage.gen.node.TStarship;
+import org.nitlanguage.gen.node.TStartString;
+import org.nitlanguage.gen.node.TString;
 
 class TokenIndex extends AnalysisAdapter
 {
@@ -59,259 +150,259 @@ class TokenIndex extends AnalysisAdapter
     }
 
     @Override
-    public void caseTKwspecial(@SuppressWarnings("unused") TKwspecial node)
+    public void caseTKwend(@SuppressWarnings("unused") TKwend node)
     {
         this.index = 8;
     }
 
     @Override
-    public void caseTKwend(@SuppressWarnings("unused") TKwend node)
+    public void caseTKwmeth(@SuppressWarnings("unused") TKwmeth node)
     {
         this.index = 9;
     }
 
     @Override
-    public void caseTKwmeth(@SuppressWarnings("unused") TKwmeth node)
+    public void caseTKwtype(@SuppressWarnings("unused") TKwtype node)
     {
         this.index = 10;
     }
 
     @Override
-    public void caseTKwtype(@SuppressWarnings("unused") TKwtype node)
+    public void caseTKwinit(@SuppressWarnings("unused") TKwinit node)
     {
         this.index = 11;
     }
 
     @Override
-    public void caseTKwinit(@SuppressWarnings("unused") TKwinit node)
+    public void caseTKwredef(@SuppressWarnings("unused") TKwredef node)
     {
         this.index = 12;
     }
 
     @Override
-    public void caseTKwredef(@SuppressWarnings("unused") TKwredef node)
+    public void caseTKwis(@SuppressWarnings("unused") TKwis node)
     {
         this.index = 13;
     }
 
     @Override
-    public void caseTKwis(@SuppressWarnings("unused") TKwis node)
+    public void caseTKwdo(@SuppressWarnings("unused") TKwdo node)
     {
         this.index = 14;
     }
 
     @Override
-    public void caseTKwdo(@SuppressWarnings("unused") TKwdo node)
+    public void caseTKwreadable(@SuppressWarnings("unused") TKwreadable node)
     {
         this.index = 15;
     }
 
     @Override
-    public void caseTKwreadable(@SuppressWarnings("unused") TKwreadable node)
+    public void caseTKwwritable(@SuppressWarnings("unused") TKwwritable node)
     {
         this.index = 16;
     }
 
     @Override
-    public void caseTKwwritable(@SuppressWarnings("unused") TKwwritable node)
+    public void caseTKwvar(@SuppressWarnings("unused") TKwvar node)
     {
         this.index = 17;
     }
 
     @Override
-    public void caseTKwvar(@SuppressWarnings("unused") TKwvar node)
+    public void caseTKwintern(@SuppressWarnings("unused") TKwintern node)
     {
         this.index = 18;
     }
 
     @Override
-    public void caseTKwintern(@SuppressWarnings("unused") TKwintern node)
+    public void caseTKwextern(@SuppressWarnings("unused") TKwextern node)
     {
         this.index = 19;
     }
 
     @Override
-    public void caseTKwextern(@SuppressWarnings("unused") TKwextern node)
+    public void caseTKwprotected(@SuppressWarnings("unused") TKwprotected node)
     {
         this.index = 20;
     }
 
     @Override
-    public void caseTKwprotected(@SuppressWarnings("unused") TKwprotected node)
+    public void caseTKwprivate(@SuppressWarnings("unused") TKwprivate node)
     {
         this.index = 21;
     }
 
     @Override
-    public void caseTKwprivate(@SuppressWarnings("unused") TKwprivate node)
+    public void caseTKwintrude(@SuppressWarnings("unused") TKwintrude node)
     {
         this.index = 22;
     }
 
     @Override
-    public void caseTKwintrude(@SuppressWarnings("unused") TKwintrude node)
+    public void caseTKwif(@SuppressWarnings("unused") TKwif node)
     {
         this.index = 23;
     }
 
     @Override
-    public void caseTKwif(@SuppressWarnings("unused") TKwif node)
+    public void caseTKwthen(@SuppressWarnings("unused") TKwthen node)
     {
         this.index = 24;
     }
 
     @Override
-    public void caseTKwthen(@SuppressWarnings("unused") TKwthen node)
+    public void caseTKwelse(@SuppressWarnings("unused") TKwelse node)
     {
         this.index = 25;
     }
 
     @Override
-    public void caseTKwelse(@SuppressWarnings("unused") TKwelse node)
+    public void caseTKwwhile(@SuppressWarnings("unused") TKwwhile node)
     {
         this.index = 26;
     }
 
     @Override
-    public void caseTKwwhile(@SuppressWarnings("unused") TKwwhile node)
+    public void caseTKwloop(@SuppressWarnings("unused") TKwloop node)
     {
         this.index = 27;
     }
 
     @Override
-    public void caseTKwloop(@SuppressWarnings("unused") TKwloop node)
+    public void caseTKwfor(@SuppressWarnings("unused") TKwfor node)
     {
         this.index = 28;
     }
 
     @Override
-    public void caseTKwfor(@SuppressWarnings("unused") TKwfor node)
+    public void caseTKwin(@SuppressWarnings("unused") TKwin node)
     {
         this.index = 29;
     }
 
     @Override
-    public void caseTKwin(@SuppressWarnings("unused") TKwin node)
+    public void caseTKwand(@SuppressWarnings("unused") TKwand node)
     {
         this.index = 30;
     }
 
     @Override
-    public void caseTKwand(@SuppressWarnings("unused") TKwand node)
+    public void caseTKwor(@SuppressWarnings("unused") TKwor node)
     {
         this.index = 31;
     }
 
     @Override
-    public void caseTKwor(@SuppressWarnings("unused") TKwor node)
+    public void caseTKwnot(@SuppressWarnings("unused") TKwnot node)
     {
         this.index = 32;
     }
 
     @Override
-    public void caseTKwnot(@SuppressWarnings("unused") TKwnot node)
+    public void caseTKwreturn(@SuppressWarnings("unused") TKwreturn node)
     {
         this.index = 33;
     }
 
     @Override
-    public void caseTKwreturn(@SuppressWarnings("unused") TKwreturn node)
+    public void caseTKwcontinue(@SuppressWarnings("unused") TKwcontinue node)
     {
         this.index = 34;
     }
 
     @Override
-    public void caseTKwcontinue(@SuppressWarnings("unused") TKwcontinue node)
+    public void caseTKwbreak(@SuppressWarnings("unused") TKwbreak node)
     {
         this.index = 35;
     }
 
     @Override
-    public void caseTKwbreak(@SuppressWarnings("unused") TKwbreak node)
+    public void caseTKwabort(@SuppressWarnings("unused") TKwabort node)
     {
         this.index = 36;
     }
 
     @Override
-    public void caseTKwabort(@SuppressWarnings("unused") TKwabort node)
+    public void caseTKwassert(@SuppressWarnings("unused") TKwassert node)
     {
         this.index = 37;
     }
 
     @Override
-    public void caseTKwassert(@SuppressWarnings("unused") TKwassert node)
+    public void caseTKwnew(@SuppressWarnings("unused") TKwnew node)
     {
         this.index = 38;
     }
 
     @Override
-    public void caseTKwnew(@SuppressWarnings("unused") TKwnew node)
+    public void caseTKwisa(@SuppressWarnings("unused") TKwisa node)
     {
         this.index = 39;
     }
 
     @Override
-    public void caseTKwisa(@SuppressWarnings("unused") TKwisa node)
+    public void caseTKwonce(@SuppressWarnings("unused") TKwonce node)
     {
         this.index = 40;
     }
 
     @Override
-    public void caseTKwonce(@SuppressWarnings("unused") TKwonce node)
+    public void caseTKwsuper(@SuppressWarnings("unused") TKwsuper node)
     {
         this.index = 41;
     }
 
     @Override
-    public void caseTKwsuper(@SuppressWarnings("unused") TKwsuper node)
+    public void caseTKwself(@SuppressWarnings("unused") TKwself node)
     {
         this.index = 42;
     }
 
     @Override
-    public void caseTKwself(@SuppressWarnings("unused") TKwself node)
+    public void caseTKwtrue(@SuppressWarnings("unused") TKwtrue node)
     {
         this.index = 43;
     }
 
     @Override
-    public void caseTKwtrue(@SuppressWarnings("unused") TKwtrue node)
+    public void caseTKwfalse(@SuppressWarnings("unused") TKwfalse node)
     {
         this.index = 44;
     }
 
     @Override
-    public void caseTKwfalse(@SuppressWarnings("unused") TKwfalse node)
+    public void caseTKwnull(@SuppressWarnings("unused") TKwnull node)
     {
         this.index = 45;
     }
 
     @Override
-    public void caseTKwnull(@SuppressWarnings("unused") TKwnull node)
+    public void caseTKwas(@SuppressWarnings("unused") TKwas node)
     {
         this.index = 46;
     }
 
     @Override
-    public void caseTKwas(@SuppressWarnings("unused") TKwas node)
+    public void caseTKwnullable(@SuppressWarnings("unused") TKwnullable node)
     {
         this.index = 47;
     }
 
     @Override
-    public void caseTKwnullable(@SuppressWarnings("unused") TKwnullable node)
+    public void caseTKwisset(@SuppressWarnings("unused") TKwisset node)
     {
         this.index = 48;
     }
 
     @Override
-    public void caseTKwisset(@SuppressWarnings("unused") TKwisset node)
+    public void caseTKwlabel(@SuppressWarnings("unused") TKwlabel node)
     {
         this.index = 49;
     }
 
     @Override
-    public void caseTKwlabel(@SuppressWarnings("unused") TKwlabel node)
+    public void caseTKwdebug(@SuppressWarnings("unused") TKwdebug node)
     {
         this.index = 50;
     }
@@ -557,8 +648,14 @@ class TokenIndex extends AnalysisAdapter
     }
 
     @Override
-    public void caseEOF(@SuppressWarnings("unused") EOF node)
+    public void caseTExternCodeSegment(@SuppressWarnings("unused") TExternCodeSegment node)
     {
         this.index = 91;
+    }
+
+    @Override
+    public void caseEOF(@SuppressWarnings("unused") EOF node)
+    {
+        this.index = 92;
     }
 }

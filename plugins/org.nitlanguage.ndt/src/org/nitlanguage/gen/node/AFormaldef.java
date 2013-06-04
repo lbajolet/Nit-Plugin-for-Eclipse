@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AFormaldef extends PFormaldef
@@ -34,6 +34,7 @@ public final class AFormaldef extends PFormaldef
             cloneNode(this._type_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAFormaldef(this);

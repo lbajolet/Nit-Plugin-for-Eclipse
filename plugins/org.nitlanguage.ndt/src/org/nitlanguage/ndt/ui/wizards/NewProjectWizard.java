@@ -2,6 +2,7 @@ package org.nitlanguage.ndt.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;

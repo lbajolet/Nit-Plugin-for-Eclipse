@@ -2,14 +2,16 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AAsCastExpr extends PExpr
 {
     private PExpr _expr_;
     private TKwas _kwas_;
+    private TOpar _opar_;
     private PType _type_;
+    private TCpar _cpar_;
 
     public AAsCastExpr()
     {
@@ -19,14 +21,20 @@ public final class AAsCastExpr extends PExpr
     public AAsCastExpr(
         @SuppressWarnings("hiding") PExpr _expr_,
         @SuppressWarnings("hiding") TKwas _kwas_,
-        @SuppressWarnings("hiding") PType _type_)
+        @SuppressWarnings("hiding") TOpar _opar_,
+        @SuppressWarnings("hiding") PType _type_,
+        @SuppressWarnings("hiding") TCpar _cpar_)
     {
         // Constructor
         setExpr(_expr_);
 
         setKwas(_kwas_);
 
+        setOpar(_opar_);
+
         setType(_type_);
+
+        setCpar(_cpar_);
 
     }
 
@@ -36,9 +44,12 @@ public final class AAsCastExpr extends PExpr
         return new AAsCastExpr(
             cloneNode(this._expr_),
             cloneNode(this._kwas_),
-            cloneNode(this._type_));
+            cloneNode(this._opar_),
+            cloneNode(this._type_),
+            cloneNode(this._cpar_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAsCastExpr(this);
@@ -94,6 +105,31 @@ public final class AAsCastExpr extends PExpr
         this._kwas_ = node;
     }
 
+    public TOpar getOpar()
+    {
+        return this._opar_;
+    }
+
+    public void setOpar(TOpar node)
+    {
+        if(this._opar_ != null)
+        {
+            this._opar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._opar_ = node;
+    }
+
     public PType getType()
     {
         return this._type_;
@@ -119,13 +155,40 @@ public final class AAsCastExpr extends PExpr
         this._type_ = node;
     }
 
+    public TCpar getCpar()
+    {
+        return this._cpar_;
+    }
+
+    public void setCpar(TCpar node)
+    {
+        if(this._cpar_ != null)
+        {
+            this._cpar_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._cpar_ = node;
+    }
+
     @Override
     public String toString()
     {
         return ""
             + toString(this._expr_)
             + toString(this._kwas_)
-            + toString(this._type_);
+            + toString(this._opar_)
+            + toString(this._type_)
+            + toString(this._cpar_);
     }
 
     @Override
@@ -144,9 +207,21 @@ public final class AAsCastExpr extends PExpr
             return;
         }
 
+        if(this._opar_ == child)
+        {
+            this._opar_ = null;
+            return;
+        }
+
         if(this._type_ == child)
         {
             this._type_ = null;
+            return;
+        }
+
+        if(this._cpar_ == child)
+        {
+            this._cpar_ = null;
             return;
         }
 
@@ -169,9 +244,21 @@ public final class AAsCastExpr extends PExpr
             return;
         }
 
+        if(this._opar_ == oldChild)
+        {
+            setOpar((TOpar) newChild);
+            return;
+        }
+
         if(this._type_ == oldChild)
         {
             setType((PType) newChild);
+            return;
+        }
+
+        if(this._cpar_ == oldChild)
+        {
+            setCpar((TCpar) newChild);
             return;
         }
 

@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ABlockExpr extends PExpr
@@ -18,7 +20,7 @@ public final class ABlockExpr extends PExpr
     }
 
     public ABlockExpr(
-        @SuppressWarnings("hiding") List<PExpr> _expr_,
+        @SuppressWarnings("hiding") List<?> _expr_,
         @SuppressWarnings("hiding") TKwend _kwend_)
     {
         // Constructor
@@ -36,6 +38,7 @@ public final class ABlockExpr extends PExpr
             cloneNode(this._kwend_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseABlockExpr(this);
@@ -46,18 +49,24 @@ public final class ABlockExpr extends PExpr
         return this._expr_;
     }
 
-    public void setExpr(List<PExpr> list)
+    public void setExpr(List<?> list)
     {
-        this._expr_.clear();
-        this._expr_.addAll(list);
-        for(PExpr e : list)
+        for(PExpr e : this._expr_)
         {
+            e.parent(null);
+        }
+        this._expr_.clear();
+
+        for(Object obj_e : list)
+        {
+            PExpr e = (PExpr) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._expr_.add(e);
         }
     }
 

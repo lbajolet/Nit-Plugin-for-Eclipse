@@ -39,7 +39,7 @@ public class NitDocumentProvider extends TextFileDocumentProvider{
 	/**
 	 * Manages the cleaning of the document being edited
 	 */
-	private void performCleanActions(IDocument document) {
+	public void performCleanActions(IDocument document) {
           TextEdit edit = trimWhitespaces(document);
           if (edit != null) {
                 try {
@@ -86,5 +86,5 @@ public class NitDocumentProvider extends TextFileDocumentProvider{
               }
         } catch (BadLocationException e) {}
         return rootEdit;
-  }
+	}
 }

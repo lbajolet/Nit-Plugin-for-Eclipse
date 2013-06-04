@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class APlusAssignOp extends PAssignOp
@@ -29,6 +29,7 @@ public final class APlusAssignOp extends PAssignOp
             cloneNode(this._pluseq_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAPlusAssignOp(this);

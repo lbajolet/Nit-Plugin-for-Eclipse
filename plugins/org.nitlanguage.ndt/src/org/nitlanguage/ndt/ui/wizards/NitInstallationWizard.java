@@ -40,6 +40,7 @@ public class NitInstallationWizard extends Wizard implements IWorkbenchWizard {
 
 	@Override
 	public boolean performFinish() {
+		pageOne.save();
 		return NitActivator.getDefault().getNitInstallation().save();
 	}
 

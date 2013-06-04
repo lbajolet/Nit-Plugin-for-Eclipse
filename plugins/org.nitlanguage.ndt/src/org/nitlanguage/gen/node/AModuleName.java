@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AModuleName extends PModuleName
@@ -20,7 +22,7 @@ public final class AModuleName extends PModuleName
 
     public AModuleName(
         @SuppressWarnings("hiding") TQuad _quad_,
-        @SuppressWarnings("hiding") List<TId> _path_,
+        @SuppressWarnings("hiding") List<?> _path_,
         @SuppressWarnings("hiding") TId _id_)
     {
         // Constructor
@@ -41,6 +43,7 @@ public final class AModuleName extends PModuleName
             cloneNode(this._id_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAModuleName(this);
@@ -76,18 +79,24 @@ public final class AModuleName extends PModuleName
         return this._path_;
     }
 
-    public void setPath(List<TId> list)
+    public void setPath(List<?> list)
     {
-        this._path_.clear();
-        this._path_.addAll(list);
-        for(TId e : list)
+        for(TId e : this._path_)
         {
+            e.parent(null);
+        }
+        this._path_.clear();
+
+        for(Object obj_e : list)
+        {
+            TId e = (TId) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._path_.add(e);
         }
     }
 

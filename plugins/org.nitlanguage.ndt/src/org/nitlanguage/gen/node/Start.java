@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class Start extends Node
@@ -31,6 +31,7 @@ public final class Start extends Node
             cloneNode(this._eof_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseStart(this);

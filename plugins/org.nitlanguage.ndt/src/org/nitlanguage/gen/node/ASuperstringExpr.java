@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ASuperstringExpr extends PExpr
@@ -17,7 +19,7 @@ public final class ASuperstringExpr extends PExpr
     }
 
     public ASuperstringExpr(
-        @SuppressWarnings("hiding") List<PExpr> _exprs_)
+        @SuppressWarnings("hiding") List<?> _exprs_)
     {
         // Constructor
         setExprs(_exprs_);
@@ -31,6 +33,7 @@ public final class ASuperstringExpr extends PExpr
             cloneList(this._exprs_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseASuperstringExpr(this);
@@ -41,18 +44,24 @@ public final class ASuperstringExpr extends PExpr
         return this._exprs_;
     }
 
-    public void setExprs(List<PExpr> list)
+    public void setExprs(List<?> list)
     {
-        this._exprs_.clear();
-        this._exprs_.addAll(list);
-        for(PExpr e : list)
+        for(PExpr e : this._exprs_)
         {
+            e.parent(null);
+        }
+        this._exprs_.clear();
+
+        for(Object obj_e : list)
+        {
+            PExpr e = (PExpr) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._exprs_.add(e);
         }
     }
 

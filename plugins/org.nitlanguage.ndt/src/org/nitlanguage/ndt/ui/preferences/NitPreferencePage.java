@@ -1,8 +1,5 @@
 package org.nitlanguage.ndt.ui.preferences;
 
-import java.util.List;
-import org.eclipse.jface.preference.FieldEditor;
-import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
@@ -10,7 +7,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.UiMsg;
 
 /**
@@ -44,7 +40,7 @@ public class NitPreferencePage extends PreferencePage implements
 	
 	@Override
 	public boolean performOk() {
-		nitFieldEditor.saveChanges();
+		nitFieldEditor.save();
 		return true;
 	}
 	

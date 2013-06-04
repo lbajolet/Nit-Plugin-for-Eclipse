@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
-import org.nitlanguage.ndt.core.BuildMsg;
 import org.nitlanguage.ndt.core.PluginParams;
 
 /**

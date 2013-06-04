@@ -1,11 +1,7 @@
 package org.nitlanguage.ndt.core.plugin;
 
 import java.io.File;
-import java.nio.file.Paths;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -19,15 +15,15 @@ public class NitInstallation {
 	private static NitInstallation installation;
 	
 	// Root path string
-	public static final String ROOT_PATH_ID = "rootLocation";	
+	public static final String ROOT_PATH_ID = "root";	
+	// Standard library path
+	public static final String STDLIB_FOLDER_ID = "lib";
 	// Compiler path string
-	public static final String COMPILER_PATH_ID = "compilerLocation";	
+	public static final String COMPILER_PATH_ID = "nitc";	
 	// Interpreter path string
-	public static final String INTERPRETER_PATHS_ID = "interpreterLocation";
+	public static final String INTERPRETER_PATHS_ID = "nit";
 	// Debugger path string
-	public static final String DEBUGGER_PATH_ID = "debuggerLocation";
-	// Compiler path string
-	public static final String STDLIB_FOLDER_ID = "NitLibEditor";
+	public static final String DEBUGGER_PATH_ID = "nitd";
 	
 	private String root = null;
 	private String compiler = null;
@@ -44,7 +40,7 @@ public class NitInstallation {
 		return installation;
 	}
 	
-	public NitInstallation(IPreferenceStore store){	
+	private NitInstallation(IPreferenceStore store){	
 		this.store = store;
 		init();
 	}
@@ -88,9 +84,9 @@ public class NitInstallation {
 		return root;
 	}
 	
-	public boolean setRoot(String pathname){
-		if(setParam(ROOT_PATH_ID, pathname, true)){
-			root = pathname;
+	public boolean setRoot(String path){
+		if(setParam(ROOT_PATH_ID, path, true)){
+			root = path;
 			return true;
 		}
 		return false;
@@ -100,9 +96,9 @@ public class NitInstallation {
 		return compiler;
 	}
 	
-	public boolean setCompiler(String pathname){
-		if(setParam(COMPILER_PATH_ID, pathname, false)){
-			compiler = pathname;
+	public boolean setCompiler(String path){
+		if(setParam(COMPILER_PATH_ID, path, false)){
+			compiler = path;
 			return true;
 		}
 		return false;
@@ -112,9 +108,9 @@ public class NitInstallation {
 		return debugger;
 	}
 	
-	public boolean setDebugger(String pathname){
-		if(setParam(DEBUGGER_PATH_ID, pathname, false)){
-			debugger = pathname;
+	public boolean setDebugger(String path){
+		if(setParam(DEBUGGER_PATH_ID, path, false)){
+			debugger = path;
 			return true;
 		}
 		return false;
@@ -124,9 +120,9 @@ public class NitInstallation {
 		return interpreter;
 	}
 	
-	public boolean setInterpreter(String pathname){
-		if(setParam(INTERPRETER_PATHS_ID, pathname, false)){
-			interpreter = pathname;
+	public boolean setInterpreter(String path){
+		if(setParam(INTERPRETER_PATHS_ID, path, false)){
+			interpreter = path;
 			return true;
 		}
 		return false;
@@ -136,12 +132,24 @@ public class NitInstallation {
 		return stdlib;
 	}
 	
-	public boolean setStdLib(String pathname){
-		if(setParam(STDLIB_FOLDER_ID, pathname, true)){
-			stdlib = pathname;
+	public boolean setStdLib(String path){
+		if(setParam(STDLIB_FOLDER_ID, path, true)){
+			stdlib = path;
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean set(String paramId, String path){
+		if(paramId.equals(STDLIB_FOLDER_ID)) 
+			return setStdLib(path);
+		else if(paramId.equals(COMPILER_PATH_ID)) 
+			return setCompiler(path);
+		else if(paramId.equals(INTERPRETER_PATHS_ID))
+			return setInterpreter(path);
+		else if(paramId.equals(DEBUGGER_PATH_ID))
+			return setDebugger(path);
+		else return false;
 	}
 	
 	public boolean isFunctional(){

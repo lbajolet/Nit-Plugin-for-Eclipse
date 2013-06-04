@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AQualified extends PQualified
@@ -18,7 +20,7 @@ public final class AQualified extends PQualified
     }
 
     public AQualified(
-        @SuppressWarnings("hiding") List<TId> _id_,
+        @SuppressWarnings("hiding") List<?> _id_,
         @SuppressWarnings("hiding") TClassid _classid_)
     {
         // Constructor
@@ -36,6 +38,7 @@ public final class AQualified extends PQualified
             cloneNode(this._classid_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAQualified(this);
@@ -46,18 +49,24 @@ public final class AQualified extends PQualified
         return this._id_;
     }
 
-    public void setId(List<TId> list)
+    public void setId(List<?> list)
     {
-        this._id_.clear();
-        this._id_.addAll(list);
-        for(TId e : list)
+        for(TId e : this._id_)
         {
+            e.parent(null);
+        }
+        this._id_.clear();
+
+        for(Object obj_e : list)
+        {
+            TId e = (TId) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._id_.add(e);
         }
     }
 

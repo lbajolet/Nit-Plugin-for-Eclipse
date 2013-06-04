@@ -15,6 +15,4 @@ public class CorrectIndentationHandler extends AbstractHandler {
 		editor.correct_indent();
 		return null;
 	}
-	
-
 }

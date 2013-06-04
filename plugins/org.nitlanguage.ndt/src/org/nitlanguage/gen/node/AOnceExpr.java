@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AOnceExpr extends PExpr
@@ -34,6 +34,7 @@ public final class AOnceExpr extends PExpr
             cloneNode(this._expr_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAOnceExpr(this);

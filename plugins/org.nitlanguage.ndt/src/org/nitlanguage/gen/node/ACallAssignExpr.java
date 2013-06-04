@@ -2,16 +2,14 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
-
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ACallAssignExpr extends PExpr
 {
     private PExpr _expr_;
     private TId _id_;
-    private final LinkedList<PExpr> _args_ = new LinkedList<PExpr>();
+    private PExprs _args_;
     private TAssign _assign_;
     private PExpr _value_;
 
@@ -23,7 +21,7 @@ public final class ACallAssignExpr extends PExpr
     public ACallAssignExpr(
         @SuppressWarnings("hiding") PExpr _expr_,
         @SuppressWarnings("hiding") TId _id_,
-        @SuppressWarnings("hiding") List<PExpr> _args_,
+        @SuppressWarnings("hiding") PExprs _args_,
         @SuppressWarnings("hiding") TAssign _assign_,
         @SuppressWarnings("hiding") PExpr _value_)
     {
@@ -46,11 +44,12 @@ public final class ACallAssignExpr extends PExpr
         return new ACallAssignExpr(
             cloneNode(this._expr_),
             cloneNode(this._id_),
-            cloneList(this._args_),
+            cloneNode(this._args_),
             cloneNode(this._assign_),
             cloneNode(this._value_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseACallAssignExpr(this);
@@ -106,24 +105,29 @@ public final class ACallAssignExpr extends PExpr
         this._id_ = node;
     }
 
-    public LinkedList<PExpr> getArgs()
+    public PExprs getArgs()
     {
         return this._args_;
     }
 
-    public void setArgs(List<PExpr> list)
+    public void setArgs(PExprs node)
     {
-        this._args_.clear();
-        this._args_.addAll(list);
-        for(PExpr e : list)
+        if(this._args_ != null)
         {
-            if(e.parent() != null)
+            this._args_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
             {
-                e.parent().removeChild(e);
+                node.parent().removeChild(node);
             }
 
-            e.parent(this);
+            node.parent(this);
         }
+
+        this._args_ = node;
     }
 
     public TAssign getAssign()
@@ -203,8 +207,9 @@ public final class ACallAssignExpr extends PExpr
             return;
         }
 
-        if(this._args_.remove(child))
+        if(this._args_ == child)
         {
+            this._args_ = null;
             return;
         }
 
@@ -239,22 +244,10 @@ public final class ACallAssignExpr extends PExpr
             return;
         }
 
-        for(ListIterator<PExpr> i = this._args_.listIterator(); i.hasNext();)
+        if(this._args_ == oldChild)
         {
-            if(i.next() == oldChild)
-            {
-                if(newChild != null)
-                {
-                    i.set((PExpr) newChild);
-                    newChild.parent(this);
-                    oldChild.parent(null);
-                    return;
-                }
-
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
+            setArgs((PExprs) newChild);
+            return;
         }
 
         if(this._assign_ == oldChild)

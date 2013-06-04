@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AType extends PType
@@ -21,7 +23,7 @@ public final class AType extends PType
     public AType(
         @SuppressWarnings("hiding") TKwnullable _kwnullable_,
         @SuppressWarnings("hiding") TClassid _id_,
-        @SuppressWarnings("hiding") List<PType> _types_)
+        @SuppressWarnings("hiding") List<?> _types_)
     {
         // Constructor
         setKwnullable(_kwnullable_);
@@ -41,6 +43,7 @@ public final class AType extends PType
             cloneList(this._types_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAType(this);
@@ -101,18 +104,24 @@ public final class AType extends PType
         return this._types_;
     }
 
-    public void setTypes(List<PType> list)
+    public void setTypes(List<?> list)
     {
-        this._types_.clear();
-        this._types_.addAll(list);
-        for(PType e : list)
+        for(PType e : this._types_)
         {
+            e.parent(null);
+        }
+        this._types_.clear();
+
+        for(Object obj_e : list)
+        {
+            PType e = (PType) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._types_.add(e);
         }
     }
 

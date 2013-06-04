@@ -2,7 +2,8 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ABreakClosureId extends PClosureId
@@ -29,6 +30,7 @@ public final class ABreakClosureId extends PClosureId
             cloneNode(this._kwbreak_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseABreakClosureId(this);
