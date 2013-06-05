@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AStdClassdef extends PClassdef
@@ -15,6 +17,7 @@ public final class AStdClassdef extends PClassdef
     private PClasskind _classkind_;
     private TClassid _id_;
     private final LinkedList<PFormaldef> _formaldefs_ = new LinkedList<PFormaldef>();
+    private PExternCodeBlock _externCodeBlock_;
     private final LinkedList<PSuperclass> _superclasses_ = new LinkedList<PSuperclass>();
     private final LinkedList<PPropdef> _propdefs_ = new LinkedList<PPropdef>();
     private TKwend _kwend_;
@@ -30,9 +33,10 @@ public final class AStdClassdef extends PClassdef
         @SuppressWarnings("hiding") PVisibility _visibility_,
         @SuppressWarnings("hiding") PClasskind _classkind_,
         @SuppressWarnings("hiding") TClassid _id_,
-        @SuppressWarnings("hiding") List<PFormaldef> _formaldefs_,
-        @SuppressWarnings("hiding") List<PSuperclass> _superclasses_,
-        @SuppressWarnings("hiding") List<PPropdef> _propdefs_,
+        @SuppressWarnings("hiding") List<?> _formaldefs_,
+        @SuppressWarnings("hiding") PExternCodeBlock _externCodeBlock_,
+        @SuppressWarnings("hiding") List<?> _superclasses_,
+        @SuppressWarnings("hiding") List<?> _propdefs_,
         @SuppressWarnings("hiding") TKwend _kwend_)
     {
         // Constructor
@@ -47,6 +51,8 @@ public final class AStdClassdef extends PClassdef
         setId(_id_);
 
         setFormaldefs(_formaldefs_);
+
+        setExternCodeBlock(_externCodeBlock_);
 
         setSuperclasses(_superclasses_);
 
@@ -66,11 +72,13 @@ public final class AStdClassdef extends PClassdef
             cloneNode(this._classkind_),
             cloneNode(this._id_),
             cloneList(this._formaldefs_),
+            cloneNode(this._externCodeBlock_),
             cloneList(this._superclasses_),
             cloneList(this._propdefs_),
             cloneNode(this._kwend_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAStdClassdef(this);
@@ -206,19 +214,50 @@ public final class AStdClassdef extends PClassdef
         return this._formaldefs_;
     }
 
-    public void setFormaldefs(List<PFormaldef> list)
+    public void setFormaldefs(List<?> list)
     {
-        this._formaldefs_.clear();
-        this._formaldefs_.addAll(list);
-        for(PFormaldef e : list)
+        for(PFormaldef e : this._formaldefs_)
         {
+            e.parent(null);
+        }
+        this._formaldefs_.clear();
+
+        for(Object obj_e : list)
+        {
+            PFormaldef e = (PFormaldef) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._formaldefs_.add(e);
         }
+    }
+
+    public PExternCodeBlock getExternCodeBlock()
+    {
+        return this._externCodeBlock_;
+    }
+
+    public void setExternCodeBlock(PExternCodeBlock node)
+    {
+        if(this._externCodeBlock_ != null)
+        {
+            this._externCodeBlock_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._externCodeBlock_ = node;
     }
 
     public LinkedList<PSuperclass> getSuperclasses()
@@ -226,18 +265,24 @@ public final class AStdClassdef extends PClassdef
         return this._superclasses_;
     }
 
-    public void setSuperclasses(List<PSuperclass> list)
+    public void setSuperclasses(List<?> list)
     {
-        this._superclasses_.clear();
-        this._superclasses_.addAll(list);
-        for(PSuperclass e : list)
+        for(PSuperclass e : this._superclasses_)
         {
+            e.parent(null);
+        }
+        this._superclasses_.clear();
+
+        for(Object obj_e : list)
+        {
+            PSuperclass e = (PSuperclass) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._superclasses_.add(e);
         }
     }
 
@@ -246,18 +291,24 @@ public final class AStdClassdef extends PClassdef
         return this._propdefs_;
     }
 
-    public void setPropdefs(List<PPropdef> list)
+    public void setPropdefs(List<?> list)
     {
-        this._propdefs_.clear();
-        this._propdefs_.addAll(list);
-        for(PPropdef e : list)
+        for(PPropdef e : this._propdefs_)
         {
+            e.parent(null);
+        }
+        this._propdefs_.clear();
+
+        for(Object obj_e : list)
+        {
+            PPropdef e = (PPropdef) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._propdefs_.add(e);
         }
     }
 
@@ -296,6 +347,7 @@ public final class AStdClassdef extends PClassdef
             + toString(this._classkind_)
             + toString(this._id_)
             + toString(this._formaldefs_)
+            + toString(this._externCodeBlock_)
             + toString(this._superclasses_)
             + toString(this._propdefs_)
             + toString(this._kwend_);
@@ -337,6 +389,12 @@ public final class AStdClassdef extends PClassdef
 
         if(this._formaldefs_.remove(child))
         {
+            return;
+        }
+
+        if(this._externCodeBlock_ == child)
+        {
+            this._externCodeBlock_ = null;
             return;
         }
 
@@ -409,6 +467,12 @@ public final class AStdClassdef extends PClassdef
                 oldChild.parent(null);
                 return;
             }
+        }
+
+        if(this._externCodeBlock_ == oldChild)
+        {
+            setExternCodeBlock((PExternCodeBlock) newChild);
+            return;
         }
 
         for(ListIterator<PSuperclass> i = this._superclasses_.listIterator(); i.hasNext();)

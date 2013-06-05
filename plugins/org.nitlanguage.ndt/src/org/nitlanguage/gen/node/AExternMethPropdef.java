@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AExternMethPropdef extends PPropdef
@@ -15,6 +15,7 @@ public final class AExternMethPropdef extends PPropdef
     private PSignature _signature_;
     private TString _extern_;
     private PExternCalls _externCalls_;
+    private PExternCodeBlock _externCodeBlock_;
 
     public AExternMethPropdef()
     {
@@ -29,7 +30,8 @@ public final class AExternMethPropdef extends PPropdef
         @SuppressWarnings("hiding") PMethid _methid_,
         @SuppressWarnings("hiding") PSignature _signature_,
         @SuppressWarnings("hiding") TString _extern_,
-        @SuppressWarnings("hiding") PExternCalls _externCalls_)
+        @SuppressWarnings("hiding") PExternCalls _externCalls_,
+        @SuppressWarnings("hiding") PExternCodeBlock _externCodeBlock_)
     {
         // Constructor
         setDoc(_doc_);
@@ -48,6 +50,8 @@ public final class AExternMethPropdef extends PPropdef
 
         setExternCalls(_externCalls_);
 
+        setExternCodeBlock(_externCodeBlock_);
+
     }
 
     @Override
@@ -61,9 +65,11 @@ public final class AExternMethPropdef extends PPropdef
             cloneNode(this._methid_),
             cloneNode(this._signature_),
             cloneNode(this._extern_),
-            cloneNode(this._externCalls_));
+            cloneNode(this._externCalls_),
+            cloneNode(this._externCodeBlock_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAExternMethPropdef(this);
@@ -269,6 +275,31 @@ public final class AExternMethPropdef extends PPropdef
         this._externCalls_ = node;
     }
 
+    public PExternCodeBlock getExternCodeBlock()
+    {
+        return this._externCodeBlock_;
+    }
+
+    public void setExternCodeBlock(PExternCodeBlock node)
+    {
+        if(this._externCodeBlock_ != null)
+        {
+            this._externCodeBlock_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._externCodeBlock_ = node;
+    }
+
     @Override
     public String toString()
     {
@@ -280,7 +311,8 @@ public final class AExternMethPropdef extends PPropdef
             + toString(this._methid_)
             + toString(this._signature_)
             + toString(this._extern_)
-            + toString(this._externCalls_);
+            + toString(this._externCalls_)
+            + toString(this._externCodeBlock_);
     }
 
     @Override
@@ -332,6 +364,12 @@ public final class AExternMethPropdef extends PPropdef
         if(this._externCalls_ == child)
         {
             this._externCalls_ = null;
+            return;
+        }
+
+        if(this._externCodeBlock_ == child)
+        {
+            this._externCodeBlock_ = null;
             return;
         }
 
@@ -387,6 +425,12 @@ public final class AExternMethPropdef extends PPropdef
         if(this._externCalls_ == oldChild)
         {
             setExternCalls((PExternCalls) newChild);
+            return;
+        }
+
+        if(this._externCodeBlock_ == oldChild)
+        {
+            setExternCodeBlock((PExternCodeBlock) newChild);
             return;
         }
 

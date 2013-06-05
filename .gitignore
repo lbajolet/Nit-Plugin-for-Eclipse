@@ -2,6 +2,7 @@ site/org.nitlanguage.p2updatesite/target/*
 features/org.nitlanguage.feature/target/*
 plugins/org.nitlanguage.ndt/bin/*
 plugins/org.nitlanguage.ndt/target/*
+plugins/org.nitlanguage.ndt/.settings/*
 /*.xml~
 /pom.xml
 *.class

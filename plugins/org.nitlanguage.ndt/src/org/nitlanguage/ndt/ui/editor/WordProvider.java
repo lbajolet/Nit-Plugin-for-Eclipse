@@ -3,12 +3,13 @@ package org.nitlanguage.ndt.ui.editor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+
+import org.eclipse.jface.text.contentassist.CompletionProposal;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.nitlanguage.gen.node.AConcreteMethPropdef;
 import org.nitlanguage.gen.node.ADeferredMethPropdef;
 import org.nitlanguage.gen.node.AStdClassdef;
 import org.nitlanguage.gen.node.ATopClassdef;
-import org.eclipse.jface.text.contentassist.CompletionProposal;
-import org.eclipse.jface.text.contentassist.ICompletionProposal;
 
 /**
  * Provides the methods needed to compute the words to propose via

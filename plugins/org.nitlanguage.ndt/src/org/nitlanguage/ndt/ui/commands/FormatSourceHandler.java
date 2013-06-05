@@ -16,6 +16,8 @@ public class FormatSourceHandler extends AbstractHandler {
 		editor.correct_indent();
 		System.out.println("Step 2 : Remove Superfluous Lines");
 		editor.clean();
+		System.out.println("Step 3 : Trim whitespaces");
+		editor.trimWhitespaces();
 		return null;
 	}
 }

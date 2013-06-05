@@ -1,28 +1,12 @@
 package org.nitlanguage.ndt.core.plugin;
 
-import java.net.URL;
-
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.ui.wizards.IWizardDescriptor;
-import org.eclipse.ui.wizards.IWizardRegistry;
-import org.nitlanguage.ndt.ui.preferences.NitPreferencePage;
-import org.nitlanguage.ndt.ui.wizards.NewProjectPageOne;
-import org.nitlanguage.ndt.ui.wizards.NewProjectWizard;
 import org.nitlanguage.ndt.ui.wizards.NitInstallationWizard;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 /**

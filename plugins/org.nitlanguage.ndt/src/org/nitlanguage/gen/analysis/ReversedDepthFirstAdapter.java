@@ -2,7 +2,9 @@
 
 package org.nitlanguage.gen.analysis;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.nitlanguage.gen.node.*;
 
@@ -55,6 +57,14 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             List<PClassdef> copy = new ArrayList<PClassdef>(node.getClassdefs());
             Collections.reverse(copy);
             for(PClassdef e : copy)
+            {
+                e.apply(this);
+            }
+        }
+        {
+            List<PExternCodeBlock> copy = new ArrayList<PExternCodeBlock>(node.getExternCodeBlocks());
+            Collections.reverse(copy);
+            for(PExternCodeBlock e : copy)
             {
                 e.apply(this);
             }
@@ -275,6 +285,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
                 e.apply(this);
             }
         }
+        if(node.getExternCodeBlock() != null)
+        {
+            node.getExternCodeBlock().apply(this);
+        }
         {
             List<PFormaldef> copy = new ArrayList<PFormaldef>(node.getFormaldefs());
             Collections.reverse(copy);
@@ -458,6 +472,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAExternClasskind(AExternClasskind node)
     {
         inAExternClasskind(node);
+        if(node.getKwclass() != null)
+        {
+            node.getKwclass().apply(this);
+        }
         if(node.getKwextern() != null)
         {
             node.getKwextern().apply(this);
@@ -511,10 +529,6 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         if(node.getKwsuper() != null)
         {
             node.getKwsuper().apply(this);
-        }
-        if(node.getKwspecial() != null)
-        {
-            node.getKwspecial().apply(this);
         }
         outASuperclass(node);
     }
@@ -709,6 +723,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAExternMethPropdef(AExternMethPropdef node)
     {
         inAExternMethPropdef(node);
+        if(node.getExternCodeBlock() != null)
+        {
+            node.getExternCodeBlock().apply(this);
+        }
         if(node.getExternCalls() != null)
         {
             node.getExternCalls().apply(this);
@@ -848,6 +866,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAExternInitPropdef(AExternInitPropdef node)
     {
         inAExternInitPropdef(node);
+        if(node.getExternCodeBlock() != null)
+        {
+            node.getExternCodeBlock().apply(this);
+        }
         if(node.getExternCalls() != null)
         {
             node.getExternCalls().apply(this);
@@ -1423,6 +1445,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getType().apply(this);
         }
+        if(node.getCpar() != null)
+        {
+            node.getCpar().apply(this);
+        }
         {
             List<PParam> copy = new ArrayList<PParam>(node.getParams());
             Collections.reverse(copy);
@@ -1430,6 +1456,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             {
                 e.apply(this);
             }
+        }
+        if(node.getOpar() != null)
+        {
+            node.getOpar().apply(this);
         }
         outASignature(node);
     }
@@ -2585,13 +2615,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseANewExpr(ANewExpr node)
     {
         inANewExpr(node);
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getId() != null)
         {
@@ -2721,13 +2747,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
                 e.apply(this);
             }
         }
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getId() != null)
         {
@@ -2762,13 +2784,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getAssign().apply(this);
         }
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getId() != null)
         {
@@ -2803,13 +2821,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getAssignOp().apply(this);
         }
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getId() != null)
         {
@@ -2836,13 +2850,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseASuperExpr(ASuperExpr node)
     {
         inASuperExpr(node);
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getKwsuper() != null)
         {
@@ -2869,13 +2879,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAInitExpr(AInitExpr node)
     {
         inAInitExpr(node);
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getKwinit() != null)
         {
@@ -2910,13 +2916,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
                 e.apply(this);
             }
         }
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getExpr() != null)
         {
@@ -2947,13 +2949,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getAssign().apply(this);
         }
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getExpr() != null)
         {
@@ -2984,13 +2982,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getAssignOp().apply(this);
         }
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getExpr() != null)
         {
@@ -3021,13 +3015,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
                 e.apply(this);
             }
         }
+        if(node.getArgs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getArgs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getArgs().apply(this);
         }
         if(node.getId() != null)
         {
@@ -3154,6 +3144,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseACrangeExpr(ACrangeExpr node)
     {
         inACrangeExpr(node);
+        if(node.getCbra() != null)
+        {
+            node.getCbra().apply(this);
+        }
         if(node.getExpr2() != null)
         {
             node.getExpr2().apply(this);
@@ -3161,6 +3155,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         if(node.getExpr() != null)
         {
             node.getExpr().apply(this);
+        }
+        if(node.getObra() != null)
+        {
+            node.getObra().apply(this);
         }
         outACrangeExpr(node);
     }
@@ -3179,6 +3177,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAOrangeExpr(AOrangeExpr node)
     {
         inAOrangeExpr(node);
+        if(node.getCbra() != null)
+        {
+            node.getCbra().apply(this);
+        }
         if(node.getExpr2() != null)
         {
             node.getExpr2().apply(this);
@@ -3186,6 +3188,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         if(node.getExpr() != null)
         {
             node.getExpr().apply(this);
+        }
+        if(node.getObra() != null)
+        {
+            node.getObra().apply(this);
         }
         outAOrangeExpr(node);
     }
@@ -3204,13 +3210,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAArrayExpr(AArrayExpr node)
     {
         inAArrayExpr(node);
+        if(node.getExprs() != null)
         {
-            List<PExpr> copy = new ArrayList<PExpr>(node.getExprs());
-            Collections.reverse(copy);
-            for(PExpr e : copy)
-            {
-                e.apply(this);
-            }
+            node.getExprs().apply(this);
         }
         outAArrayExpr(node);
     }
@@ -3502,9 +3504,17 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAParExpr(AParExpr node)
     {
         inAParExpr(node);
+        if(node.getCpar() != null)
+        {
+            node.getCpar().apply(this);
+        }
         if(node.getExpr() != null)
         {
             node.getExpr().apply(this);
+        }
+        if(node.getOpar() != null)
+        {
+            node.getOpar().apply(this);
         }
         outAParExpr(node);
     }
@@ -3523,9 +3533,17 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAAsCastExpr(AAsCastExpr node)
     {
         inAAsCastExpr(node);
+        if(node.getCpar() != null)
+        {
+            node.getCpar().apply(this);
+        }
         if(node.getType() != null)
         {
             node.getType().apply(this);
+        }
+        if(node.getOpar() != null)
+        {
+            node.getOpar().apply(this);
         }
         if(node.getKwas() != null)
         {
@@ -3552,6 +3570,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
     public void caseAAsNotnullExpr(AAsNotnullExpr node)
     {
         inAAsNotnullExpr(node);
+        if(node.getCpar() != null)
+        {
+            node.getCpar().apply(this);
+        }
         if(node.getKwnull() != null)
         {
             node.getKwnull().apply(this);
@@ -3559,6 +3581,10 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         if(node.getKwnot() != null)
         {
             node.getKwnot().apply(this);
+        }
+        if(node.getOpar() != null)
+        {
+            node.getOpar().apply(this);
         }
         if(node.getKwas() != null)
         {
@@ -3598,6 +3624,130 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             node.getKwisset().apply(this);
         }
         outAIssetAttrExpr(node);
+    }
+
+    public void inADebugTypeExpr(ADebugTypeExpr node)
+    {
+        defaultIn(node);
+    }
+
+    public void outADebugTypeExpr(ADebugTypeExpr node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseADebugTypeExpr(ADebugTypeExpr node)
+    {
+        inADebugTypeExpr(node);
+        if(node.getType() != null)
+        {
+            node.getType().apply(this);
+        }
+        if(node.getExpr() != null)
+        {
+            node.getExpr().apply(this);
+        }
+        if(node.getKwtype() != null)
+        {
+            node.getKwtype().apply(this);
+        }
+        if(node.getKwdebug() != null)
+        {
+            node.getKwdebug().apply(this);
+        }
+        outADebugTypeExpr(node);
+    }
+
+    public void inAListExprs(AListExprs node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAListExprs(AListExprs node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAListExprs(AListExprs node)
+    {
+        inAListExprs(node);
+        {
+            List<PExpr> copy = new ArrayList<PExpr>(node.getExprs());
+            Collections.reverse(copy);
+            for(PExpr e : copy)
+            {
+                e.apply(this);
+            }
+        }
+        outAListExprs(node);
+    }
+
+    public void inAParExprs(AParExprs node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAParExprs(AParExprs node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAParExprs(AParExprs node)
+    {
+        inAParExprs(node);
+        if(node.getCpar() != null)
+        {
+            node.getCpar().apply(this);
+        }
+        {
+            List<PExpr> copy = new ArrayList<PExpr>(node.getExprs());
+            Collections.reverse(copy);
+            for(PExpr e : copy)
+            {
+                e.apply(this);
+            }
+        }
+        if(node.getOpar() != null)
+        {
+            node.getOpar().apply(this);
+        }
+        outAParExprs(node);
+    }
+
+    public void inABraExprs(ABraExprs node)
+    {
+        defaultIn(node);
+    }
+
+    public void outABraExprs(ABraExprs node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseABraExprs(ABraExprs node)
+    {
+        inABraExprs(node);
+        if(node.getCbra() != null)
+        {
+            node.getCbra().apply(this);
+        }
+        {
+            List<PExpr> copy = new ArrayList<PExpr>(node.getExprs());
+            Collections.reverse(copy);
+            for(PExpr e : copy)
+            {
+                e.apply(this);
+            }
+        }
+        if(node.getObra() != null)
+        {
+            node.getObra().apply(this);
+        }
+        outABraExprs(node);
     }
 
     public void inAPlusAssignOp(APlusAssignOp node)
@@ -3989,6 +4139,56 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
             node.getType().apply(this);
         }
         outAAsNotNullableExternCall(node);
+    }
+
+    public void inAInLanguage(AInLanguage node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAInLanguage(AInLanguage node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAInLanguage(AInLanguage node)
+    {
+        inAInLanguage(node);
+        if(node.getString() != null)
+        {
+            node.getString().apply(this);
+        }
+        if(node.getKwin() != null)
+        {
+            node.getKwin().apply(this);
+        }
+        outAInLanguage(node);
+    }
+
+    public void inAExternCodeBlock(AExternCodeBlock node)
+    {
+        defaultIn(node);
+    }
+
+    public void outAExternCodeBlock(AExternCodeBlock node)
+    {
+        defaultOut(node);
+    }
+
+    @Override
+    public void caseAExternCodeBlock(AExternCodeBlock node)
+    {
+        inAExternCodeBlock(node);
+        if(node.getExternCodeSegment() != null)
+        {
+            node.getExternCodeSegment().apply(this);
+        }
+        if(node.getInLanguage() != null)
+        {
+            node.getInLanguage().apply(this);
+        }
+        outAExternCodeBlock(node);
     }
 
     public void inAQualified(AQualified node)

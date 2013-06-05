@@ -2,9 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
-
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ANewExpr extends PExpr
@@ -12,7 +10,7 @@ public final class ANewExpr extends PExpr
     private TKwnew _kwnew_;
     private PType _type_;
     private TId _id_;
-    private final LinkedList<PExpr> _args_ = new LinkedList<PExpr>();
+    private PExprs _args_;
 
     public ANewExpr()
     {
@@ -23,7 +21,7 @@ public final class ANewExpr extends PExpr
         @SuppressWarnings("hiding") TKwnew _kwnew_,
         @SuppressWarnings("hiding") PType _type_,
         @SuppressWarnings("hiding") TId _id_,
-        @SuppressWarnings("hiding") List<PExpr> _args_)
+        @SuppressWarnings("hiding") PExprs _args_)
     {
         // Constructor
         setKwnew(_kwnew_);
@@ -43,9 +41,10 @@ public final class ANewExpr extends PExpr
             cloneNode(this._kwnew_),
             cloneNode(this._type_),
             cloneNode(this._id_),
-            cloneList(this._args_));
+            cloneNode(this._args_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseANewExpr(this);
@@ -126,24 +125,29 @@ public final class ANewExpr extends PExpr
         this._id_ = node;
     }
 
-    public LinkedList<PExpr> getArgs()
+    public PExprs getArgs()
     {
         return this._args_;
     }
 
-    public void setArgs(List<PExpr> list)
+    public void setArgs(PExprs node)
     {
-        this._args_.clear();
-        this._args_.addAll(list);
-        for(PExpr e : list)
+        if(this._args_ != null)
         {
-            if(e.parent() != null)
+            this._args_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
             {
-                e.parent().removeChild(e);
+                node.parent().removeChild(node);
             }
 
-            e.parent(this);
+            node.parent(this);
         }
+
+        this._args_ = node;
     }
 
     @Override
@@ -178,8 +182,9 @@ public final class ANewExpr extends PExpr
             return;
         }
 
-        if(this._args_.remove(child))
+        if(this._args_ == child)
         {
+            this._args_ = null;
             return;
         }
 
@@ -208,22 +213,10 @@ public final class ANewExpr extends PExpr
             return;
         }
 
-        for(ListIterator<PExpr> i = this._args_.listIterator(); i.hasNext();)
+        if(this._args_ == oldChild)
         {
-            if(i.next() == oldChild)
-            {
-                if(newChild != null)
-                {
-                    i.set((PExpr) newChild);
-                    newChild.parent(this);
-                    oldChild.parent(null);
-                    return;
-                }
-
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
+            setArgs((PExprs) newChild);
+            return;
         }
 
         throw new RuntimeException("Not a child.");

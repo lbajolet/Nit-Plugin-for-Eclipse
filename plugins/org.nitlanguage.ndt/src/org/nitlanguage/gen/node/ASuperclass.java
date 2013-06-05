@@ -2,12 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ASuperclass extends PSuperclass
 {
-    private TKwspecial _kwspecial_;
     private TKwsuper _kwsuper_;
     private PType _type_;
 
@@ -17,13 +16,10 @@ public final class ASuperclass extends PSuperclass
     }
 
     public ASuperclass(
-        @SuppressWarnings("hiding") TKwspecial _kwspecial_,
         @SuppressWarnings("hiding") TKwsuper _kwsuper_,
         @SuppressWarnings("hiding") PType _type_)
     {
         // Constructor
-        setKwspecial(_kwspecial_);
-
         setKwsuper(_kwsuper_);
 
         setType(_type_);
@@ -34,39 +30,14 @@ public final class ASuperclass extends PSuperclass
     public Object clone()
     {
         return new ASuperclass(
-            cloneNode(this._kwspecial_),
             cloneNode(this._kwsuper_),
             cloneNode(this._type_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseASuperclass(this);
-    }
-
-    public TKwspecial getKwspecial()
-    {
-        return this._kwspecial_;
-    }
-
-    public void setKwspecial(TKwspecial node)
-    {
-        if(this._kwspecial_ != null)
-        {
-            this._kwspecial_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._kwspecial_ = node;
     }
 
     public TKwsuper getKwsuper()
@@ -123,7 +94,6 @@ public final class ASuperclass extends PSuperclass
     public String toString()
     {
         return ""
-            + toString(this._kwspecial_)
             + toString(this._kwsuper_)
             + toString(this._type_);
     }
@@ -132,12 +102,6 @@ public final class ASuperclass extends PSuperclass
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._kwspecial_ == child)
-        {
-            this._kwspecial_ = null;
-            return;
-        }
-
         if(this._kwsuper_ == child)
         {
             this._kwsuper_ = null;
@@ -157,12 +121,6 @@ public final class ASuperclass extends PSuperclass
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._kwspecial_ == oldChild)
-        {
-            setKwspecial((TKwspecial) newChild);
-            return;
-        }
-
         if(this._kwsuper_ == oldChild)
         {
             setKwsuper((TKwsuper) newChild);

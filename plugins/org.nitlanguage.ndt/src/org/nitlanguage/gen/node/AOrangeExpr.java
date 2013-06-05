@@ -2,13 +2,15 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AOrangeExpr extends PExpr
 {
+    private TObra _obra_;
     private PExpr _expr_;
     private PExpr _expr2_;
+    private TObra _cbra_;
 
     public AOrangeExpr()
     {
@@ -16,13 +18,19 @@ public final class AOrangeExpr extends PExpr
     }
 
     public AOrangeExpr(
+        @SuppressWarnings("hiding") TObra _obra_,
         @SuppressWarnings("hiding") PExpr _expr_,
-        @SuppressWarnings("hiding") PExpr _expr2_)
+        @SuppressWarnings("hiding") PExpr _expr2_,
+        @SuppressWarnings("hiding") TObra _cbra_)
     {
         // Constructor
+        setObra(_obra_);
+
         setExpr(_expr_);
 
         setExpr2(_expr2_);
+
+        setCbra(_cbra_);
 
     }
 
@@ -30,13 +38,41 @@ public final class AOrangeExpr extends PExpr
     public Object clone()
     {
         return new AOrangeExpr(
+            cloneNode(this._obra_),
             cloneNode(this._expr_),
-            cloneNode(this._expr2_));
+            cloneNode(this._expr2_),
+            cloneNode(this._cbra_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAOrangeExpr(this);
+    }
+
+    public TObra getObra()
+    {
+        return this._obra_;
+    }
+
+    public void setObra(TObra node)
+    {
+        if(this._obra_ != null)
+        {
+            this._obra_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._obra_ = node;
     }
 
     public PExpr getExpr()
@@ -89,18 +125,51 @@ public final class AOrangeExpr extends PExpr
         this._expr2_ = node;
     }
 
+    public TObra getCbra()
+    {
+        return this._cbra_;
+    }
+
+    public void setCbra(TObra node)
+    {
+        if(this._cbra_ != null)
+        {
+            this._cbra_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
+            {
+                node.parent().removeChild(node);
+            }
+
+            node.parent(this);
+        }
+
+        this._cbra_ = node;
+    }
+
     @Override
     public String toString()
     {
         return ""
+            + toString(this._obra_)
             + toString(this._expr_)
-            + toString(this._expr2_);
+            + toString(this._expr2_)
+            + toString(this._cbra_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
+        if(this._obra_ == child)
+        {
+            this._obra_ = null;
+            return;
+        }
+
         if(this._expr_ == child)
         {
             this._expr_ = null;
@@ -113,6 +182,12 @@ public final class AOrangeExpr extends PExpr
             return;
         }
 
+        if(this._cbra_ == child)
+        {
+            this._cbra_ = null;
+            return;
+        }
+
         throw new RuntimeException("Not a child.");
     }
 
@@ -120,6 +195,12 @@ public final class AOrangeExpr extends PExpr
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
+        if(this._obra_ == oldChild)
+        {
+            setObra((TObra) newChild);
+            return;
+        }
+
         if(this._expr_ == oldChild)
         {
             setExpr((PExpr) newChild);
@@ -129,6 +210,12 @@ public final class AOrangeExpr extends PExpr
         if(this._expr2_ == oldChild)
         {
             setExpr2((PExpr) newChild);
+            return;
+        }
+
+        if(this._cbra_ == oldChild)
+        {
+            setCbra((TObra) newChild);
             return;
         }
 

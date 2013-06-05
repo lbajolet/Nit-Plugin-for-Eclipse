@@ -2,15 +2,18 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AModule extends PModule
 {
     private PModuledecl _moduledecl_;
     private final LinkedList<PImport> _imports_ = new LinkedList<PImport>();
+    private final LinkedList<PExternCodeBlock> _externCodeBlocks_ = new LinkedList<PExternCodeBlock>();
     private final LinkedList<PClassdef> _classdefs_ = new LinkedList<PClassdef>();
 
     public AModule()
@@ -20,13 +23,16 @@ public final class AModule extends PModule
 
     public AModule(
         @SuppressWarnings("hiding") PModuledecl _moduledecl_,
-        @SuppressWarnings("hiding") List<PImport> _imports_,
-        @SuppressWarnings("hiding") List<PClassdef> _classdefs_)
+        @SuppressWarnings("hiding") List<?> _imports_,
+        @SuppressWarnings("hiding") List<?> _externCodeBlocks_,
+        @SuppressWarnings("hiding") List<?> _classdefs_)
     {
         // Constructor
         setModuledecl(_moduledecl_);
 
         setImports(_imports_);
+
+        setExternCodeBlocks(_externCodeBlocks_);
 
         setClassdefs(_classdefs_);
 
@@ -38,9 +44,11 @@ public final class AModule extends PModule
         return new AModule(
             cloneNode(this._moduledecl_),
             cloneList(this._imports_),
+            cloneList(this._externCodeBlocks_),
             cloneList(this._classdefs_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAModule(this);
@@ -76,18 +84,50 @@ public final class AModule extends PModule
         return this._imports_;
     }
 
-    public void setImports(List<PImport> list)
+    public void setImports(List<?> list)
     {
-        this._imports_.clear();
-        this._imports_.addAll(list);
-        for(PImport e : list)
+        for(PImport e : this._imports_)
         {
+            e.parent(null);
+        }
+        this._imports_.clear();
+
+        for(Object obj_e : list)
+        {
+            PImport e = (PImport) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._imports_.add(e);
+        }
+    }
+
+    public LinkedList<PExternCodeBlock> getExternCodeBlocks()
+    {
+        return this._externCodeBlocks_;
+    }
+
+    public void setExternCodeBlocks(List<?> list)
+    {
+        for(PExternCodeBlock e : this._externCodeBlocks_)
+        {
+            e.parent(null);
+        }
+        this._externCodeBlocks_.clear();
+
+        for(Object obj_e : list)
+        {
+            PExternCodeBlock e = (PExternCodeBlock) obj_e;
+            if(e.parent() != null)
+            {
+                e.parent().removeChild(e);
+            }
+
+            e.parent(this);
+            this._externCodeBlocks_.add(e);
         }
     }
 
@@ -96,18 +136,24 @@ public final class AModule extends PModule
         return this._classdefs_;
     }
 
-    public void setClassdefs(List<PClassdef> list)
+    public void setClassdefs(List<?> list)
     {
-        this._classdefs_.clear();
-        this._classdefs_.addAll(list);
-        for(PClassdef e : list)
+        for(PClassdef e : this._classdefs_)
         {
+            e.parent(null);
+        }
+        this._classdefs_.clear();
+
+        for(Object obj_e : list)
+        {
+            PClassdef e = (PClassdef) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._classdefs_.add(e);
         }
     }
 
@@ -117,6 +163,7 @@ public final class AModule extends PModule
         return ""
             + toString(this._moduledecl_)
             + toString(this._imports_)
+            + toString(this._externCodeBlocks_)
             + toString(this._classdefs_);
     }
 
@@ -131,6 +178,11 @@ public final class AModule extends PModule
         }
 
         if(this._imports_.remove(child))
+        {
+            return;
+        }
+
+        if(this._externCodeBlocks_.remove(child))
         {
             return;
         }
@@ -160,6 +212,24 @@ public final class AModule extends PModule
                 if(newChild != null)
                 {
                     i.set((PImport) newChild);
+                    newChild.parent(this);
+                    oldChild.parent(null);
+                    return;
+                }
+
+                i.remove();
+                oldChild.parent(null);
+                return;
+            }
+        }
+
+        for(ListIterator<PExternCodeBlock> i = this._externCodeBlocks_.listIterator(); i.hasNext();)
+        {
+            if(i.next() == oldChild)
+            {
+                if(newChild != null)
+                {
+                    i.set((PExternCodeBlock) newChild);
                     newChild.parent(this);
                     oldChild.parent(null);
                     return;

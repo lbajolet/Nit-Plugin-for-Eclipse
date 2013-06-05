@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ACharExpr extends PExpr
@@ -29,6 +29,7 @@ public final class ACharExpr extends PExpr
             cloneNode(this._char_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseACharExpr(this);

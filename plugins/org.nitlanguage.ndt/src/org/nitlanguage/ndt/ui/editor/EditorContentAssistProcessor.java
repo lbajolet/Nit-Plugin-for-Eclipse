@@ -2,6 +2,7 @@ package org.nitlanguage.ndt.ui.editor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -19,7 +20,7 @@ import org.nitlanguage.gen.node.AStdImport;
 import org.nitlanguage.gen.node.ATopClassdef;
 import org.nitlanguage.gen.node.PPropdef;
 import org.nitlanguage.gen.node.Start;
-import org.nitlanguage.ndt.core.asthelpers.AstParserHelper;
+import org.nitlanguage.ndt.core.model.asthelpers.AstParserHelper;
 import org.nitlanguage.ndt.ui.ErrorMsg;
 
 

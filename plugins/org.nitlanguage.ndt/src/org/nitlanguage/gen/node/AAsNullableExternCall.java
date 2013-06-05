@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AAsNullableExternCall extends PExternCall
@@ -39,6 +39,7 @@ public final class AAsNullableExternCall extends PExternCall
             cloneNode(this._kwnullable_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAAsNullableExternCall(this);

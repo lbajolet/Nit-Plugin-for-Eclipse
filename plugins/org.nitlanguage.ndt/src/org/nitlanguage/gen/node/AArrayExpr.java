@@ -2,14 +2,12 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
-
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AArrayExpr extends PExpr
 {
-    private final LinkedList<PExpr> _exprs_ = new LinkedList<PExpr>();
+    private PExprs _exprs_;
 
     public AArrayExpr()
     {
@@ -17,7 +15,7 @@ public final class AArrayExpr extends PExpr
     }
 
     public AArrayExpr(
-        @SuppressWarnings("hiding") List<PExpr> _exprs_)
+        @SuppressWarnings("hiding") PExprs _exprs_)
     {
         // Constructor
         setExprs(_exprs_);
@@ -28,32 +26,38 @@ public final class AArrayExpr extends PExpr
     public Object clone()
     {
         return new AArrayExpr(
-            cloneList(this._exprs_));
+            cloneNode(this._exprs_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAArrayExpr(this);
     }
 
-    public LinkedList<PExpr> getExprs()
+    public PExprs getExprs()
     {
         return this._exprs_;
     }
 
-    public void setExprs(List<PExpr> list)
+    public void setExprs(PExprs node)
     {
-        this._exprs_.clear();
-        this._exprs_.addAll(list);
-        for(PExpr e : list)
+        if(this._exprs_ != null)
         {
-            if(e.parent() != null)
+            this._exprs_.parent(null);
+        }
+
+        if(node != null)
+        {
+            if(node.parent() != null)
             {
-                e.parent().removeChild(e);
+                node.parent().removeChild(node);
             }
 
-            e.parent(this);
+            node.parent(this);
         }
+
+        this._exprs_ = node;
     }
 
     @Override
@@ -67,8 +71,9 @@ public final class AArrayExpr extends PExpr
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._exprs_.remove(child))
+        if(this._exprs_ == child)
         {
+            this._exprs_ = null;
             return;
         }
 
@@ -79,22 +84,10 @@ public final class AArrayExpr extends PExpr
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        for(ListIterator<PExpr> i = this._exprs_.listIterator(); i.hasNext();)
+        if(this._exprs_ == oldChild)
         {
-            if(i.next() == oldChild)
-            {
-                if(newChild != null)
-                {
-                    i.set((PExpr) newChild);
-                    newChild.parent(this);
-                    oldChild.parent(null);
-                    return;
-                }
-
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
+            setExprs((PExprs) newChild);
+            return;
         }
 
         throw new RuntimeException("Not a child.");

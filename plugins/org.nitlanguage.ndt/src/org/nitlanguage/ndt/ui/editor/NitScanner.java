@@ -2,6 +2,11 @@ package org.nitlanguage.ndt.ui.editor;
 
 import java.io.IOException;
 import java.io.PushbackReader;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
@@ -9,18 +14,24 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.LineBackgroundEvent;
+import org.eclipse.swt.custom.LineBackgroundListener;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 import org.nitlanguage.gen.lexer.Lexer;
 import org.nitlanguage.gen.lexer.LexerException;
+import org.nitlanguage.gen.node.TExternCodeSegment;
+import org.nitlanguage.ndt.core.model.ctools.CLexerHelper;
 
 /**
  * Scanner used by the NitEditor to highlight words in the editor
+ * 
  * @author lucas.bajolet
  * @author nathan.heu
  */
-public class NitScanner implements ITokenScanner {
+public class NitScanner implements ITokenScanner, LineBackgroundListener {
 
 	/** The document to scan tokens in */
 	protected IDocument doc;
@@ -41,8 +52,30 @@ public class NitScanner implements ITokenScanner {
 	protected Lexer lex;
 
 	/**
-	 * @param document : The document to set
-	 * Changes the document to scan for tokens
+	 * Used for nit extern code support. Map containing the background color for
+	 * lines written in an nit extern block (ex: C code)
+	 */
+	Map<Integer, Color> lineStyles = new HashMap<Integer, Color>();
+
+	/**
+	 * Used for nit extern code support. A queue containing each token of an
+	 * extern block
+	 */
+	Queue<org.nitlanguage.gen.simplec.node.Token> externBlock = new LinkedList<org.nitlanguage.gen.simplec.node.Token>();
+
+	@Override
+	public int getTokenOffset() {
+		return this.fTokenOffset;
+	}
+
+	@Override
+	public int getTokenLength() {
+		return this.fTokenLength;
+	}
+
+	/**
+	 * @param document
+	 *            : The document to set Changes the document to scan for tokens
 	 */
 	public void setDocument(IDocument document) {
 		if (document != null) {
@@ -60,58 +93,41 @@ public class NitScanner implements ITokenScanner {
 		// crashes because of the PushbackReader buffer when encountering tokens
 		// like .. or ...
 		lex = new Lexer(new PushbackReader(this.docStr, 2));
-
-		if (this.doc != document) {
-			setDocument(document);
-		} else {
-			this.docStr.setRange(offset, length);
-			this.fTokenOffset = offset;
-			this.fTokenLength = 0;
-		}
-	}
-
-	/**
-	 * Computes the origin offset in the document of the token returned by the
-	 * lexer
-	 * 
-	 * @param tok
-	 *            : The token to get the origin position from
-	 * @return the position computed from the document
-	 */
-	private int computePositionFromOfToken(org.nitlanguage.gen.node.Token tok) {
-		try {
-			int linesToAdd = this.doc.getLineOfOffset(this.docStr.fStartRange);
-			int test = this.doc.getLineOffset(linesToAdd + tok.getLine() - 1);
-			int tokPos = (tok.getPos() - 1);
-			return test + tokPos;
-		} catch (BadLocationException e) {
-			return -1;
-		}
+		setDocument(document);
 	}
 
 	@Override
 	public IToken nextToken() {
+
+		if (!externBlock.isEmpty()) {
+			return getPendingCToken();
+		}
 		if (this.doc != null) {
 			try {
-
 				org.nitlanguage.gen.node.Token tok = lex.next();
-				this.fTokenLength = tok.getText().length();
-				this.fTokenOffset = this.computePositionFromOfToken(tok);
-				if (tok instanceof org.nitlanguage.gen.node.EOF) {
-					return Token.EOF;
-				}
 
-				// To discover what is the TextAttribute to map to which token
-				// the Lexer sent back, we use the className without the whole
-				// hierarchy
-				String[] classNameArr = tok.getClass().getName().split("\\.");
-				String className = classNameArr[classNameArr.length - 1];
-				Token tokEclipse;
-				//
-				tokEclipse = new Token(NitColorReposit.getInstance()
-						.getStyleForKeyWord(className));
-				//
-				return tokEclipse;
+				if (tok instanceof TExternCodeSegment) {
+					// on parse le token nit "Extern C" en tokens C
+					// puis on add chacun de ces tokens.
+					// on poll le dernier Token
+					// return externBlock.poll();
+					externBlock = new CLexerHelper(tok.getText())
+							.getASTTokens();
+					fTokenOffset = this.computePositionFromOfToken(tok);
+					fTokenLength = 0;
+					computeExternCodeBackground((TExternCodeSegment) tok);
+					return getPendingCToken();
+				} else {
+					this.fTokenLength = tok.getText().length();
+					this.fTokenOffset = this.computePositionFromOfToken(tok);
+
+					if (tok instanceof org.nitlanguage.gen.node.EOF) {
+						return Token.EOF;
+					} else {
+						return new Token(NitColorReposit.getInstance()
+								.getStyleForKeyWord(tok.getClass()));
+					}
+				}
 			} catch (LexerException e) {
 
 				// A LexerException is thrown when an unknown token is
@@ -135,14 +151,81 @@ public class NitScanner implements ITokenScanner {
 		}
 	}
 
-	@Override
-	public int getTokenOffset() {
-		return this.fTokenOffset;
+	/**
+	 * Computes the origin offset in the document of the token returned by the
+	 * lexer
+	 * 
+	 * @param tok
+	 *            : The token to get the origin position from
+	 * @return the position computed from the document
+	 */
+	private int computePositionFromOfToken(org.nitlanguage.gen.node.Token tok) {
+		try {
+			int linesToAdd = this.doc.getLineOfOffset(this.docStr.fStartRange);
+			int test = this.doc.getLineOffset(linesToAdd + tok.getLine() - 1);
+			int tokPos = (tok.getPos() - 1);
+			return test + tokPos;
+		} catch (BadLocationException e) {
+			return -1;
+		}
+	}
+
+	/**
+	 * Used for nit extern code support. Returns a jface-token corresponding to
+	 * the current C token to be returned Actually, this method is a shortcut
+	 * for nextToken() which only returns jface-tokens corresponding to nit
+	 * tokens
+	 * 
+	 * @return
+	 */
+	private IToken getPendingCToken() {
+		org.nitlanguage.gen.simplec.node.Token ctoken = externBlock.poll();
+		assert (ctoken != null);
+		this.fTokenOffset += getTokenLength();
+		this.fTokenLength = ctoken.getText().length();
+		return new Token(CColorReposit.getInstance().getStyleForKeyWord(
+				ctoken.getClass()));
+	}
+
+	/**
+	 * Used for nit extern code support. Set the background color of lines
+	 * between a nit extern opening character and a nit extern closing character
+	 * Note : if opening and closing character are on the same line or one line
+	 * spaced then no line will be painted.
+	 * 
+	 * @param cCode
+	 */
+	private void computeExternCodeBackground(TExternCodeSegment cCode) {
+		try {
+			int beginLine = this.doc.getLineOfOffset(fTokenOffset
+					+ fTokenLength);
+			int endLine = doc.getLineOfOffset(fTokenOffset
+					+ cCode.getText().length());
+			for (int startLine = beginLine + 1; startLine < endLine; startLine++) {
+				lineStyles.put(startLine, CColorReposit.lineBackground);
+			}
+		} catch (BadLocationException e) {
+		}
+	}
+
+	/**
+	 * Used for nit extern code support. Returns the background color associated
+	 * whith a given line
+	 * 
+	 * @param line
+	 * @return
+	 */
+	public Color getLineStyle(int line) {
+		return lineStyles.get(line);
 	}
 
 	@Override
-	public int getTokenLength() {
-		return this.fTokenLength;
+	public void lineGetBackground(LineBackgroundEvent event) {
+		int line = ((StyledText) event.widget)
+				.getLineAtOffset(event.lineOffset);
+		Color col = getLineStyle(line);
+		if (col != null)
+			event.lineBackground = col;
 	}
 
 }

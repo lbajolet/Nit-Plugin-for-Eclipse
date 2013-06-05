@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ATopClassdef extends PClassdef
@@ -17,7 +19,7 @@ public final class ATopClassdef extends PClassdef
     }
 
     public ATopClassdef(
-        @SuppressWarnings("hiding") List<PPropdef> _propdefs_)
+        @SuppressWarnings("hiding") List<?> _propdefs_)
     {
         // Constructor
         setPropdefs(_propdefs_);
@@ -31,6 +33,7 @@ public final class ATopClassdef extends PClassdef
             cloneList(this._propdefs_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseATopClassdef(this);
@@ -41,18 +44,24 @@ public final class ATopClassdef extends PClassdef
         return this._propdefs_;
     }
 
-    public void setPropdefs(List<PPropdef> list)
+    public void setPropdefs(List<?> list)
     {
-        this._propdefs_.clear();
-        this._propdefs_.addAll(list);
-        for(PPropdef e : list)
+        for(PPropdef e : this._propdefs_)
         {
+            e.parent(null);
+        }
+        this._propdefs_.clear();
+
+        for(Object obj_e : list)
+        {
+            PPropdef e = (PPropdef) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._propdefs_.add(e);
         }
     }
 

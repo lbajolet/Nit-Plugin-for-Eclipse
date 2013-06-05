@@ -12,11 +12,26 @@ public class UiMsg {
 	//NitEditorPage
 	public static final String DESC_EDITOR_PREF_PAGE = "Nit editor preferences";
 	//NitInstallFieldEditor
-	public static final String LBL_NITROOT_LOCATION = "Nit Folder Location";
-	public static final String LBL_STDLIB_LOCATION = "Nit StdLib Folder Location";
-	public static final String LBL_COMPILER_LOCATION = "Compiler Location";
-	public static final String LBL_INTERPRETER_LOCATION = "Interpreter Location";
-	public static final String LBL_DEBUGGER_LOCATION = "Debugger Location";		
+		//root
+		public static final String ID_ROOT = "root";
+		public static final String NAME_ROOT = "Nit root location";	
+		//stdlib
+		public static final String ID_STDLIB = "lib";
+		public static final String NAME_STDLIB = "Standard library";
+		public static final String DESC_STDLIB = "Usually under lib/standard. Includes all sources constitutind the nit standard library.";
+		//compiler
+		public static final String ID_COMPILER = "nitc";
+		public static final String NAME_COMPILER = "Compiler";
+		public static final String DESC_COMPILER = "Usually named nitc. It compiles nit sources to binaries.";
+		//interpreter
+		public static final String ID_INTERPRETER = "nit";
+		public static final String NAME_INTERPRETER = "Interpreter";
+		public static final String DESC_INTERPRETER = "Usually named nit(i). It allows to run nit program without using the compiler." +
+		" Do not use the interpreter in a production environment.";
+		//debugger
+		public static final String ID_DEBUGGER = "nitd";
+		public static final String NAME_DEBUGGER = "Debugger";
+		public static final String DESC_DEBUGGER = "Facilitates localization of problems in the nit programs. Acts as an interpreter with a couple of convenient features.";
 	
 	/*WIZARDS*/
 	

@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AImplicitSelfExpr extends PExpr
@@ -19,6 +19,7 @@ public final class AImplicitSelfExpr extends PExpr
         return new AImplicitSelfExpr();
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAImplicitSelfExpr(this);

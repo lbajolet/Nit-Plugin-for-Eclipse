@@ -2,9 +2,11 @@
 
 package org.nitlanguage.gen.node;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class ADoc extends PDoc
@@ -17,7 +19,7 @@ public final class ADoc extends PDoc
     }
 
     public ADoc(
-        @SuppressWarnings("hiding") List<TComment> _comment_)
+        @SuppressWarnings("hiding") List<?> _comment_)
     {
         // Constructor
         setComment(_comment_);
@@ -31,6 +33,7 @@ public final class ADoc extends PDoc
             cloneList(this._comment_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseADoc(this);
@@ -41,18 +44,24 @@ public final class ADoc extends PDoc
         return this._comment_;
     }
 
-    public void setComment(List<TComment> list)
+    public void setComment(List<?> list)
     {
-        this._comment_.clear();
-        this._comment_.addAll(list);
-        for(TComment e : list)
+        for(TComment e : this._comment_)
         {
+            e.parent(null);
+        }
+        this._comment_.clear();
+
+        for(Object obj_e : list)
+        {
+            TComment e = (TComment) obj_e;
             if(e.parent() != null)
             {
                 e.parent().removeChild(e);
             }
 
             e.parent(this);
+            this._comment_.add(e);
         }
     }
 

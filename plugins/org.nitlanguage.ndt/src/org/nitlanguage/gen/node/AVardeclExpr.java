@@ -2,7 +2,7 @@
 
 package org.nitlanguage.gen.node;
 
-import org.nitlanguage.gen.analysis.*;
+import org.nitlanguage.gen.analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AVardeclExpr extends PExpr
@@ -49,6 +49,7 @@ public final class AVardeclExpr extends PExpr
             cloneNode(this._expr_));
     }
 
+    @Override
     public void apply(Switch sw)
     {
         ((Analysis) sw).caseAVardeclExpr(this);
