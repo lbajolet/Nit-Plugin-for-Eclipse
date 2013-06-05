@@ -92,6 +92,7 @@ public class NitScanner implements ITokenScanner, LineBackgroundListener{
 		// like .. or ...
 		lex = new Lexer(new PushbackReader(this.docStr, 2));
 		setDocument(document);
+		lineStyles = new HashMap<Integer, Color>();
 	}
 	
 	@Override
