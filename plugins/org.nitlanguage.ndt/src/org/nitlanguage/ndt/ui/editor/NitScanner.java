@@ -2,13 +2,10 @@ package org.nitlanguage.ndt.ui.editor;
 
 import java.io.IOException;
 import java.io.PushbackReader;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Stack;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.TextAttribute;
@@ -26,9 +23,6 @@ import org.nitlanguage.gen.lexer.Lexer;
 import org.nitlanguage.gen.lexer.LexerException;
 import org.nitlanguage.gen.node.TExternCodeSegment;
 import org.nitlanguage.ndt.core.model.ctools.CLexerHelper;
-
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
-
 /**
  * Scanner used by the NitEditor to highlight words in the editor
  * @author lucas.bajolet
