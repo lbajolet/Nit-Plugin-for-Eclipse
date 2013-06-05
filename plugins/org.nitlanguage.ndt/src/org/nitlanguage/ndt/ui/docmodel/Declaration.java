@@ -45,7 +45,7 @@ public class Declaration{
     				|| line.startsWith("init ")
     				|| line.startsWith("init(")){
     		String nextLine = cleanLine(next_line);
-    		if(line.endsWith(" end") || (!line.endsWith(" do") && !nextLine.equals("do"))){
+    		if(line.endsWith(" end") || (!line.endsWith(" do") && !nextLine.trim().equals("do"))){
     			return DeclarationType.INLINE_FUN;
     		}
     		if(nextLine.equals("do")) return DeclarationType.MULTILINE_FUN_CLEAN;
@@ -76,6 +76,9 @@ public class Declaration{
      * @return
      */
     private static String removeModificatorKeyword(String line){
+    	if(line.startsWith("extern ")){
+    		return line.substring(6, line.length()-1).trim();
+    	} 
     	if(line.startsWith("redef ")){
     		return line.substring(5, line.length()-1).trim();
     	} else if(line.startsWith("public ")){
