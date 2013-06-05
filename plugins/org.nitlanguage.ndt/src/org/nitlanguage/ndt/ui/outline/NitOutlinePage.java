@@ -21,6 +21,7 @@ import org.nitlanguage.gen.node.AAttrPropdef;
 import org.nitlanguage.gen.node.AConcreteInitPropdef;
 import org.nitlanguage.gen.node.AConcreteMethPropdef;
 import org.nitlanguage.gen.node.ADeferredMethPropdef;
+import org.nitlanguage.gen.node.AExternMethPropdef;
 import org.nitlanguage.gen.node.AIdMethid;
 import org.nitlanguage.gen.node.AModule;
 import org.nitlanguage.gen.node.AModuleName;
@@ -64,11 +65,24 @@ public class NitOutlinePage extends ContentOutlinePage implements IAdaptable {
 		return null;
 	}	
 	
+	//checks if event was triggered by a manual selection
+	//that is to say a selection made programmatically
+	//after a corresponding selection in the text editor.
+	private boolean isValidEvent(SelectionChangedEvent event){
+    	if(manualSelection != null 
+    			&& ((TreeSelection)event.getSelection()).getFirstElement() 
+    			== manualSelection.getFirstElement()) return false;
+    	//resets the manual selection -- avoid an incorrect
+    	//test if next selected tree item it this one
+    	manualSelection = null;
+    	return true;
+	}
+	
     /**
      * Selects the text in the editor corresponding to the newly selected tree item
      */
-    public void selectionChanged(SelectionChangedEvent event) {   	
-    	if(event.getSelectionProvider() == getTreeViewer()) return;
+    public void selectionChanged(SelectionChangedEvent event) {
+    	if(!isValidEvent(event)) return;
     	super.selectionChanged(event);
     	TreeSelection selection = (TreeSelection)event.getSelection();
     	Object item = selection.getFirstElement();
@@ -134,9 +148,13 @@ public class NitOutlinePage extends ContentOutlinePage implements IAdaptable {
 		if(!(item.getData() instanceof Node)) return false;
 		NodeInformation infos = getNodeInformations((Node)item.getData());
 		if(!infos.equals(sel, editor)) return visit(item.getItems(), sel);
-		setSelection(new TreeSelection(new TreePath(new Object[]{item.getData()})));
+		TreePath treePath = new TreePath(new Object[]{item.getData()});
+		manualSelection = new TreeSelection(treePath);
+		setSelection(manualSelection);
 		return true;
 	}  
+	
+	TreeSelection manualSelection = null;
 	
     /**
      * Extracts parsed document informations from an AST node
@@ -167,6 +185,12 @@ public class NitOutlinePage extends ContentOutlinePage implements IAdaptable {
     											attrDef.getId().getPos(),
     											attrDef.getId().getText().length());
     			}
+    		} else if(item instanceof AExternMethPropdef){
+    			PMethid methId = ((AExternMethPropdef)item).getMethid();
+    			TId id = ((AIdMethid)methId).getId();
+    			return new NodeInformation(id.getLine(),
+    										id.getPos(),
+    										id.getText().length());
     		} else if(item instanceof AConcreteInitPropdef){
     			TKwinit initId = ((AConcreteInitPropdef)item).getKwinit();
     			return new NodeInformation(initId.getLine(),

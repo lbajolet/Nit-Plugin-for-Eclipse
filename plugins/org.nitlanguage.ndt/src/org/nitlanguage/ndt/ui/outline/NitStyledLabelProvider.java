@@ -12,6 +12,7 @@ import org.nitlanguage.gen.node.ACharExpr;
 import org.nitlanguage.gen.node.AConcreteInitPropdef;
 import org.nitlanguage.gen.node.AConcreteMethPropdef;
 import org.nitlanguage.gen.node.ADeferredMethPropdef;
+import org.nitlanguage.gen.node.AExternMethPropdef;
 import org.nitlanguage.gen.node.AFalseExpr;
 import org.nitlanguage.gen.node.AFloatExpr;
 import org.nitlanguage.gen.node.AFormaldef;
@@ -178,7 +179,18 @@ public class NitStyledLabelProvider extends StyledCellLabelProvider {
     			ASignature sign = (ASignature)init_def.getSignature();
         		printSignature(text, "init." + init_def.getMethid().toString(), sign);	       	
     		}
-    	}    	
+    	}  
+    	else if (element instanceof AExternMethPropdef){
+    		AExternMethPropdef meth_def = (AExternMethPropdef)element;
+    		PVisibility vis = meth_def.getVisibility();
+    		if (vis instanceof APublicVisibility){
+    			cell.setImage(images.getImage(ISharedImages.IMG_OBJS_PUBLIC));
+    		} else {
+    			cell.setImage(images.getImage(ISharedImages.IMG_OBJS_PRIVATE));
+    		}
+    		ASignature sign = (ASignature)meth_def.getSignature();
+    		printSignature(text, meth_def.getMethid().toString(), sign);
+    	}
     	else if (element instanceof AConcreteMethPropdef){
     		AConcreteMethPropdef meth_def = (AConcreteMethPropdef)element;
     		PVisibility vis = meth_def.getVisibility();
