@@ -1,5 +1,7 @@
 package org.nitlanguage.ndt.core.builder;
 
+import java.util.ArrayList;
+
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -9,6 +11,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.model.asthelpers.AstReposit;
 import org.nitlanguage.ndt.core.model.asthelpers.ProjectAutoParser;
+import org.nitlanguage.ndt.core.plugin.NitActivator;
+import org.nitlanguage.ndt.core.plugin.NitInstallation;
 import org.nitlanguage.ndt.core.plugin.ProjectPropertiesHelper;
 
 /**
@@ -180,5 +184,13 @@ public class NitNature implements IProjectNature {
 	 */
 	public NitCompilerCallerClass getCompilerCaller() {
 		return this.compilerCaller;
+	}
+
+	public String[] buildDebuggerCommand(String targetPath) {
+		ArrayList<String> command = new ArrayList<String>();
+		NitInstallation infos = NitActivator.getDefault().getNitInstallation();
+		command.add(infos.getDebugger());
+		command.add(targetPath);
+		return command.toArray(new String[command.size()]);
 	}
 }

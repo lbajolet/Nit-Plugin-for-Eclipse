@@ -29,7 +29,7 @@ public class UiMsg {
 		public static final String DESC_INTERPRETER = "Usually named nit(i). It allows to run nit program without using the compiler." +
 		" Do not use the interpreter in a production environment.";
 		//debugger
-		public static final String ID_DEBUGGER = "nitd";
+		public static final String ID_DEBUGGER = "netdbg";
 		public static final String NAME_DEBUGGER = "Debugger";
 		public static final String DESC_DEBUGGER = "Facilitates localization of problems in the nit programs. Acts as an interpreter with a couple of convenient features.";
 	

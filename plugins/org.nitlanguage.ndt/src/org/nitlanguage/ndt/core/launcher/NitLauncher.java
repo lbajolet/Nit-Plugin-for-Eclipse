@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -14,25 +15,32 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.model.IDebugTarget;
 import org.eclipse.debug.core.model.ILaunchConfigurationDelegate;
+import org.eclipse.debug.core.model.IProcess;
 import org.nitlanguage.ndt.core.BuildMsg;
 import org.nitlanguage.ndt.core.PluginParams;
 import org.nitlanguage.ndt.core.builder.NitNature;
+import org.nitlanguage.ndt.core.debug.NitDebugTarget;
 import org.nitlanguage.ndt.core.plugin.NitActivator;
 import org.nitlanguage.ndt.ui.console.NitConsole;
 
 /**
- * The launcher class, auto-compiles and executes a nit program
- * with the selected configuration
- * @author lucas.bajolet 
- * @author nathan.heu 
+ * The launcher class, auto-compiles and executes a nit program with the
+ * selected configuration
+ * 
+ * @author lucas.bajolet
+ * @author nathan.heu
  */
 public class NitLauncher implements ILaunchConfigurationDelegate {
 	/**
 	 * The background job doing the compiling + Executing processes
-	 * @author lucas.bajolet 
+	 * 
+	 * @author lucas.bajolet
 	 */
 	private class ExecJob extends Job {
 
@@ -151,34 +159,34 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 	@Override
 	public void launch(ILaunchConfiguration configuration, String mode,
 			ILaunch launch, IProgressMonitor monitor) throws CoreException {
-		monitor.beginTask(BuildMsg.LAUNCHING_TASK, 100);
 
-		if (mode.equals("run")) {
-			// Get the file to compile
-			String fileName = configuration.getAttribute(
-					NitMainTab.TARGET_FILE_PATH, "");
-			IFile fichier = null;
-			if (!fileName.equals("")) {
-				fichier = ResourcesPlugin.getWorkspace().getRoot()
-						.getFile(new Path(fileName));
-			}
+		// Get the target file
+		String fileName = configuration.getAttribute(
+				NitMainTab.TARGET_FILE_PATH, "");
+		IFile fichier = null;
+		if (!fileName.equals("")) {
+			fichier = ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(new Path(fileName));
+		}
+		// Get project
+		IProject proj = fichier.getProject();
+
+		// Then get the nature of the project
+		NitNature nnat = (NitNature) proj.getNature(PluginParams.NATURE_ID);
+
+		// Call the compiler/debugger with this information
+		nnat.setDefaultFile(fichier);
+
+		String[] file = configuration.getAttribute(NitMainTab.TARGET_FILE_PATH,
+				"").split("/");
+
+		if (mode.equals(ILaunchManager.RUN_MODE)) {
+			monitor.beginTask(BuildMsg.LAUNCHING_TASK, 100);
 			if (fichier != null) {
-
-				// Get project
-				IProject proj = fichier.getProject();
-
-				// Then get the nature of the project
-				NitNature nnat = (NitNature) proj
-						.getNature(PluginParams.NATURE_ID);
-
-				// Call the compiler with this information
-				nnat.setDefaultFile(fichier);
 				nnat.getCompilerCaller().setOutFolder(
 						configuration.getAttribute(NitMainTab.OUTPUT_PATH, ""));
 				monitor.worked(10);
 
-				String[] file = configuration.getAttribute(
-						NitMainTab.TARGET_FILE_PATH, "").split("/");
 				String pathToFile = configuration.getAttribute(
 						NitMainTab.OUTPUT_PATH, "")
 						+ "/"
@@ -205,6 +213,32 @@ public class NitLauncher implements ILaunchConfigurationDelegate {
 				ej.schedule();
 
 				monitor.worked(50);
+			}
+		} else if (mode.equals(ILaunchManager.DEBUG_MODE)) {
+			monitor.beginTask(BuildMsg.DEBUGGING_TASK, 100);
+			String[] command = nnat.buildDebuggerCommand(fichier
+					.getRawLocationURI().getRawPath());
+			monitor.worked(50);
+			Process debugProcess = DebugPlugin.exec(command, null);
+			IProcess eclipseProcess = DebugPlugin.newProcess(launch,
+					debugProcess, BuildMsg.DEBUGGING_JOB);
+			try {
+				//Time waiting for the debugging server/interpreter to boot and wait for connections, 3 seconds should be plenty enough
+				Thread.sleep(3000);
+				// TODO change host and port to settings
+				IDebugTarget target = new NitDebugTarget(launch,
+						eclipseProcess, "127.0.0.1", 22125);
+				launch.addDebugTarget(target);
+				monitor.worked(50);
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+				debugProcess.destroy();
+			} catch (IOException e) {
+				e.printStackTrace();
+				debugProcess.destroy();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				debugProcess.destroy();
 			}
 		}
 

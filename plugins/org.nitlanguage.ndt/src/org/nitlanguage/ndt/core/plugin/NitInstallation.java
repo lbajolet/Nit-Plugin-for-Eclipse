@@ -23,7 +23,7 @@ public class NitInstallation {
 	// Interpreter path string
 	public static final String INTERPRETER_PATHS_ID = "nit";
 	// Debugger path string
-	public static final String DEBUGGER_PATH_ID = "nitd";
+	public static final String DEBUGGER_PATH_ID = "netdbg";
 	
 	private String root = null;
 	private String compiler = null;

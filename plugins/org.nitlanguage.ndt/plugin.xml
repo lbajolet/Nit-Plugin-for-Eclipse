@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension point="org.eclipse.ui.perspectives">
+   <extension
+         id="org.nitlanguage.ndt.perspective"
+         name="Nit Language Perspective"
+         point="org.eclipse.ui.perspectives">
       <perspective
             class="org.nitlanguage.ndt.ui.perspective.NitPerspective"
             icon="icons/nit_perspective.png"
@@ -9,7 +12,10 @@
             name="Nit">
       </perspective>
    </extension>
-   <extension point="org.eclipse.ui.editors">
+   <extension
+         id="org.nitlanguage.ndt.ui.editor.NitEditor"
+         name="Nit Language Editor"
+         point="org.eclipse.ui.editors">
       <editor
             class="org.nitlanguage.ndt.ui.editor.NitEditor"
             default="false"
@@ -118,11 +124,14 @@
    <extension point="org.eclipse.debug.core.launchConfigurationTypes">
       <launchConfigurationType
             delegate="org.nitlanguage.ndt.core.launcher.NitLauncher"
-	    delegateName="Nit Launcher"            
-	    delegateDescription="The Nit Application Launcher supports running Nit on UNIX based operating systems."
+            delegateDescription="The Nit Application Launcher supports running Nit on UNIX based operating systems."
+            delegateName="Nit Launcher"
             id="org.nitlanguage.ndt.nitLauncher"
             modes="run, debug"
-            name="Nit Application">
+            name="Nit Application"
+            public="true"
+            sourceLocatorId="org.nitlanguage.ndt.sourceLookupDirector.nit"
+            sourcePathComputerId="org.nitlanguage.ndt.core.debug.sourcePathComputer.nit">
       </launchConfigurationType>
    </extension>
    <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
@@ -138,8 +147,14 @@
             id="org.uqam.nit.ndt.nitLaunchProgram"
             type="org.nitlanguage.ndt.nitLauncher">
             <launchMode
+                  description="Run/Debug a Nit Program"
                   mode="run"
-                  description="run description">
+                  perspective="org.eclipse.debug.ui.DebugPerspective">
+            </launchMode>
+            <launchMode
+                  description="Debug a Nit Program"
+                  mode="debug"
+                  perspective="org.eclipse.debug.ui.DebugPerspective">
             </launchMode>
       </launchConfigurationTabGroup>
    </extension>
@@ -267,5 +282,48 @@
 				sequence="M1+SHIFT+C"
 				schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
 			</key>
+    </extension>
+    <extension
+          point="org.eclipse.debug.core.sourceLocators">
+       <sourceLocator
+             class="org.nitlanguage.ndt.core.debug.sourceLocation.NitSourceLookupDirector"
+             id="org.nitlanguage.ndt.sourceLookupDirector.nit"
+             name="Nit Source Lookup Director">
+       </sourceLocator>
+    </extension>
+    <extension
+          point="org.eclipse.debug.core.sourcePathComputers">
+       <sourcePathComputer
+             class="org.nitlanguage.ndt.core.debug.sourceLocation.NitSourcePathComputerDelegate"
+             id="org.nitlanguage.ndt.core.debug.sourcePathComputer.nit">
+       </sourcePathComputer>
+    </extension>
+    <extension
+          point="org.eclipse.debug.ui.debugModelPresentations">
+       <debugModelPresentation
+             class="org.nitlanguage.ndt.ui.debug.NitDebugModelPresentation"
+             detailsViewerConfiguration="org.nitlanguage.ndt.ui.editor.NitSourceViewerConfiguration"
+             id="org.nitlanguage.ndt.debugModelPresentation.nit">
+       </debugModelPresentation>
+    </extension>
+    <extension
+          point="org.eclipse.debug.core.breakpoints">
+       <breakpoint
+             class="org.nitlanguage.ndt.core.debug.NitLineBreakpoint"
+             id="org.nitlanguage.ndt.core.nitLineBreakpoint"
+             markerType="ndt.debug.lineBreakpoint.marker"
+             name="Nit Line Breakpoint">
+       </breakpoint>
+    </extension>
+    <extension
+          id="ndt.debug.lineBreakpoint.marker"
+          name="Nit Line Breakpoint"
+          point="org.eclipse.core.resources.markers">
+       <persistent
+             value="true">
+       </persistent>
+       <super
+             type="org.eclipse.debug.core.lineBreakpointMarker">
+       </super>
     </extension>
 </plugin>

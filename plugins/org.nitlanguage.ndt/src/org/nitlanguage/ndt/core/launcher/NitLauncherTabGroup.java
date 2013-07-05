@@ -8,6 +8,7 @@ import org.eclipse.debug.ui.ILaunchConfigurationTab;
 
 /**
  * The tab group for Nit Configurations
+ * 
  * @author lucas.bajolet
  * @author nathan.heu
  */
@@ -15,11 +16,8 @@ public class NitLauncherTabGroup extends AbstractLaunchConfigurationTabGroup {
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { 
-				new NitMainTab(),
-				new EnvironmentTab(),
-				new CommonTab()
-		};
+		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] {
+				new NitMainTab(), new EnvironmentTab(), new CommonTab() };
 
 		setTabs(tabs);
 	}
